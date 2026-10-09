@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Language, PageView, Branch, Dish, ReservationFormData, ReservationRecord } from '../types';
-import { BRANCHES } from '../data/branches';
 import { translations } from '../data/translations';
 import { adminStore } from '../services/adminStore';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { 
   Calendar, 
   CalendarCheck,
@@ -47,8 +44,7 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
 }) => {
   const t = translations[lang].reservation;
 
-  // Today in YYYY-MM-DD
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 
   // Available Time Slots inside Opening Hours (06:00 - 13:00 and 17:00 - 22:00)
   const timeSlots = [
@@ -110,12 +106,22 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
     }
   }, [preselectedDish, lang]);
 
-  const selectedBranch = branchesList.find((b) => b.id === formData.branchId) || branchesList[0] || BRANCHES[0];
+  const selectedBranch = branchesList.find((b) => b.id === formData.branchId);
+  const [submitError, setSubmitError] = useState('');
+  const [isSample, setIsSample] = useState(false);
+  const receiptTitle = { vi: 'Đã tiếp nhận yêu cầu đặt bàn', en: 'Reservation request received', zh: '已收到预订申请', ko: '예약 요청이 접수되었습니다' }[lang];
+  const receiptNotice = { vi: 'Yêu cầu đang chờ xác nhận từ cơ sở. Đây không phải xác nhận giữ bàn.', en: 'Your request awaits confirmation from the branch. This is not a confirmed table booking.', zh: '申请正在等待门店确认，此凭证不代表已保留座位。', ko: '지점 확인을 기다리고 있습니다. 이 접수증은 테이블 예약 확정이 아닙니다.' }[lang];
+
+  useEffect(() => {
+    if (!initialBranchId && branchesList.length) {
+      setFormData((prev) => branchesList.some((b) => b.id === prev.branchId) ? prev : { ...prev, branchId: branchesList[0].id });
+    }
+  }, [branchesList, initialBranchId]);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: name === 'partySize' ? Number(value) : value }));
     // Clear specific field error when user modifies
     if (errors[name]) {
       setErrors((prev) => {
@@ -140,7 +146,7 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
     } else {
       // Clean phone
       const cleanPhone = formData.phone.replace(/[\s\-\.\(\)]/g, '');
-      const vnPhoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+      const vnPhoneRegex = /^(?:0|\+?84)[35789]\d{8}$/;
       if (!vnPhoneRegex.test(cleanPhone)) {
         newErrors.phone = t.errors.phoneInvalid;
       }
@@ -149,22 +155,22 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
     // 3. Ngày bắt buộc & không chọn ngày quá khứ
     if (!formData.reservationDate) {
       newErrors.reservationDate = t.errors.dateRequired;
-    } else if (formData.reservationDate < todayStr) {
+    } else if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.reservationDate) || !Number.isFinite(Date.parse(`${formData.reservationDate}T00:00:00+07:00`)) || new Date(`${formData.reservationDate}T00:00:00Z`).toISOString().slice(0, 10) !== formData.reservationDate || formData.reservationDate < todayStr) {
       newErrors.reservationDate = t.errors.datePast;
     }
 
     // 4. Giờ bắt buộc & trong giờ mở cửa
-    if (!formData.reservationTime) {
+    if (!timeSlots.includes(formData.reservationTime) || (formData.reservationDate === todayStr && Date.parse(`${formData.reservationDate}T${formData.reservationTime}:00+07:00`) <= Date.now())) {
       newErrors.reservationTime = t.errors.timeRequired;
     }
 
     // 5. Số lượng người >= 1
-    if (!formData.partySize || Number(formData.partySize) < 1) {
+    if (!Number.isInteger(Number(formData.partySize)) || Number(formData.partySize) < 1 || Number(formData.partySize) > 50) {
       newErrors.partySize = t.errors.partySizeRequired;
     }
 
     // 6. Cơ sở bắt buộc
-    if (!formData.branchId) {
+    if (!selectedBranch) {
       newErrors.branchId = t.errors.branchRequired;
     }
 
@@ -172,27 +178,27 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) {
-      return;
-    }
-
+    if (isSubmitting || !validate() || !selectedBranch) return;
     setIsSubmitting(true);
-
-    // Simulate sending reservation to the selected branch and persist to adminStore
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const createdRecord = adminStore.addReservationFromClient(formData, selectedBranch);
-      const record: ReservationRecord = {
+    setSubmitError('');
+    const submittedData = { ...formData, fullName: formData.fullName.trim(), phone: formData.phone.replace(/[\s.()\-]/g, ''), partySize: Number(formData.partySize) };
+    try {
+      const createdRecord = await adminStore.addReservationFromClient(submittedData, selectedBranch);
+      setIsSample(false);
+      setConfirmation({
         id: createdRecord.id,
-        createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-        data: formData,
+        createdAt: new Date(createdRecord.createdAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+        data: { ...submittedData, ...createdRecord },
         branch: selectedBranch,
-      };
-      setConfirmation(record);
+      });
       window.scrollTo({ top: 100, behavior: 'smooth' });
-    }, 700);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Không thể gửi yêu cầu đặt bàn. Vui lòng thử lại.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handlePrint = () => {
@@ -205,7 +211,7 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
     setPdfSuccessMessage(false);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([import('html2canvas'), import('jspdf')]);
 
       const element = voucherRef.current;
       const canvas = await html2canvas(element, {
@@ -252,6 +258,8 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
   };
 
   const handlePreviewSample = () => {
+    if (!selectedBranch || isSubmitting) return;
+    setIsSample(true);
     const sampleRecord: ReservationRecord = {
       id: `PTBH-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
@@ -309,10 +317,10 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                     Gia truyền từ 1955
                   </span>
                   <span className="my-0.5 px-1.5 py-0.5 bg-[#A52B25] text-[#FFF8E9] text-[9px] font-black tracking-widest uppercase rounded inline-block">
-                    ★ {t.sealVerified} ★
+                    {isSample ? 'PHIẾU MẪU' : 'ĐÃ TIẾP NHẬN'}
                   </span>
                   <span className="text-[7.5px] font-bold tracking-tight block">
-                    {t.sealCertified}
+                    CHƯA XÁC NHẬN GIỮ BÀN
                   </span>
                   <span className="text-[7px] font-mono text-[#A52B25]/90 block">
                     HOÀN KIẾM • HÀ NỘI
@@ -328,13 +336,13 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#68131C] text-[#D6A84F] text-xs font-bold uppercase tracking-wider mb-2">
                 <CheckCircle2 className="w-4 h-4 text-[#D6A84F]" />
-                <span>{t.voucherBadge}</span>
+                <span>{isSample ? 'Phiếu mẫu — chưa gửi' : receiptTitle}</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-black text-[#68131C]">
-                {t.successTitle}
+                {isSample ? 'Phiếu minh họa đặt bàn' : receiptTitle}
               </h2>
               <p className="mt-1.5 text-xs sm:text-sm text-[#65452F] max-w-lg mx-auto">
-                {t.successSubtitle}
+                {isSample ? 'Thông tin mẫu chưa được gửi tới quán và không giữ bàn.' : receiptNotice}
               </p>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
                 <div className="inline-block bg-[#FFF8E9] border-2 border-[#68131C] px-4 py-1.5 rounded-lg text-xs font-mono font-bold text-[#A52B25] shadow-xs">
@@ -405,7 +413,7 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
 
                   <div className="mt-3 pt-3 border-t border-[#B88932]/25 text-[11px] text-[#A52B25] font-semibold flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 shrink-0 text-[#68131C]" />
-                    <span>Bàn được giữ ưu tiên trong 15 phút sau giờ hẹn</span>
+                    <span>Vui lòng chờ cơ sở liên hệ xác nhận trước khi đến.</span>
                   </div>
                 </div>
               </div>
@@ -450,10 +458,10 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                   <div>
                     <span className="text-xs font-bold text-[#68131C] flex items-center gap-1.5">
                       <QrCode className="w-3.5 h-3.5 text-[#D6A84F]" />
-                      <span>Mã QR Xác Thực Đặt Chỗ</span>
+                      <span>Mã QR minh họa</span>
                     </span>
                     <p className="text-[11px] text-[#65452F] mt-0.5 leading-tight">
-                      {t.qrHelp}
+                      Hình minh họa, không dùng để quét hoặc xác thực đặt chỗ.
                     </p>
                   </div>
                 </div>
@@ -808,6 +816,7 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
 
               {/* Action Submit Button [Gửi thông tin] - Heritage red #A52B25 with warm cream text */}
               <div className="pt-4 space-y-3">
+                {submitError && <p role="alert" className="text-sm text-[#A52B25]">{submitError}</p>}
                 <button
                   type="submit"
                   disabled={isSubmitting}

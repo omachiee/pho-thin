@@ -50,7 +50,7 @@ export const ARTICLES: Article[] = [
       zh: '战略合作',
       ko: '전략적 제휴',
     },
-    image: '/src/assets/images/regenerated_image_1790961081614.jpg',
+    image: '/assets/regenerated_image_1790961081614.jpg',
     author: 'Admin',
     isHeroArticle: true,
   },
@@ -96,7 +96,7 @@ export const ARTICLES: Article[] = [
       zh: '国际交流',
       ko: '국제 교류',
     },
-    image: '/src/assets/images/regenerated_image_1790965639507.webp',
+    image: '/assets/regenerated_image_1790965639507.webp',
     author: 'Admin',
   },
   {
@@ -141,7 +141,7 @@ export const ARTICLES: Article[] = [
       zh: '湖畔纪事',
       ko: '호반의 기록',
     },
-    image: '/src/assets/images/regenerated_image_1790912138011.jpg',
+    image: '/assets/regenerated_image_1790912138011.jpg',
     author: 'Admin',
   },
   {
@@ -188,7 +188,7 @@ export const ARTICLES: Article[] = [
       zh: '烹饪秘法',
       ko: '조리 비법',
     },
-    image: '/src/assets/images/regenerated_image_1790953552668.jpg',
+    image: '/assets/regenerated_image_1790953552668.jpg',
     author: 'Admin',
   },
   {
@@ -235,7 +235,7 @@ export const ARTICLES: Article[] = [
       zh: '非遗文化',
       ko: '문화유산',
     },
-    image: '/src/assets/images/regenerated_image_1790961085415.jpg',
+    image: '/assets/regenerated_image_1790961085415.jpg',
     author: 'Admin',
   },
 
@@ -282,7 +282,7 @@ export const ARTICLES: Article[] = [
       zh: '社区公益',
       ko: '지역 사회 나눔',
     },
-    image: '/src/assets/images/regenerated_image_1790961547583.png',
+    image: '/assets/regenerated_image_1790961547583.png',
     author: 'Admin',
   },
   {
@@ -327,7 +327,7 @@ export const ARTICLES: Article[] = [
       zh: '国际交流',
       ko: '국제 교류',
     },
-    image: '/src/assets/images/regenerated_image_1790961550910.webp',
+    image: '/assets/regenerated_image_1790961550910.webp',
     author: 'Admin',
   },
   {
@@ -372,7 +372,7 @@ export const ARTICLES: Article[] = [
       zh: '门店空间',
       ko: '매장 이야기',
     },
-    image: '/src/assets/images/regenerated_image_1790912134184.jpg',
+    image: '/assets/regenerated_image_1790912134184.jpg',
     author: 'Admin',
   },
   {
@@ -417,7 +417,7 @@ export const ARTICLES: Article[] = [
       zh: '非遗文化',
       ko: '문화유산',
     },
-    image: '/src/assets/images/dish_pho_tai_chin_1790702822779.jpg',
+    image: '/assets/dish_pho_tai_chin_1790702822779.jpg',
     author: 'Admin',
   }
 ];

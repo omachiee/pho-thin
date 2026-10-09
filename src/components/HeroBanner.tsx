@@ -24,7 +24,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         {/* Background Hero Image with subtle warm dark-burgundy/brown cinematic overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/src/assets/images/regenerated_image_1790911567588.png"
+            src="/assets/regenerated_image_1790911567588.png"
             alt="Phở Thìn Bờ Hồ Hà Nội"
             className="w-full h-full object-cover object-center brightness-75 contrast-105"
             referrerPolicy="no-referrer"

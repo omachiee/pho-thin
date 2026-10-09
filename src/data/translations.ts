@@ -70,7 +70,7 @@ export const translations = {
       craftTitle: 'Nghệ thuật chế biến',
       relatedTitle: 'Món cùng loại bạn có thể thích',
       btnReserveThis: 'Đặt bàn thưởng thức ngay',
-      reservationNote: 'Nhà hàng nhận đặt chỗ giữ bàn, không bán online.',
+      reservationNote: 'Đặt bàn hoặc đặt món nhận tại cơ sở, thanh toán khi nhận.',
     },
     about: {
       newspaperName: 'NHẬT BÁO HÀ NỘI XƯA VÀ NAY',
@@ -257,7 +257,7 @@ export const translations = {
       craftTitle: 'Preparation Artistry',
       relatedTitle: 'You may also like',
       btnReserveThis: 'Book a Table for this Dish',
-      reservationNote: 'We accept dine-in table reservations only, no delivery app orders.',
+      reservationNote: 'Reserve a table or order for branch pickup. Pay when collecting your food.',
     },
     about: {
       newspaperName: 'HANOI GAZETTE CHRONICLES',
@@ -444,7 +444,7 @@ export const translations = {
       craftTitle: '古法烹饪工艺',
       relatedTitle: '相关推荐',
       btnReserveThis: '订座品尝此菜品',
-      reservationNote: '本店仅提供店内就餐预订，不设外卖配送。',
+      reservationNote: '可预订餐桌或在线点餐到店自取，取餐时付款。',
     },
     about: {
       newspaperName: '河内旧闻与今朝公报',
@@ -631,7 +631,7 @@ export const translations = {
       craftTitle: '조리 예술',
       relatedTitle: '함께 즐기기 좋은 메뉴',
       btnReserveThis: '이 메뉴로 테이블 예약하기',
-      reservationNote: '매장 내 식사 예약만 가능하며 배달 주문은 지원하지 않습니다.',
+      reservationNote: '테이블 예약 또는 매장 픽업 주문이 가능합니다. 수령 시 결제합니다.',
     },
     about: {
       newspaperName: '하노이 가제트 헤리티지',

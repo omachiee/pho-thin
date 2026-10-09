@@ -12,6 +12,7 @@ interface DishDetailModalProps {
   onNavigate: (view: PageView) => void;
   onReserveWithDish: (dish: Dish) => void;
   onSelectDish: (dish: Dish) => void;
+  onAddToCart: (dish: Dish) => void;
 }
 
 export const DishDetailModal: React.FC<DishDetailModalProps> = ({
@@ -22,6 +23,7 @@ export const DishDetailModal: React.FC<DishDetailModalProps> = ({
   onNavigate,
   onReserveWithDish,
   onSelectDish,
+  onAddToCart,
 }) => {
   if (!isOpen || !dish) return null;
 
@@ -123,6 +125,13 @@ export const DishDetailModal: React.FC<DishDetailModalProps> = ({
                 <span>{t.reservationNote}</span>
               </div>
 
+              <button
+                disabled={adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false}
+                onClick={() => { onAddToCart(dish); onClose(); }}
+                className="w-full rounded-lg bg-[#68131C] px-6 py-3.5 font-bold text-[#FFF8E9] disabled:opacity-50"
+              >
+                {adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false ? 'Tạm hết món' : 'Thêm vào giỏ hàng'}
+              </button>
               {/* Primary Action Buttons */}
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 {/* [Đặt bàn] - Primary Button */}

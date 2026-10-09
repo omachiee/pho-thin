@@ -28,15 +28,7 @@ export const HomeFeaturedDishes: React.FC<HomeFeaturedDishesProps> = ({
     return () => window.removeEventListener('phothin_store_updated', handleUpdate);
   }, []);
 
-  // 5 featured dishes with "Phở tái chín" in the middle:
-  // Order: [Phở sốt vang, Phở sườn cây đặc biệt, Phở tái chín (CENTER), Phở xào bò, Phở cuốn]
-  const orderedDishes = [
-    allDishes.find((d) => d.id === 'pho-sot-vang'),
-    allDishes.find((d) => d.id === 'pho-suon-cay'),
-    allDishes.find((d) => d.id === 'pho-tai-chin'), // CENTER SIGNATURE
-    allDishes.find((d) => d.id === 'pho-xao-bo'),
-    allDishes.find((d) => d.id === 'pho-cuon-ha-noi'),
-  ].filter((d): d is Dish => Boolean(d));
+  const orderedDishes = allDishes.filter((dish) => dish.isFeatured);
 
 
   return (
@@ -67,8 +59,8 @@ export const HomeFeaturedDishes: React.FC<HomeFeaturedDishesProps> = ({
 
         {/* 5 Dishes Showcase Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
-          {orderedDishes.map((dish, index) => {
-            const isCenterSignature = dish.isSignature; // Phở tái chín at center
+          {orderedDishes.map((dish) => {
+            const isCenterSignature = dish.isSignature;
             return (
               <div
                 key={dish.id}
@@ -89,7 +81,7 @@ export const HomeFeaturedDishes: React.FC<HomeFeaturedDishesProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#560F16]/60 via-transparent to-transparent opacity-60" />
 
-                  {/* SIGNATURE badge strictly on Phở tái chín per instructions */}
+                  {/* Signature badge follows the catalog flag. */}
                   {dish.isSignature && (
                     <div className="absolute top-3 left-3 bg-[#A52B25] text-[#F4E8D2] font-black text-[11px] px-2.5 py-1 rounded shadow-md flex items-center gap-1">
                       <Award className="w-3.5 h-3.5 text-[#D6A84F]" />

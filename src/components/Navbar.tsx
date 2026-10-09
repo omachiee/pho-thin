@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Language, PageView } from '../types';
 import { translations } from '../data/translations';
-import { Menu as MenuIcon, X, Globe, AlertCircle } from 'lucide-react';
+import { Menu as MenuIcon, X, Globe, AlertCircle, ShoppingBag } from 'lucide-react';
 import { PhoThinLogo } from './PhoThinLogo';
 
 interface NavbarProps {
@@ -10,6 +10,8 @@ interface NavbarProps {
   lang: Language;
   onLanguageChange: (lang: Language) => void;
   onTriggerWarning: () => void;
+  cartCount: number;
+  onOpenCart: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   lang,
   onLanguageChange,
   onTriggerWarning,
+  cartCount,
+  onOpenCart,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -90,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+        <nav className="hidden xl:flex items-center gap-1 xl:gap-2">
           {navItems.map((item) => {
             const isActive = currentView === item.view;
             return (
@@ -111,8 +115,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Zone 3: Language Selector & Booking CTA */}
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          {/* Language Selector Dropdown */}
-          <div className="relative">
+          {/* Mobile language choices remain in the drawer to keep the header compact. */}
+          <div className="relative hidden sm:block">
             <button
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
               className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-xs font-semibold bg-[#FFF8E9] text-[#68131C] border border-[#B88932]/40 rounded hover:border-[#B88932] transition-colors cursor-pointer shadow-xs"
@@ -146,6 +150,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
+          <button
+            onClick={onOpenCart}
+            className="flex items-center gap-1 rounded border border-[#B88932]/40 px-2 py-2 text-xs font-bold"
+            aria-label={`Giỏ hàng, ${cartCount} món`}
+          >
+            <ShoppingBag className="h-4 w-4" />
+            <span className="hidden sm:inline">Giỏ hàng</span><span>{cartCount}</span>
+          </button>
+
           {/* Primary Action Button: [Đặt bàn] - Synchronized to theme Đỏ Đô #68131C */}
           <button
             onClick={() => handleNavClick('reservation')}
@@ -157,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1 sm:p-2 text-[#68131C] hover:text-[#560F16] rounded focus:outline-none cursor-pointer"
+            className="xl:hidden min-h-11 min-w-11 p-2 text-[#68131C] hover:text-[#560F16] rounded focus:outline-none cursor-pointer"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-5.5 h-5.5 sm:w-6 sm:h-6" /> : <MenuIcon className="w-5.5 h-5.5 sm:w-6 sm:h-6" />}
@@ -167,7 +180,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#F4E8D2] border-b border-[#B88932]/30 px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top-3 duration-200 shadow-lg">
+        <div className="xl:hidden bg-[#F4E8D2] border-b border-[#B88932]/30 px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top-3 duration-200 shadow-lg">
           {navItems.map((item) => (
             <button
               key={item.view}

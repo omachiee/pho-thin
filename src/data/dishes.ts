@@ -13,7 +13,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 80000,
     formattedPrice: '80.000',
-    image: '/src/assets/images/regenerated_image_1790911567588.png',
+    image: '/assets/regenerated_image_1790911567588.png',
     isSignature: true,
     isFeatured: true,
     shortDescription: {
@@ -80,7 +80,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 85000,
     formattedPrice: '85.000',
-    image: '/src/assets/images/regenerated_image_1790953552668.jpg',
+    image: '/assets/regenerated_image_1790953552668.jpg',
     isSignature: false,
     isFeatured: true,
     shortDescription: {
@@ -113,7 +113,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 95000,
     formattedPrice: '95.000',
-    image: '/src/assets/images/hero_pho_thin_bo_ho_1790702796317.jpg',
+    image: '/assets/hero_pho_thin_bo_ho_1790702796317.jpg',
     isSignature: false,
     isFeatured: true,
     shortDescription: {
@@ -146,7 +146,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 85000,
     formattedPrice: '85.000',
-    image: '/src/assets/images/regenerated_image_1790967147601.jpg',
+    image: '/assets/regenerated_image_1790967147601.jpg',
     isSignature: false,
     isFeatured: true,
     shortDescription: {
@@ -179,7 +179,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 75000,
     formattedPrice: '75.000',
-    image: '/src/assets/images/regenerated_image_1790964450176.png',
+    image: '/assets/regenerated_image_1790964450176.png',
     isSignature: false,
     isFeatured: true,
     shortDescription: {
@@ -214,7 +214,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 80000,
     formattedPrice: '80.000',
-    image: '/src/assets/images/dish_pho_tai_chin_1790702822779.jpg',
+    image: '/assets/dish_pho_tai_chin_1790702822779.jpg',
     isSignature: false,
     shortDescription: {
       vi: 'Thịt bò tươi được xào lăn siêu tốc trên chảo gang ngập mỡ tỏi thơm phức rồi đổ ụp lên bát phở rợp hành hoa ngút ngàn.',
@@ -246,7 +246,7 @@ export const DISHES: Dish[] = [
     category: 'pho',
     price: 85000,
     formattedPrice: '85.000',
-    image: '/src/assets/images/regenerated_image_1790912135999.jpg',
+    image: '/assets/regenerated_image_1790912135999.jpg',
     isSignature: false,
     shortDescription: {
       vi: 'Miếng gầu bò hoa giòn sần sật, béo ngậy mà không ngán, quyện cùng nước hầm xương nguyên chất.',
@@ -280,7 +280,7 @@ export const DISHES: Dish[] = [
     category: 'drinks',
     price: 10000,
     formattedPrice: '10.000',
-    image: '/src/assets/images/regenerated_image_1790912137081.jpg',
+    image: '/assets/regenerated_image_1790912137081.jpg',
     shortDescription: {
       vi: 'Trà búp Thái Nguyên ủ thơm ngát, vị chát nhẹ hậu ngọt sâu, thức uống bất hủ cùng bát phở.',
       en: 'Fragrant Thai Nguyen highland tea, light crisp astringency with sweet lingering finish.',
@@ -311,7 +311,7 @@ export const DISHES: Dish[] = [
     category: 'drinks',
     price: 25000,
     formattedPrice: '25.000',
-    image: '/src/assets/images/regenerated_image_1790966972439.png',
+    image: '/assets/regenerated_image_1790966972439.png',
     shortDescription: {
       vi: 'Quả sấu Hà Nội ngâm đường phèn cùng gừng tươi cay nồng, chua dịu ngọt thanh giải nhiệt.',
       en: 'Native Hanoi dracontomelon fruits slow-cured with rock sugar and fresh ginger.',
@@ -342,7 +342,7 @@ export const DISHES: Dish[] = [
     category: 'drinks',
     price: 25000,
     formattedPrice: '25.000',
-    image: '/src/assets/images/regenerated_image_1790953402012.png',
+    image: '/assets/regenerated_image_1790953402012.png',
     shortDescription: {
       vi: 'Vị bia êm dịu, sảng khoái, thương hiệu huyền thoại của thủ đô Hà Nội từ năm 1890.',
       en: 'Crisp, refreshing legendary Hanoi lager brewed since 1890.',
@@ -373,7 +373,7 @@ export const DISHES: Dish[] = [
     category: 'drinks',
     price: 15000,
     formattedPrice: '15.000',
-    image: '/src/assets/images/regenerated_image_1790912140503.webp',
+    image: '/assets/regenerated_image_1790912140503.webp',
     shortDescription: {
       vi: 'Nước giải khát ướp lạnh sẵn sàng phục vụ quý khách.',
       en: 'Chilled soft drinks and pure natural mineral water.',
@@ -406,7 +406,7 @@ export const DISHES: Dish[] = [
     category: 'others',
     price: 15000,
     formattedPrice: '15.000',
-    image: '/src/assets/images/regenerated_image_1790912141053.webp',
+    image: '/assets/regenerated_image_1790912141053.webp',
     shortDescription: {
       vi: 'Quẩy nở phồng giòn tan rụm, nhúng ngập trong nước dùng phở bò nóng hổi ăn béo ngậy.',
       en: 'Airy, crispy crullers dunked into boiling broth to soak up every drop of beef essence.',
@@ -437,7 +437,7 @@ export const DISHES: Dish[] = [
     category: 'others',
     price: 15000,
     formattedPrice: '15.000',
-    image: '/src/assets/images/trung_chan_nuoc_beo.jpg',
+    image: '/assets/trung_chan_nuoc_beo.jpg',
     shortDescription: {
       vi: 'Trứng gà ta lòng đào béo ngậy chần trong muôi nước béo sôi, rắc hành hoa thơm lừng.',
       en: 'Organic soft-yolked egg poached in rich bubbling broth with tender scallions.',
@@ -468,7 +468,7 @@ export const DISHES: Dish[] = [
     category: 'others',
     price: 10000,
     formattedPrice: '10.000',
-    image: '/src/assets/images/regenerated_image_1790953403020.jpg',
+    image: '/assets/regenerated_image_1790953403020.jpg',
     shortDescription: {
       vi: 'Chiếc bánh mì chuột nướng giòn rụm, chấm cùng phở sốt vang hay nước phở bò béo ngậy.',
       en: 'Mini Vietnamese crispy baguette, heavenly when dipped in red wine beef stew broth.',

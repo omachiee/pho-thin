@@ -46,33 +46,10 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
 
   const t = translations[lang].news;
 
-  // Banner articles on Trang 1 (5 bài tiêu điểm & mới nhất)
-  const page1Articles = [
-    articles[0],
-    articles[3] || articles[1],
-    articles[1] || articles[0],
-    articles[2] || articles[0],
-    articles[4] || articles[0],
-  ].filter(Boolean);
-
-  // Banner articles on Trang 2 (4 bài cộng đồng & di sản)
-  const page2Articles = [
-    articles[5] || articles[0],
-    articles[6] || articles[1],
-    articles[7] || articles[2],
-    articles[8] || articles[3],
-  ].filter(Boolean);
-
-
+  const page1Articles = articles.slice(0, 5);
+  const page2Articles = articles.slice(5);
   const currentBoardArticles = currentPage === 1 ? page1Articles : page2Articles;
-
-  // LOGIC HIỂN THỊ KHÔNG LẶP:
-  // Khi đang ở Trang 1 (Banner hiển thị 5 bài mới nhất) -> Danh mục bên dưới hiển thị 4 bài Di sản & Cộng đồng tiếp theo
-  // Khi đang ở Trang 2 (Banner hiển thị 4 bài cộng đồng) -> Danh mục bên dưới hiển thị 5 bài Tiêu điểm & Hợp tác
-  // Như vậy trên cùng một trang, mỗi bài viết chỉ xuất hiện ĐÚNG 1 LẦN, hoàn toàn không bị trùng lặp!
-  const catalogArticles = currentPage === 1 
-    ? page2Articles 
-    : page1Articles;
+  const catalogArticles = currentPage === 1 ? page2Articles : page1Articles;
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href);
@@ -302,7 +279,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                       : 'text-[#68131C] hover:bg-[#FFF8E9] hover:text-[#560F16] border border-transparent'
                   }`}
                 >
-                  <span>Trang 1 • 5 Bài Mới Nhất</span>
+                  <span>Trang 1 • {page1Articles.length} Bài Mới Nhất</span>
                 </button>
                 <button
                   onClick={() => setCurrentPage(2)}
@@ -312,7 +289,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                       : 'text-[#68131C] hover:bg-[#FFF8E9] hover:text-[#560F16] border border-transparent'
                   }`}
                 >
-                  <span>Trang 2 • 4 Bài Cộng Đồng</span>
+                  <span>Trang 2 • {page2Articles.length} Bài Viết Khác</span>
                 </button>
               </div>
             </div>
@@ -359,6 +336,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                     : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch max-w-5xl mx-auto'
                 }
               >
+                {currentBoardArticles.length === 0 && <p className="text-sm">Chưa có bài viết trong mục này.</p>}
                 {currentBoardArticles.map((article) => (
                   <div
                     key={article.id}
@@ -454,9 +432,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-3 border-b border-[#B88932]/30">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#68131C]">
-                    {currentPage === 1 
-                      ? 'Danh Mục Bài Viết Di Sản & Đời Sống (4 Bài)' 
-                      : 'Danh Mục Bài Viết Tiêu Điểm & Hợp Tác (5 Bài)'}
+                    {currentPage === 1 ? 'Danh Mục Bài Viết Khác' : 'Danh Mục Bài Viết Mới Nhất'} ({catalogArticles.length} Bài)
                   </h3>
                   <p className="text-xs text-[#65452F] mt-0.5">
                     {currentPage === 1 
@@ -538,7 +514,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                     : 'bg-[#F4E8D2] text-[#68131C] border border-[#B88932]/40 hover:bg-[#68131C] hover:text-[#F4E8D2] shadow-sm'
                 }`}
               >
-                ← Trang 1 (5 Bài Mới Nhất)
+                ← Trang 1 ({page1Articles.length} Bài Mới Nhất)
               </button>
               <button
                 onClick={() => {
@@ -551,7 +527,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({
                     : 'bg-[#F4E8D2] text-[#68131C] border border-[#B88932]/40 hover:bg-[#68131C] hover:text-[#F4E8D2] shadow-sm'
                 }`}
               >
-                Trang 2 (4 Bài Cộng Đồng) →
+                Trang 2 ({page2Articles.length} Bài Viết Khác) →
               </button>
             </div>
           </div>

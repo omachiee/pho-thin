@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+.next/
+*.tsbuildinfo
+.playwright-mcp/
+pho-thin-next-*.png

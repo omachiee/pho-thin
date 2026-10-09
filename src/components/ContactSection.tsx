@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Language, PageView } from '../types';
-import { BRANCHES } from '../data/branches';
 import { translations } from '../data/translations';
 import { adminStore } from '../services/adminStore';
 import { 
@@ -49,23 +48,33 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const t = translations[lang].contact;
 
 
-  const handleApplySubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleApplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!applicantName || !applicantPhone) return;
-    setApplicantSubmitted(true);
-    adminStore.addInquiry({
-      type: 'recruitment',
-      fullName: applicantName,
-      phone: applicantPhone,
-      position: appliedPosition || 'Nhân viên',
-      message: `Ứng tuyển vị trí ${appliedPosition || 'Nhân viên'} qua website.`,
-    });
-    setTimeout(() => {
-      setApplicantSubmitted(false);
-      setShowApplyModal(false);
-      setApplicantName('');
-      setApplicantPhone('');
-    }, 2500);
+    if (isSubmitting) return;
+    const phone = applicantPhone.replace(/[\s.()\-]/g, '');
+    if (!applicantName.trim() || !/^(?:0|\+?84)[35789]\d{8}$/.test(phone)) {
+      setSubmitError('Vui lòng nhập họ tên và số điện thoại Việt Nam hợp lệ.');
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      await adminStore.addInquiry({
+        type: 'recruitment',
+        fullName: applicantName.trim(),
+        phone,
+        position: appliedPosition || 'Nhân viên',
+        message: `Ứng tuyển vị trí ${appliedPosition || 'Nhân viên'} qua website.`,
+      });
+      setApplicantSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Không thể gửi thông tin. Vui lòng thử lại.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -280,6 +289,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <button
                       onClick={() => {
                         setAppliedPosition(pos.title);
+                        setApplicantSubmitted(false);
+                        setSubmitError('');
+                        setApplicantName('');
+                        setApplicantPhone('');
                         setShowApplyModal(true);
                       }}
                       className="px-4 py-2 bg-[#68131C] hover:bg-[#560F16] text-[#F4E8D2] text-xs font-bold uppercase tracking-wider rounded-lg border border-[#B88932]/40 transition-colors cursor-pointer shadow-sm"
@@ -331,7 +344,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div className="text-center py-6 space-y-2">
                   <CheckCircle className="w-10 h-10 text-emerald-700 mx-auto" />
                   <p className="text-sm font-bold text-[#68131C]">Đã gửi thông tin ứng tuyển thành công!</p>
-                  <p className="text-xs text-[#65452F]">Quán sẽ liên hệ bạn qua điện thoại trong 24 giờ tới.</p>
+                  <p className="text-xs text-[#65452F]">Thông tin đã được tiếp nhận. Bộ phận nhân sự sẽ liên hệ khi phù hợp.</p>
+                  <button type="button" onClick={() => setShowApplyModal(false)} className="px-4 py-2.5 bg-[#F4E8D2] border border-[#B88932]/40 rounded-lg text-xs">Đóng</button>
                 </div>
               ) : (
                 <form onSubmit={handleApplySubmit} className="space-y-4">
@@ -359,15 +373,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     />
                   </div>
 
+                  {submitError && <p role="alert" className="text-xs text-[#A52B25]">{submitError}</p>}
                   <div className="flex gap-2 pt-2">
                     <button
                       type="submit"
+                      disabled={isSubmitting}
                       className="flex-1 py-2.5 bg-[#68131C] text-[#F4E8D2] font-bold text-xs uppercase tracking-wider rounded-lg hover:bg-[#560F16] border border-[#B88932]/40 cursor-pointer shadow-sm"
                     >
-                      Gửi ứng tuyển
+                      {isSubmitting ? 'Đang gửi...' : 'Gửi ứng tuyển'}
                     </button>
                     <button
                       type="button"
+                      disabled={isSubmitting}
                       onClick={() => setShowApplyModal(false)}
                       className="px-4 py-2.5 bg-[#F4E8D2] border border-[#B88932]/40 text-[#68131C] text-xs rounded-lg hover:bg-[#B88932]/20 cursor-pointer"
                     >

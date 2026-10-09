@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Language, PageView, Dish, Article } from './types';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Language, PageView, Dish, Article, CartItem } from './types';
+import { CheckoutSection } from './components/CheckoutSection';
 import { Navbar } from './components/Navbar';
 import { LoadingScreen } from './components/LoadingScreen';
 import { FakeMapWarningModal } from './components/FakeMapWarningModal';
@@ -21,8 +22,10 @@ import { adminStore } from './services/adminStore';
 import { ShieldCheck } from 'lucide-react';
 
 export default function App() {
-  // Step 0: Loading screen with steaming pho bowl
+  // Wait for the first data attempt, with a short welcome and a bounded fallback.
   const [isLoading, setIsLoading] = useState(true);
+  const [isDataReady, setIsDataReady] = useState(false);
+  const finishLoading = useCallback(() => setIsLoading(false), []);
 
   // Active view page ('home' | 'about' | 'menu' | 'reservation' | 'news' | 'partners' | 'contact')
   const [currentView, setCurrentView] = useState<PageView>('home');
@@ -48,7 +51,25 @@ export default function App() {
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isAdminViewActive, setIsAdminViewActive] = useState(false);
 
-  const handleOpenAdminPortal = () => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [backendError, setBackendError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const refresh = () => {
+      setBackendError(adminStore.getError());
+      setIsAdminLoggedIn(adminStore.isAuthenticated());
+      if (!adminStore.isAuthenticated()) setIsAdminViewActive(false);
+    };
+    window.addEventListener('phothin_store_updated', refresh);
+    void adminStore.initialize().then(() => {
+      refresh();
+      setIsDataReady(true);
+    });
+    return () => window.removeEventListener('phothin_store_updated', refresh);
+  }, []);
+
+  const handleOpenAdminPortal = async () => {
+    await adminStore.initialize();
     if (adminStore.isAuthenticated()) {
       setIsAdminLoggedIn(true);
       setIsAdminViewActive(true);
@@ -102,8 +123,9 @@ export default function App() {
     setIsAdminViewActive(true);
   };
 
-  const handleAdminLogout = () => {
-    adminStore.logout();
+  const handleAdminLogout = async () => {
+    try { await adminStore.logout(); }
+    catch { window.alert('Chưa kết thúc được phiên trên server. Vui lòng kiểm tra mạng và đăng xuất lại.'); }
     setIsAdminLoggedIn(false);
     setIsAdminViewActive(false);
     // Remove secret hash from URL
@@ -123,6 +145,20 @@ export default function App() {
 
   const handleSelectDish = (dish: Dish) => {
     setSelectedDish(dish);
+  };
+
+  const handleAddToCart = (dish: Dish) => {
+    if (adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false) return;
+    setCart((items) => {
+      const existing = items.find((item) => item.dishId === dish.id);
+      return existing
+        ? items.map((item) => item.dishId === dish.id ? { ...item, quantity: Math.min(50, item.quantity + 1) } : item)
+        : [...items, { dishId: dish.id, quantity: 1 }];
+    });
+    handleNavigate('checkout');
+  };
+  const handleQuantity = (id: string, quantity: number) => {
+    setCart((items) => quantity === 0 ? items.filter((item) => item.dishId !== id) : items.map((item) => item.dishId === id ? { ...item, quantity } : item));
   };
 
   const handleReserveWithDish = (dish: Dish) => {
@@ -146,6 +182,10 @@ export default function App() {
     }
   };
 
+  if (isLoading) {
+    return <LoadingScreen lang={lang} ready={isDataReady} onFinish={finishLoading} />;
+  }
+
   if (isAdminViewActive) {
     return (
       <AdminDashboard
@@ -157,11 +197,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FFF8E9] text-[#68131C] flex flex-col font-sans selection:bg-[#D6A84F] selection:text-[#68131C]">
-      {/* Step 0: Initial Steam Loading Screen */}
-      {isLoading && (
-        <LoadingScreen lang={lang} onFinish={() => setIsLoading(false)} />
-      )}
-
       {/* Persistent Top Navigation Bar (Zone 1: Brand Wordmark, Zone 2: Links, Zone 3: Language & [Đặt bàn]) */}
       <Navbar
         currentView={currentView}
@@ -169,10 +204,22 @@ export default function App() {
         lang={lang}
         onLanguageChange={setLang}
         onTriggerWarning={() => setIsWarningOpen(true)}
+        cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
+        onOpenCart={() => handleNavigate('checkout')}
       />
+      {(backendError || !isDataReady) && (
+        <p role="status" className="border-b border-[#B88932]/40 bg-[#F4E8D2] px-4 py-3 text-center text-sm">
+          {backendError
+            ? `${backendError} Nội dung hiện tại chỉ để xem giao diện; biểu mẫu và đơn món chưa được lưu khi backend chưa kết nối.`
+            : 'Thực đơn đang tải trong nền. Nội dung đang hiển thị là bản xem trước.'}
+        </p>
+      )}
 
       {/* Main Content Area based on current view */}
       <main className="flex-1">
+        {currentView === 'checkout' && (
+          <CheckoutSection cart={cart} lang={lang} onQuantity={handleQuantity} onBack={() => handleNavigate('menu')} onComplete={() => setCart([])} />
+        )}
         {/* VIEW 1: HOME PAGE */}
         {currentView === 'home' && (
           <>
@@ -278,6 +325,7 @@ export default function App() {
         onNavigate={handleNavigate}
         onReserveWithDish={handleReserveWithDish}
         onSelectDish={handleSelectDish}
+        onAddToCart={handleAddToCart}
       />
 
       {/* Modal View: Cảnh Báo Mạo Danh & Bản Đồ Giả Mạo Phở Thìn Bờ Hồ */}

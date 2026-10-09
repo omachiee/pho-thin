@@ -61,7 +61,7 @@ export const HomeFeaturedNews: React.FC<HomeFeaturedNewsProps> = ({
               className="inline-flex items-center gap-2 px-4 py-2 bg-[#F4E8D2] hover:bg-[#68131C] text-[#68131C] hover:text-[#F4E8D2] border border-[#B88932]/40 rounded-lg text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#D6A84F]" />
-              <span>{lang === 'vi' ? 'Xem tất cả bảng tin (9 bài)' : 'View all news (9 articles)'}</span>
+              <span>{lang === 'vi' ? `Xem tất cả bảng tin (${articles.length} bài)` : `View all news (${articles.length} articles)`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

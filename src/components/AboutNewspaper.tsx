@@ -91,7 +91,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
                 <div className="relative bg-[#DFCCA8] border border-[#543D2B]/50 p-2 rounded-xs shadow-md max-w-[210px] transform rotate-1">
                   <div className="aspect-[407/600] overflow-hidden bg-[#24150B] border border-[#543D2B]/30">
                     <img
-                      src="/src/assets/images/regenerated_image_1790964215309.webp"
+                      src="/assets/regenerated_image_1790964215309.webp"
                       alt="Ông chủ Phở Thìn Bờ Hồ"
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
@@ -119,7 +119,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
             <div className="my-4">
               <div className="border-2 border-[#543D2B] p-1 bg-[#DECEB0] shadow-xs">
                 <img
-                  src="/src/assets/images/regenerated_image_1790911897093.png"
+                  src="/assets/regenerated_image_1790911897093.png"
                   alt="Gánh phở rong bên Tháp Rùa – Hà Nội xưa"
                   className="w-full h-auto object-cover max-h-[360px] filter contrast-105"
                   referrerPolicy="no-referrer"
@@ -172,7 +172,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
                   <div className="border border-[#543D2B]/40 p-1 bg-[#DECEB0] my-2">
                     <div className="aspect-16/10 overflow-hidden bg-[#24150B]">
                       <img
-                        src="/src/assets/images/regenerated_image_1790964450176.png"
+                        src="/assets/regenerated_image_1790964450176.png"
                         alt="Phở cuốn bò tươi Hà Nội"
                         className="w-full h-full object-cover filter contrast-105"
                         referrerPolicy="no-referrer"
@@ -210,7 +210,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
                   <div className="border border-[#543D2B]/40 p-2 bg-[#DECEB0] flex items-center gap-3 rounded-xs">
                     <div className="w-12 h-12 shrink-0 border border-[#543D2B]/30 bg-[#FFF8E9] p-0.5 overflow-hidden">
                       <img
-                        src="/src/assets/images/regenerated_image_1790956870285.jpg"
+                        src="/assets/regenerated_image_1790956870285.jpg"
                         alt="Gia vị bí truyền"
                         className="w-full h-full object-contain"
                         referrerPolicy="no-referrer"
@@ -257,7 +257,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
                     <div className="border border-[#543D2B]/40 p-1 bg-[#DECEB0] flex flex-col justify-between">
                       <div className="aspect-4/3 overflow-hidden bg-[#24150B]">
                         <img
-                          src="/src/assets/images/vintage_hanoi_pho_stall_1790702834461.jpg"
+                          src="/assets/vintage_hanoi_pho_stall_1790702834461.jpg"
                           alt="Hà Nội những năm 1950 - 1960"
                           className="w-full h-full object-cover filter contrast-105"
                           referrerPolicy="no-referrer"
@@ -306,7 +306,7 @@ export const AboutNewspaper: React.FC<AboutNewspaperProps> = ({
                   <div className="border border-[#543D2B]/40 p-1 bg-[#DECEB0] my-2">
                     <div className="aspect-16/9 overflow-hidden bg-[#24150B]">
                       <img
-                        src="/src/assets/images/regenerated_image_1790911567588.png"
+                        src="/assets/regenerated_image_1790911567588.png"
                         alt="Bát phở bò truyền thống Phở Thìn Bờ Hồ"
                         className="w-full h-full object-cover filter contrast-105"
                         referrerPolicy="no-referrer"

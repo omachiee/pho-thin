@@ -2,10 +2,10 @@ import React from 'react';
 import { Language, PageView } from '../types';
 import { translations } from '../data/translations';
 import { ArrowRight, BookOpen, Compass, Flame, Sparkles } from 'lucide-react';
-import vintageStallImg from '../assets/images/regenerated_image_1790911897093.png';
-import heroPhoImg from '../assets/images/regenerated_image_1790911567588.png';
-import dishPhoImg from '../assets/images/regenerated_image_1790911567588.png';
-import bowlPhoImg from '../assets/images/loading_pho_bowl_1790702809711.jpg';
+const vintageStallImg = '/assets/regenerated_image_1790911897093.png';
+const heroPhoImg = '/assets/regenerated_image_1790911567588.png';
+const dishPhoImg = heroPhoImg;
+const bowlPhoImg = '/assets/loading_pho_bowl_1790702809711.jpg';
 
 interface HomeIntroCardsProps {
   lang: Language;

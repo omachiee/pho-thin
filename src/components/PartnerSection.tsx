@@ -66,7 +66,7 @@ export const PartnerSection: React.FC<PartnerSectionProps> = ({
             <div className="md:col-span-5 relative rounded-xl overflow-hidden border-2 border-[#D6A84F] shadow-lg flex flex-col justify-end min-h-[290px] sm:min-h-[310px] md:min-h-[330px] bg-[#FFF8E9] group">
               {/* Background Illustration / Photo */}
               <img
-                src="/src/assets/images/regenerated_image_1790962400224.webp"
+                src="/assets/regenerated_image_1790962400224.webp"
                 alt="Lễ công bố hợp tác và ra mắt Phở Story - Phở Thìn Bờ Hồ & Chin-su Masan"
                 className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"

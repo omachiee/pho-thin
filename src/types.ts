@@ -1,6 +1,6 @@
 export type Language = 'vi' | 'en' | 'zh' | 'ko';
 
-export type PageView = 'home' | 'about' | 'menu' | 'dish-detail' | 'reservation' | 'news' | 'partners' | 'contact';
+export type PageView = 'home' | 'about' | 'menu' | 'dish-detail' | 'reservation' | 'news' | 'partners' | 'contact' | 'checkout';
 
 export interface Dish {
   id: string;
@@ -118,3 +118,54 @@ export interface ReservationRecord {
   data: ReservationFormData;
   branch: Branch;
 }
+
+export type ReservationStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+export interface AdminReservation extends ReservationFormData {
+  id: string;
+  branchName: string;
+  status: ReservationStatus;
+  createdAt: string;
+  isWalkIn?: boolean;
+}
+export interface AdminDish extends Dish { isAvailable: boolean }
+export interface AdminInquiry {
+  id: string;
+  type: 'inquiry' | 'recruitment';
+  fullName: string;
+  phone: string;
+  email?: string;
+  position?: string;
+  message?: string;
+  status: 'new' | 'contacted' | 'resolved';
+  createdAt: string;
+}
+export interface CartItem { dishId: string; quantity: number }
+export interface OrderInput {
+  fullName: string;
+  phone: string;
+  branchId: string;
+  pickupAt: string;
+  notes: string;
+  items: CartItem[];
+}
+export interface OrderItem {
+  dishId: string;
+  name: string;
+  unitPrice: number;
+  quantity: number;
+}
+export type OrderStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+export interface Order extends Omit<OrderInput, 'items'> {
+  id: string;
+  branchName: string;
+  total: number;
+  status: OrderStatus;
+  createdAt: string;
+  items: OrderItem[];
+}
+export interface Catalog {
+  dishes: AdminDish[];
+  branches: Branch[];
+  articles: Article[];
+}
+export interface AdminSession { email: string }
