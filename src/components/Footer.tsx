@@ -11,7 +11,6 @@ interface FooterProps {
   onNavigate: (view: PageView) => void;
   onHeadingClick: () => void;
   onReserveBranch: (branchId: string) => void;
-  onTriggerAdmin?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -19,7 +18,6 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigate,
   onHeadingClick,
   onReserveBranch,
-  onTriggerAdmin,
 }) => {
   const t = translations[lang].footer;
   const [branchesList, setBranchesList] = useState(() => adminStore.getBranches());
@@ -32,45 +30,6 @@ export const Footer: React.FC<FooterProps> = ({
     return () => window.removeEventListener('phothin_store_updated', handleUpdate);
   }, []);
 
-  // Discrete multi-tap and long-press handlers for stealth Admin entry
-  const [logoTapCount, setLogoTapCount] = React.useState(0);
-
-  const logoTimerRef = React.useRef<any>(null);
-  const longPressTimerRef = React.useRef<any>(null);
-
-  const handleLogoTap = () => {
-    setLogoTapCount((prev) => {
-      const next = prev + 1;
-      if (next >= 3) {
-        if (onTriggerAdmin) onTriggerAdmin();
-        else window.dispatchEvent(new CustomEvent('open_admin_portal'));
-        return 0;
-      }
-      return next;
-    });
-
-    if (logoTimerRef.current) clearTimeout(logoTimerRef.current);
-    logoTimerRef.current = setTimeout(() => {
-      setLogoTapCount(0);
-    }, 900);
-  };
-
-  const handleSecretTouchStart = () => {
-    longPressTimerRef.current = setTimeout(() => {
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(60);
-      }
-      if (onTriggerAdmin) onTriggerAdmin();
-      else window.dispatchEvent(new CustomEvent('open_admin_portal'));
-    }, 2200);
-  };
-
-  const handleSecretTouchEnd = () => {
-    if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current);
-    }
-  };
-
   return (
     <footer className="bg-[#560F16] text-[#F4E8D2] border-t-2 border-[#B88932]/50 pt-14 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,11 +38,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Brand & Heritage (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div 
-                onClick={handleLogoTap} 
-                className="cursor-pointer select-none active:scale-95 transition-transform"
-                title=""
-              >
+              <div>
                 <PhoThinLogo size={52} withRing />
               </div>
               <div>
@@ -232,13 +187,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Legal & Notice Bottom */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#F4E8D2]/70 text-center sm:text-left">
           <p>{t.legalNotice}</p>
-          <span 
-            className="font-mono text-[#D6A84F] select-none cursor-default active:text-amber-300 transition-colors"
-            onTouchStart={handleSecretTouchStart}
-            onTouchEnd={handleSecretTouchEnd}
-            onMouseDown={handleSecretTouchStart}
-            onMouseUp={handleSecretTouchEnd}
-          >
+          <span className="font-mono text-[#D6A84F]">
             Hanoi Heritage • Est. 1955
           </span>
         </div>

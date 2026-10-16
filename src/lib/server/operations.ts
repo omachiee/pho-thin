@@ -95,3 +95,153 @@ export async function adminDelete(client: SupabaseClient, name: Resource, record
   if (!data) throw new ApiError(400, 'Không tìm thấy dữ liệu.');
   return { id: validatedId };
 }
+
+function phoneVariants(phone: string): string[] {
+  const clean = phone.replace(/[\s().-]/g, '');
+  const set = new Set<string>([clean]);
+  if (clean.startsWith('0')) {
+    set.add('+84' + clean.slice(1));
+    set.add('84' + clean.slice(1));
+  } else if (clean.startsWith('+84')) {
+    set.add('0' + clean.slice(3));
+    set.add(clean.slice(1));
+  } else if (clean.startsWith('84')) {
+    set.add('0' + clean.slice(2));
+    set.add('+' + clean);
+  }
+  return Array.from(set);
+}
+
+function matchesPhone(storedPhone: string, testPhone: string): boolean {
+  const s = storedPhone.replace(/[\s().-]/g, '');
+  const t = testPhone.replace(/[\s().-]/g, '');
+  if (s === t) return true;
+  const sNorm = s.startsWith('+84') ? '0' + s.slice(3) : (s.startsWith('84') ? '0' + s.slice(2) : s);
+  const tNorm = t.startsWith('+84') ? '0' + t.slice(3) : (t.startsWith('84') ? '0' + t.slice(2) : t);
+  return sNorm === tNorm;
+}
+
+export async function customerOrders(client: SupabaseClient, rawPhone: string) {
+  const clean = validate.phone(rawPhone);
+  const variants = phoneVariants(clean);
+  const [ordersRes, reservationsRes] = await Promise.all([
+    client.from('orders').select('*,order_items(*)').in('phone', variants).order('created_at', { ascending: false }),
+    client.from('reservations').select('*').in('phone', variants).order('created_at', { ascending: false }),
+  ]);
+  databaseError(ordersRes.error, 'Không thể tải danh sách đơn đặt món.');
+  databaseError(reservationsRes.error, 'Không thể tải danh sách đơn đặt bàn.');
+  return {
+    orders: (ordersRes.data || []).map(mapOrder),
+    reservations: (reservationsRes.data || []).map(mapReservation),
+  };
+}
+
+export async function cancelCustomerOrder(client: SupabaseClient, orderId: string, rawPhone: string) {
+  const validatedId = validate.id(orderId);
+  const clean = validate.phone(rawPhone);
+  const { data: existing, error } = await client.from('orders').select('*').eq('id', validatedId).maybeSingle();
+  databaseError(error);
+  if (!existing) throw new ApiError(400, 'Không tìm thấy đơn hàng.');
+  if (!matchesPhone(existing.phone, clean)) throw new ApiError(403, 'Bạn không có quyền thao tác với đơn này.');
+  if (existing.status !== 'pending') throw new ApiError(400, 'Chỉ có thể hủy đơn đang chờ xác nhận.');
+
+  const { data: updated, error: updateError } = await client
+    .from('orders')
+    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .eq('id', validatedId)
+    .select('*,order_items(*)')
+    .maybeSingle();
+  databaseError(updateError);
+  if (!updated) throw new ApiError(503, 'Không thể cập nhật trạng thái đơn.');
+  return mapOrder(updated);
+}
+
+export async function updateCustomerOrder(
+  client: SupabaseClient,
+  orderId: string,
+  rawPhone: string,
+  rawItems: unknown,
+  notes?: string
+) {
+  const validatedId = validate.id(orderId);
+  const clean = validate.phone(rawPhone);
+
+  if (!Array.isArray(rawItems) || rawItems.length === 0 || rawItems.length > 20) {
+    throw new ApiError(400, 'Danh sách món ăn phải từ 1 đến 20 món.');
+  }
+  const seenDishIds = new Set<string>();
+  const items = rawItems.map((item: any) => {
+    const dishId = validate.text(item?.dishId, 'Mã món ăn', 100);
+    const quantity = validate.integer(Number(item?.quantity), 'Số lượng món', 1, 50);
+    if (seenDishIds.has(dishId)) throw new ApiError(400, 'Không được chọn trùng món ăn.');
+    seenDishIds.add(dishId);
+    return { dishId, quantity };
+  });
+
+  const { data: existing, error } = await client.from('orders').select('*').eq('id', validatedId).maybeSingle();
+  databaseError(error);
+  if (!existing) throw new ApiError(400, 'Không tìm thấy đơn hàng.');
+  if (!matchesPhone(existing.phone, clean)) throw new ApiError(403, 'Bạn không có quyền thao tác với đơn này.');
+  if (existing.status !== 'pending') throw new ApiError(400, 'Chỉ có thể chỉnh sửa đơn đang chờ xác nhận.');
+
+  const dishIds = items.map((i) => i.dishId);
+  const { data: dishes, error: dishesError } = await client.from('dishes').select('*').in('id', dishIds);
+  databaseError(dishesError);
+  const dishesMap = new Map((dishes || []).map((d) => [d.id, d]));
+
+  let total = 0;
+  const orderItemsToInsert = items.map((item) => {
+    const d = dishesMap.get(item.dishId);
+    if (!d || d.is_available === false) {
+      throw new ApiError(400, `Món "${d?.name?.vi || item.dishId}" tạm hết hoặc không khả dụng.`);
+    }
+    const unitPrice = Number(d.price);
+    total += unitPrice * item.quantity;
+    return {
+      order_id: validatedId,
+      dish_id: item.dishId,
+      name: d.name.vi,
+      unit_price: unitPrice,
+      quantity: item.quantity,
+    };
+  });
+
+  const { error: delError } = await client.from('order_items').delete().eq('order_id', validatedId);
+  databaseError(delError);
+
+  const { error: insError } = await client.from('order_items').insert(orderItemsToInsert);
+  databaseError(insError);
+
+  const newNotes = typeof notes === 'string' ? validate.text(notes, 'Ghi chú', 2000, true) : existing.notes;
+  const { data: updatedOrder, error: upError } = await client
+    .from('orders')
+    .update({ total, notes: newNotes, updated_at: new Date().toISOString() })
+    .eq('id', validatedId)
+    .select('*,order_items(*)')
+    .maybeSingle();
+  databaseError(upError);
+  if (!updatedOrder) throw new ApiError(503, 'Không thể cập nhật đơn hàng.');
+
+  return mapOrder(updatedOrder);
+}
+
+export async function cancelCustomerReservation(client: SupabaseClient, resId: string, rawPhone: string) {
+  const validatedId = validate.id(resId);
+  const clean = validate.phone(rawPhone);
+  const { data: existing, error } = await client.from('reservations').select('*').eq('id', validatedId).maybeSingle();
+  databaseError(error);
+  if (!existing) throw new ApiError(400, 'Không tìm thấy yêu cầu đặt bàn.');
+  if (!matchesPhone(existing.phone, clean)) throw new ApiError(403, 'Bạn không có quyền thao tác với yêu cầu này.');
+  if (existing.status !== 'pending') throw new ApiError(400, 'Chỉ có thể hủy yêu cầu đặt bàn đang chờ xác nhận.');
+
+  const { data: updated, error: updateError } = await client
+    .from('reservations')
+    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .eq('id', validatedId)
+    .select('*')
+    .maybeSingle();
+  databaseError(updateError);
+  if (!updated) throw new ApiError(503, 'Không thể cập nhật trạng thái đặt bàn.');
+  return mapReservation(updated);
+}
+

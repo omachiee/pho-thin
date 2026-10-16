@@ -162,6 +162,102 @@ class AdminStoreService {
   async updateOrderStatus(id: string, status: OrderStatus) {
     await this.save<Order>('orders', 'PATCH', { id, status }); return true;
   }
+  private customerToken: string | null = null;
+
+  setCustomerToken(token: string | null) {
+    this.customerToken = token;
+    if (typeof window !== 'undefined') {
+      if (token) localStorage.setItem('pho_thin_customer_token', token);
+      else localStorage.removeItem('pho_thin_customer_token');
+    }
+  }
+
+  getCustomerToken(): string | null {
+    if (!this.customerToken && typeof window !== 'undefined') {
+      this.customerToken = localStorage.getItem('pho_thin_customer_token');
+    }
+    return this.customerToken;
+  }
+
+  private customerAuthHeaders(): HeadersInit {
+    const token = this.getCustomerToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  async requestCustomerOtp(phone: string): Promise<{ success: boolean; message: string; cooldownSeconds: number; devOtp?: string }> {
+    return apiRequest<{ success: boolean; message: string; cooldownSeconds: number; devOtp?: string }>(
+      '/api/customer/otp/send',
+      { method: 'POST', body: JSON.stringify({ phone }) }
+    );
+  }
+
+  async verifyCustomerOtp(phone: string, otp: string): Promise<{ success: boolean; phone: string; token: string; expiresAt: number }> {
+    const res = await apiRequest<{ success: boolean; phone: string; token: string; expiresAt: number }>(
+      '/api/customer/otp/verify',
+      { method: 'POST', body: JSON.stringify({ phone, otp }) }
+    );
+    this.setCustomerToken(res.token);
+    return res;
+  }
+
+  async getCustomerSession(): Promise<{ authenticated: boolean; phone?: string; expiresAt?: number }> {
+    try {
+      return await apiRequest<{ authenticated: boolean; phone?: string; expiresAt?: number }>(
+        '/api/customer/session',
+        { headers: this.customerAuthHeaders() }
+      );
+    } catch {
+      return { authenticated: false };
+    }
+  }
+
+  async customerLogout(): Promise<void> {
+    try {
+      await apiRequest('/api/customer/session', {
+        method: 'DELETE',
+        headers: this.customerAuthHeaders(),
+      });
+    } catch {
+      /* ignore */
+    }
+    this.setCustomerToken(null);
+  }
+
+  async fetchCustomerOrders(_phone?: string): Promise<{ orders: Order[]; reservations: AdminReservation[] }> {
+    return apiRequest<{ orders: Order[]; reservations: AdminReservation[] }>(
+      '/api/customer/orders',
+      { headers: this.customerAuthHeaders() }
+    );
+  }
+
+  async cancelCustomerOrder(orderId: string, _phone?: string): Promise<Order> {
+    return apiRequest<Order>('/api/customer/orders', {
+      method: 'PATCH',
+      headers: this.customerAuthHeaders(),
+      body: JSON.stringify({ action: 'cancel', type: 'order', id: orderId }),
+    });
+  }
+
+  async updateCustomerOrder(
+    orderId: string,
+    _phone?: string,
+    items?: { dishId: string; quantity: number }[],
+    notes?: string
+  ): Promise<Order> {
+    return apiRequest<Order>('/api/customer/orders', {
+      method: 'PATCH',
+      headers: this.customerAuthHeaders(),
+      body: JSON.stringify({ action: 'update', id: orderId, items, notes }),
+    });
+  }
+
+  async cancelCustomerReservation(reservationId: string, _phone?: string): Promise<AdminReservation> {
+    return apiRequest<AdminReservation>('/api/customer/orders', {
+      method: 'PATCH',
+      headers: this.customerAuthHeaders(),
+      body: JSON.stringify({ action: 'cancel', type: 'reservation', id: reservationId }),
+    });
+  }
 }
 
 export const adminStore = new AdminStoreService();

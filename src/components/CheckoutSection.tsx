@@ -8,11 +8,12 @@ interface Props {
   onQuantity: (id: string, quantity: number) => void;
   onBack: () => void;
   onComplete: () => void;
+  onViewMyOrders?: () => void;
 }
 const money = (amount: number) => amount.toLocaleString('vi-VN') + ' đ';
 const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
 
-export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete }: Props) {
+export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, onViewMyOrders }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [order, setOrder] = useState<Order | null>(null);
@@ -34,16 +35,24 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete }: 
     if (!Number.isFinite(pickupAt.getTime()) || pickupAt.getTime() <= Date.now()) {
       setError('Vui lòng chọn thời gian nhận trong tương lai.'); return;
     }
+    const phone = String(form.get('phone') || '').trim();
+    const diningOption = String(form.get('diningOption') || '');
+    const userNotes = String(form.get('notes') || '').trim();
+    const notes = diningOption ? `[${diningOption}] ${userNotes}`.trim() : userNotes;
+
     setBusy(true);
     try {
       const result = await adminStore.createOrder({
         fullName: String(form.get('fullName') || '').trim(),
-        phone: String(form.get('phone') || '').trim(),
+        phone,
         branchId: String(form.get('branchId') || ''),
         pickupAt: pickupAt.toISOString(),
-        notes: String(form.get('notes') || '').trim(),
+        notes,
         items: cart,
       });
+      try {
+        localStorage.setItem('pho_thin_customer_phone', phone);
+      } catch {}
       setOrder(result);
       onComplete();
     } catch (error) {
@@ -61,14 +70,28 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete }: 
         <ul className="space-y-2">{order.items.map((item) => <li key={item.dishId}>{item.quantity} × {item.name} — {money(item.unitPrice * item.quantity)}</li>)}</ul>
         <p className="text-xl font-bold">Tổng tiền: {money(order.total)}</p>
         <p>Thanh toán khi nhận món. Chưa thu tiền trực tuyến.</p>
-        <button onClick={onBack} className="rounded bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9]">Về thực đơn</button>
+        <div className="flex flex-wrap gap-3 pt-2">
+          {onViewMyOrders && (
+            <button
+              onClick={onViewMyOrders}
+              className="rounded bg-[#D6A84F] hover:bg-[#B88932] px-6 py-3 font-bold text-[#560F16] transition-colors cursor-pointer shadow-sm"
+            >
+              Xem đơn đặt bàn của tôi
+            </button>
+          )}
+          <button onClick={onBack} className="rounded bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9] cursor-pointer">
+            Về thực đơn
+          </button>
+        </div>
       </div>
     </section>
   );
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-10 sm:py-16">
-      <button onClick={onBack} className="mb-5 underline">Quay lại thực đơn</button>
+      <button onClick={onBack} className="mb-5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#68131C] hover:text-[#560F16] underline cursor-pointer">
+        ← Quay lại giỏ hàng
+      </button>
       <h1 className="mb-8 text-3xl font-bold">Đặt món nhận tại quán</h1>
       {!cart.length ? <p>Giỏ hàng trống. Chọn món trong thực đơn để bắt đầu.</p> : (
         <div className="grid gap-8 lg:grid-cols-2">
@@ -95,6 +118,16 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete }: 
               <label className="block space-y-1"><span>Họ tên</span><input name="fullName" autoComplete="name" required maxLength={100} className={inputClass} /></label>
               <label className="block space-y-1"><span>Số điện thoại</span><input name="phone" type="tel" autoComplete="tel" required maxLength={20} className={inputClass} /></label>
               <label className="block space-y-1"><span>Cơ sở nhận</span><select name="branchId" required className={inputClass}>{branches.map((branch) => <option key={branch.id} value={branch.id}>{branch.name[lang]} — {branch.address}</option>)}</select></label>
+              <label className="block space-y-1">
+                <span>Hình thức dùng món / Bàn</span>
+                <select name="diningOption" className={inputClass}>
+                  <option value="Dùng tại quán (Bàn 1-2 người)">Dùng tại quán (Bàn 1 - 2 người)</option>
+                  <option value="Dùng tại quán (Bàn 3-4 người)">Dùng tại quán (Bàn 3 - 4 người)</option>
+                  <option value="Dùng tại quán (Bàn 5-8 người)">Dùng tại quán (Bàn 5 - 8 người)</option>
+                  <option value="Dùng tại quán (Bàn lớn trên 8 người)">Dùng tại quán (Bàn lớn trên 8 người)</option>
+                  <option value="Mang về (Nhận tại quầy)">Mang về (Nhận tại quầy)</option>
+                </select>
+              </label>
               <div className="grid grid-cols-2 gap-3">
                 <label className="block space-y-1"><span>Ngày nhận</span><input name="date" type="date" required min={today()} defaultValue={today()} className={inputClass} /></label>
                 <label className="block space-y-1"><span>Giờ nhận (Việt Nam)</span><input name="time" type="time" required className={inputClass} /></label>

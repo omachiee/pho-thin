@@ -1,6 +1,6 @@
 export type Language = 'vi' | 'en' | 'zh' | 'ko';
 
-export type PageView = 'home' | 'about' | 'menu' | 'dish-detail' | 'reservation' | 'news' | 'partners' | 'contact' | 'checkout';
+export type PageView = 'home' | 'about' | 'menu' | 'dish-detail' | 'reservation' | 'news' | 'partners' | 'contact' | 'checkout' | 'my-orders';
 
 export interface Dish {
   id: string;

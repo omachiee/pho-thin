@@ -12,6 +12,7 @@ import { AboutNewspaper } from './components/AboutNewspaper';
 import { MenuSection } from './components/MenuSection';
 import { DishDetailModal } from './components/DishDetailModal';
 import { ReservationSection } from './components/ReservationSection';
+import { MyOrdersSection } from './components/MyOrdersSection';
 import { NewsSection } from './components/NewsSection';
 import { PartnerSection } from './components/PartnerSection';
 import { ContactSection } from './components/ContactSection';
@@ -19,7 +20,6 @@ import { Footer } from './components/Footer';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { adminStore } from './services/adminStore';
-import { ShieldCheck } from 'lucide-react';
 
 export default function App() {
   // Wait for the first data attempt, with a short welcome and a bounded fallback.
@@ -78,7 +78,7 @@ export default function App() {
     }
   };
 
-  // Stealth Trigger Listeners (URL Hash, Key combo, Custom events)
+  // Stealth Trigger Listeners (URL Hash, Key combo)
   useEffect(() => {
     const checkHashAndQuery = () => {
       const hash = window.location.hash.toLowerCase();
@@ -106,14 +106,9 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
 
-    // Custom stealth event from footer
-    const handleCustomOpen = () => handleOpenAdminPortal();
-    window.addEventListener('open_admin_portal', handleCustomOpen);
-
     return () => {
       window.removeEventListener('hashchange', checkHashAndQuery);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('open_admin_portal', handleCustomOpen);
     };
   }, []);
 
@@ -155,7 +150,7 @@ export default function App() {
         ? items.map((item) => item.dishId === dish.id ? { ...item, quantity: Math.min(50, item.quantity + 1) } : item)
         : [...items, { dishId: dish.id, quantity: 1 }];
     });
-    handleNavigate('checkout');
+    handleNavigate('my-orders');
   };
   const handleQuantity = (id: string, quantity: number) => {
     setCart((items) => quantity === 0 ? items.filter((item) => item.dishId !== id) : items.map((item) => item.dishId === id ? { ...item, quantity } : item));
@@ -190,13 +185,18 @@ export default function App() {
     return (
       <AdminDashboard
         onLogout={handleAdminLogout}
-        onExitToWebsite={() => setIsAdminViewActive(false)}
+        onExitToWebsite={() => {
+          setIsAdminViewActive(false);
+          if (window.location.hash.toLowerCase().includes('admin') || window.location.hash.toLowerCase().includes('quantri')) {
+            history.replaceState(null, document.title, window.location.pathname + window.location.search);
+          }
+        }}
       />
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF8E9] text-[#68131C] flex flex-col font-sans selection:bg-[#D6A84F] selection:text-[#68131C]">
+    <div className="min-h-screen bg-[#FFF8E9] text-[#68131C] flex flex-col font-sans selection:bg-[#D6A84F] selection:text-[#68131C] w-full max-w-full overflow-x-hidden">
       {/* Persistent Top Navigation Bar (Zone 1: Brand Wordmark, Zone 2: Links, Zone 3: Language & [Đặt bàn]) */}
       <Navbar
         currentView={currentView}
@@ -205,7 +205,7 @@ export default function App() {
         onLanguageChange={setLang}
         onTriggerWarning={() => setIsWarningOpen(true)}
         cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
-        onOpenCart={() => handleNavigate('checkout')}
+        onOpenCart={() => handleNavigate('my-orders')}
       />
       {(backendError || !isDataReady) && (
         <p role="status" className="border-b border-[#B88932]/40 bg-[#F4E8D2] px-4 py-3 text-center text-sm">
@@ -216,9 +216,29 @@ export default function App() {
       )}
 
       {/* Main Content Area based on current view */}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full">
         {currentView === 'checkout' && (
-          <CheckoutSection cart={cart} lang={lang} onQuantity={handleQuantity} onBack={() => handleNavigate('menu')} onComplete={() => setCart([])} />
+          <CheckoutSection
+            cart={cart}
+            lang={lang}
+            onQuantity={handleQuantity}
+            onBack={() => handleNavigate('my-orders')}
+            onComplete={() => setCart([])}
+            onViewMyOrders={() => handleNavigate('my-orders')}
+          />
+        )}
+        {currentView === 'my-orders' && (
+          <MyOrdersSection
+            lang={lang}
+            onNavigate={handleNavigate}
+            cart={cart}
+            onQuantity={handleQuantity}
+            onClearCart={() => setCart([])}
+            onOpenDishDetail={(dishId) => {
+              const dish = adminStore.getDishes().find((d) => d.id === dishId);
+              if (dish) setSelectedDish(dish);
+            }}
+          />
         )}
         {/* VIEW 1: HOME PAGE */}
         {currentView === 'home' && (
@@ -339,21 +359,14 @@ export default function App() {
       {/* Stealth Admin Gateway Login Modal */}
       <AdminLoginModal
         isOpen={isAdminModalOpen}
-        onClose={() => setIsAdminModalOpen(false)}
+        onClose={() => {
+          setIsAdminModalOpen(false);
+          if (window.location.hash.toLowerCase().includes('admin') || window.location.hash.toLowerCase().includes('quantri')) {
+            history.replaceState(null, document.title, window.location.pathname + window.location.search);
+          }
+        }}
         onLoginSuccess={handleLoginSuccess}
       />
-
-      {/* Discreet floating return button ONLY visible to currently logged-in Admin */}
-      {isAdminLoggedIn && !isAdminViewActive && (
-        <button
-          onClick={() => setIsAdminViewActive(true)}
-          className="fixed bottom-4 left-4 z-40 bg-[#560F16] border border-[#D6A84F] text-[#D6A84F] px-3 py-1.5 rounded-full text-xs font-mono shadow-2xl flex items-center gap-1.5 hover:bg-[#68131C] cursor-pointer animate-in fade-in"
-          title="Quay lại Bảng Quản Trị"
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-[#D6A84F]" />
-          <span>Bảng Quản Trị</span>
-        </button>
-      )}
 
       {/* Footer: 4 cơ sở, kênh kết nối, thông tin pháp lý, bản quyền */}
       <Footer
@@ -361,7 +374,6 @@ export default function App() {
         onNavigate={handleNavigate}
         onHeadingClick={handleHeadingClick}
         onReserveBranch={handleReserveBranch}
-        onTriggerAdmin={handleOpenAdminPortal}
       />
     </div>
   );

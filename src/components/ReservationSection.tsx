@@ -23,7 +23,8 @@ import {
   QrCode,
   FileText,
   ShieldCheck,
-  Award
+  Award,
+  ClipboardList
 } from 'lucide-react';
 import { PhoThinLogo } from './PhoThinLogo';
 
@@ -193,6 +194,9 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
         data: { ...submittedData, ...createdRecord },
         branch: selectedBranch,
       });
+      try {
+        localStorage.setItem('pho_thin_customer_phone', submittedData.phone);
+      } catch {}
       window.scrollTo({ top: 100, behavior: 'smooth' });
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Không thể gửi yêu cầu đặt bàn. Vui lòng thử lại.');
@@ -529,7 +533,19 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                 <span>{t.btnPrint}</span>
               </button>
 
-              {/* button:nth-of-type(3) - Back to Home */}
+              {/* button:nth-of-type(3) - My Orders */}
+              <button
+                onClick={() => {
+                  setConfirmation(null);
+                  onNavigate('my-orders');
+                }}
+                className="w-full sm:w-auto px-5 py-3 bg-[#D6A84F] hover:bg-[#B88932] text-[#560F16] hover:text-[#FFF8E9] border border-[#B88932]/40 font-bold text-xs uppercase tracking-wider rounded-lg shadow-md flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              >
+                <ClipboardList className="w-4 h-4" />
+                <span>Xem đơn đặt của tôi</span>
+              </button>
+
+              {/* button:nth-of-type(4) - Back to Home */}
               <button
                 onClick={() => {
                   setConfirmation(null);

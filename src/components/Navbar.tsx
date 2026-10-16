@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Language, PageView } from '../types';
 import { translations } from '../data/translations';
-import { Menu as MenuIcon, X, Globe, AlertCircle, ShoppingBag } from 'lucide-react';
+import { Menu as MenuIcon, X, Globe, AlertCircle, ShoppingBag, ClipboardList } from 'lucide-react';
 import { PhoThinLogo } from './PhoThinLogo';
 
 interface NavbarProps {
@@ -10,8 +10,8 @@ interface NavbarProps {
   lang: Language;
   onLanguageChange: (lang: Language) => void;
   onTriggerWarning: () => void;
-  cartCount: number;
-  onOpenCart: () => void;
+  cartCount?: number;
+  onOpenCart?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   lang,
   onLanguageChange,
   onTriggerWarning,
-  cartCount,
+  cartCount = 0,
   onOpenCart,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { view: 'home', label: t.home },
     { view: 'about', label: t.about },
     { view: 'menu', label: t.menu },
+    { view: 'my-orders', label: (t as any).myOrders || 'Đơn của tôi' },
     { view: 'news', label: t.news },
     { view: 'partners', label: t.partners },
     { view: 'contact', label: t.contact },
@@ -94,32 +95,57 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: Navigation Links */}
-        <nav className="hidden xl:flex items-center gap-1 xl:gap-2">
+        <nav className="hidden xl:flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2">
           {navItems.map((item) => {
             const isActive = currentView === item.view;
+            const isMyOrders = item.view === 'my-orders';
             return (
               <button
                 key={item.view}
                 onClick={() => handleNavClick(item.view)}
-                className={`px-3.5 py-1.5 text-xs xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+                className={`px-2 xl:px-2.5 2xl:px-3 py-1.5 text-xs xl:text-[13px] 2xl:text-sm font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                   isActive
                     ? 'text-[#F4E8D2] bg-[#68131C] shadow-sm'
                     : 'text-[#68131C] hover:text-[#560F16] hover:bg-[#FFF8E9]/70'
                 }`}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {isMyOrders && cartCount !== undefined && cartCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-[#A52B25] text-[#FFF8E9] text-[10px] font-bold leading-none shadow-xs">
+                    {cartCount}
+                  </span>
+                )}
               </button>
             );
           })}
         </nav>
 
         {/* Zone 3: Language Selector & Booking CTA */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          {/* Mobile language choices remain in the drawer to keep the header compact. */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Mobile/Tablet shortcut for My Orders & Cart */}
+          <button
+            onClick={() => handleNavClick('my-orders')}
+            className={`relative xl:hidden flex items-center justify-center p-2 rounded-md border border-[#B88932]/40 transition-colors cursor-pointer ${
+              currentView === 'my-orders'
+                ? 'bg-[#68131C] text-[#F4E8D2] shadow-xs'
+                : 'bg-[#FFF8E9] text-[#68131C] hover:bg-[#F4E8D2]'
+            }`}
+            aria-label={`Đơn của tôi & Giỏ hàng, ${cartCount || 0} món`}
+            title="Đơn của tôi & Giỏ hàng"
+          >
+            <ClipboardList className="w-4 h-4" />
+            {Boolean(cartCount && cartCount > 0) && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#A52B25] px-1 text-[10px] font-bold text-[#FFF8E9] shadow-xs">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
+          {/* Language selector dropdown */}
           <div className="relative hidden sm:block">
             <button
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-xs font-semibold bg-[#FFF8E9] text-[#68131C] border border-[#B88932]/40 rounded hover:border-[#B88932] transition-colors cursor-pointer shadow-xs"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 text-xs font-semibold bg-[#FFF8E9] text-[#68131C] border border-[#B88932]/40 rounded hover:border-[#B88932] transition-colors cursor-pointer shadow-xs"
               aria-label="Select Language"
             >
               <Globe className="w-3.5 h-3.5 text-[#68131C] shrink-0" />
@@ -150,19 +176,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          <button
-            onClick={onOpenCart}
-            className="flex items-center gap-1 rounded border border-[#B88932]/40 px-2 py-2 text-xs font-bold"
-            aria-label={`Giỏ hàng, ${cartCount} món`}
-          >
-            <ShoppingBag className="h-4 w-4" />
-            <span className="hidden sm:inline">Giỏ hàng</span><span>{cartCount}</span>
-          </button>
-
           {/* Primary Action Button: [Đặt bàn] - Synchronized to theme Đỏ Đô #68131C */}
           <button
             onClick={() => handleNavClick('reservation')}
-            className="px-2.5 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-bold bg-[#68131C] text-[#F4E8D2] hover:bg-[#560F16] border border-[#B88932]/40 rounded-md shadow-sm hover:shadow transition-all transform active:scale-95 whitespace-nowrap cursor-pointer"
+            className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold bg-[#68131C] text-[#F4E8D2] hover:bg-[#560F16] border border-[#B88932]/40 rounded-md shadow-sm hover:shadow transition-all transform active:scale-95 whitespace-nowrap cursor-pointer"
           >
             {t.reserve}
           </button>
@@ -170,7 +187,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden min-h-11 min-w-11 p-2 text-[#68131C] hover:text-[#560F16] rounded focus:outline-none cursor-pointer"
+            className="xl:hidden min-h-10 min-w-10 p-2 text-[#68131C] hover:text-[#560F16] rounded focus:outline-none cursor-pointer"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-5.5 h-5.5 sm:w-6 sm:h-6" /> : <MenuIcon className="w-5.5 h-5.5 sm:w-6 sm:h-6" />}
@@ -185,13 +202,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={item.view}
               onClick={() => handleNavClick(item.view)}
-              className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+              className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer flex items-center justify-between ${
                 currentView === item.view
                   ? 'bg-[#68131C] text-[#F4E8D2] font-bold'
                   : 'text-[#68131C] hover:bg-[#FFF8E9] hover:text-[#560F16]'
               }`}
             >
-              {item.label}
+              <span>{item.label}</span>
+              {item.view === 'my-orders' && cartCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-[#A52B25] text-[#FFF8E9] text-xs font-bold">
+                  {cartCount} món
+                </span>
+              )}
             </button>
           ))}
           <div className="pt-2 border-t border-[#B88932]/30 flex items-center justify-between text-xs text-[#65452F]">

@@ -125,28 +125,30 @@ export const DishDetailModal: React.FC<DishDetailModalProps> = ({
                 <span>{t.reservationNote}</span>
               </div>
 
+              {/* [Đặt bàn] - Primary Button */}
               <button
-                disabled={adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false}
-                onClick={() => { onAddToCart(dish); onClose(); }}
-                className="w-full rounded-lg bg-[#68131C] px-6 py-3.5 font-bold text-[#FFF8E9] disabled:opacity-50"
+                onClick={handleReserve}
+                className="w-full px-6 py-3.5 bg-[#D6A84F] text-[#560F16] font-bold text-xs sm:text-sm uppercase tracking-wider rounded-lg shadow-md hover:bg-[#B88932] hover:text-[#FFF8E9] transform active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                {adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false ? 'Tạm hết món' : 'Thêm vào giỏ hàng'}
+                <CalendarCheck className="w-4 h-4 text-[#560F16]" />
+                <span>{t.btnReserveThis}</span>
               </button>
-              {/* Primary Action Buttons */}
+
+              {/* Action Buttons */}
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
-                {/* [Đặt bàn] - Primary Button */}
+                {/* [Thêm vào giỏ hàng] */}
                 <button
-                  onClick={handleReserve}
-                  className="flex-1 px-6 py-3.5 bg-[#D6A84F] text-[#560F16] font-bold text-xs sm:text-sm uppercase tracking-wider rounded-lg shadow-md hover:bg-[#B88932] hover:text-[#FFF8E9] transform active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false}
+                  onClick={() => { onAddToCart(dish); onClose(); }}
+                  className="flex-1 rounded-lg bg-[#68131C] hover:bg-[#560F16] px-6 py-3.5 font-bold text-xs sm:text-sm text-[#FFF8E9] disabled:opacity-50 cursor-pointer transition-colors flex items-center justify-center text-center"
                 >
-                  <CalendarCheck className="w-4 h-4 text-[#560F16]" />
-                  <span>{t.btnReserveThis}</span>
+                  {adminStore.getDishes().find((item) => item.id === dish.id)?.isAvailable === false ? 'Tạm hết món' : 'Thêm vào giỏ hàng'}
                 </button>
 
                 {/* [Quay lại thực đơn] */}
                 <button
                   onClick={handleBackToMenu}
-                  className="px-5 py-3.5 bg-[#F4E8D2] hover:bg-[#B88932]/20 border border-[#B88932]/40 text-[#68131C] font-semibold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="px-5 py-3.5 bg-[#F4E8D2] hover:bg-[#B88932]/20 border border-[#B88932]/40 text-[#68131C] font-semibold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>{t.backToMenu}</span>

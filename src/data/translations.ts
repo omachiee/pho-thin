@@ -13,6 +13,7 @@ export const translations = {
       partners: 'Đối tác',
       contact: 'Liên hệ',
       reserve: 'Đặt bàn',
+      myOrders: 'Đơn của tôi',
       branches: '4 Cơ sở',
     },
     hero: {
@@ -200,6 +201,7 @@ export const translations = {
       partners: 'Partners',
       contact: 'Contact',
       reserve: 'Reserve',
+      myOrders: 'My Bookings',
       branches: '4 Branches',
     },
     hero: {
@@ -387,6 +389,7 @@ export const translations = {
       partners: '合作伙伴',
       contact: '联系我们',
       reserve: '在线订座',
+      myOrders: '我的订单',
       branches: '4家官方分店',
     },
     hero: {
@@ -574,6 +577,7 @@ export const translations = {
       partners: '파트너',
       contact: '연락처',
       reserve: '예약하기',
+      myOrders: '내 예약/주문',
       branches: '4개 공식 지점',
     },
     hero: {

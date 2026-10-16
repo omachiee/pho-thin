@@ -1,7 +1,7 @@
 import type { AdminDish, AdminInquiry, Article, Branch, OrderInput, ReservationFormData } from '../../types';
 
 export class ApiError extends Error {
-  constructor(public status: 400 | 401 | 403 | 503, message: string) { super(message); }
+  constructor(public status: 400 | 401 | 403 | 429 | 503, message: string) { super(message); }
 }
 const invalid = (message: string): never => { throw new ApiError(400, message); };
 export function object(value: unknown, fields: readonly string[]): Record<string, unknown> {
