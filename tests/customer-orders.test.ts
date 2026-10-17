@@ -9,6 +9,7 @@ import {
 import { requestOtp, verifyOtp } from '../src/lib/server/otp';
 import { signCustomerToken, verifyCustomerToken, requireCustomerSession } from '../src/lib/server/customerAuth';
 import { ApiError } from '../src/lib/server/validation';
+import { GET as getCustomerOrders } from '../src/app/api/customer/orders/route';
 
 function mockSupabaseClient(handlers: {
   orders?: any[];
@@ -321,5 +322,12 @@ describe('Customer Orders Operations & IDOR Protection', () => {
 
     assert.equal(updated.total, 105000);
     assert.equal(updated.notes, 'Ăn ít hành');
+  });
+
+  it('GET /api/customer/orders rejects missing phone with 400', async () => {
+    const res = await getCustomerOrders(new Request('http://localhost:3000/api/customer/orders'));
+    assert.equal(res.status, 400);
+    const json: any = await res.json();
+    assert.match(json.error, /Vui lòng cung cấp số điện thoại/);
   });
 });

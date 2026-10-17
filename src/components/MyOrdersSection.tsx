@@ -84,11 +84,6 @@ export const MyOrdersSection: React.FC<Props> = ({
 }) => {
   const [phoneInput, setPhoneInput] = useState('');
   const [currentPhone, setCurrentPhone] = useState<string>('');
-  const [authStep, setAuthStep] = useState<'phone' | 'otp' | 'authenticated'>('phone');
-  const [otpInput, setOtpInput] = useState('');
-  const [otpCooldown, setOtpCooldown] = useState(0);
-  const [otpBusy, setOtpBusy] = useState(false);
-  const [devOtpNotice, setDevOtpNotice] = useState('');
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [reservations, setReservations] = useState<AdminReservation[]>([]);
@@ -117,53 +112,30 @@ export const MyOrdersSection: React.FC<Props> = ({
 
   const dishes = adminStore.getDishes().filter((d) => d.isAvailable !== false);
 
-  // Cooldown countdown timer
-  useEffect(() => {
-    if (otpCooldown <= 0) return;
-    const timer = setInterval(() => {
-      setOtpCooldown((prev) => Math.max(0, prev - 1));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [otpCooldown]);
-
-  // Check verified customer session on mount
+  // Auto-load orders on mount if customer phone is already saved in localStorage
   useEffect(() => {
     let cancelled = false;
-    async function checkSession() {
-      try {
-        const session = await adminStore.getCustomerSession();
-        if (!cancelled && session.authenticated && session.phone) {
-          setCurrentPhone(session.phone);
-          setPhoneInput(session.phone);
-          setAuthStep('authenticated');
-          void loadOrders();
-          return;
-        }
-      } catch {
-        /* not authenticated */
-      }
-      if (!cancelled) {
-        try {
-          const savedPhone = localStorage.getItem('pho_thin_customer_phone');
-          if (savedPhone) setPhoneInput(savedPhone);
-        } catch {
-          /* ignore */
-        }
-      }
+    const savedPhone = adminStore.getCustomerPhone();
+    if (savedPhone && !cancelled) {
+      setPhoneInput(savedPhone);
+      setCurrentPhone(savedPhone);
+      void loadOrders(savedPhone);
     }
-    void checkSession();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  async function loadOrders() {
+  async function loadOrders(phoneToLoad?: string) {
+    const targetPhone = (phoneToLoad || currentPhone || phoneInput).trim();
+    if (!targetPhone) return;
     setLoading(true);
     setError('');
     try {
-      const data = await adminStore.fetchCustomerOrders();
+      const data = await adminStore.fetchCustomerOrders(targetPhone);
       setOrders(data.orders);
       setReservations(data.reservations);
+      setCurrentPhone(targetPhone);
       // Auto-switch tab if one has items and the other doesn't (preserve cart tab if currently viewing)
       if (data.orders.length === 0 && data.reservations.length > 0) {
         setActiveTab((prev) => (prev === 'cart' ? 'cart' : 'reservations'));
@@ -172,89 +144,28 @@ export const MyOrdersSection: React.FC<Props> = ({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Không thể tải lịch sử đơn.');
-      if (err instanceof Error && (err.message.includes('401') || err.message.includes('xác thực'))) {
-        setAuthStep('phone');
-      }
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleSendOtp(e?: React.FormEvent) {
-    if (e) e.preventDefault();
+  function handleLookup(e: React.FormEvent) {
+    e.preventDefault();
     const clean = phoneInput.trim();
     if (!clean) {
-      setError('Vui lòng nhập số điện thoại để nhận mã xác thực OTP.');
+      setError('Vui lòng nhập số điện thoại để tra cứu đơn hàng.');
       return;
     }
-    setOtpBusy(true);
-    setError('');
-    setDevOtpNotice('');
-    try {
-      const res = await adminStore.requestCustomerOtp(clean);
-      setAuthStep('otp');
-      setOtpCooldown(res.cooldownSeconds || 60);
-      setSuccessMsg(res.message || 'Mã OTP đã được gửi đến số điện thoại của bạn.');
-      if (res.devOtp) {
-        setDevOtpNotice(`(Môi trường phát triển: Mã OTP là ${res.devOtp})`);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Không thể gửi mã OTP.');
-    } finally {
-      setOtpBusy(false);
-      setTimeout(() => setSuccessMsg(''), 5000);
-    }
+    void loadOrders(clean);
   }
 
-  async function handleVerifyOtp(e: React.FormEvent) {
-    e.preventDefault();
-    const cleanOtp = otpInput.trim();
-    if (!cleanOtp) {
-      setError('Vui lòng nhập mã OTP gồm 6 chữ số.');
-      return;
-    }
-    setOtpBusy(true);
-    setError('');
-    try {
-      const res = await adminStore.verifyCustomerOtp(phoneInput.trim(), cleanOtp);
-      setAuthStep('authenticated');
-      setCurrentPhone(res.phone);
-      try {
-        localStorage.setItem('pho_thin_customer_phone', res.phone);
-      } catch {
-        /* ignore */
-      }
-      setSuccessMsg('Xác thực OTP thành công! Đang tải danh sách đơn của bạn...');
-      setOtpInput('');
-      void loadOrders();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Xác thực OTP không thành công.');
-    } finally {
-      setOtpBusy(false);
-      setTimeout(() => setSuccessMsg(''), 4000);
-    }
-  }
-
-  async function handleLogout() {
-    setLoading(true);
-    try {
-      await adminStore.customerLogout();
-    } catch {
-      /* ignore */
-    } finally {
-      setCurrentPhone('');
-      setOrders([]);
-      setReservations([]);
-      setAuthStep('phone');
-      setOtpInput('');
-      setLoading(false);
-      try {
-        localStorage.removeItem('pho_thin_customer_phone');
-        localStorage.removeItem('pho_thin_customer_token');
-      } catch {
-        /* ignore */
-      }
-    }
+  function handleLogout() {
+    setCurrentPhone('');
+    setOrders([]);
+    setReservations([]);
+    adminStore.setCustomerPhone(null);
+    setSuccessMsg('Đã chuyển sang tra cứu số điện thoại khác.');
+    setTimeout(() => setSuccessMsg(''), 3000);
   }
 
   // Cancel order or reservation
@@ -660,36 +571,26 @@ export const MyOrdersSection: React.FC<Props> = ({
         {/* TAB 1 & 2: ORDERS OR RESERVATIONS (CẦN SỐ ĐIỆN THOẠI TRA CỨU) */}
         {activeTab !== 'cart' && (
           <div className="space-y-6">
-            {/* Step 1: Input Phone to request SMS OTP */}
-            {authStep === 'phone' && (
+            {/* Direct Phone Lookup Form when no phone is active */}
+            {!currentPhone && (
               <div className="bg-[#F4E8D2] border-2 border-[#B88932]/40 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4 animate-in fade-in">
                 <div className="flex items-center gap-3 text-[#68131C]">
                   <div className="w-10 h-10 rounded-full bg-[#68131C] text-[#D6A84F] flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-5 h-5" />
+                    <Search className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="font-serif font-bold text-lg sm:text-xl text-[#68131C]">
-                      Xác thực chủ sở hữu đơn hàng qua SMS OTP
+                      Tra cứu đơn đặt món & đặt bàn
                     </h3>
                     <p className="text-xs text-[#65452F]">
-                      Bảo vệ quyền riêng tư: Cần mã OTP gửi qua tin nhắn SMS để xem, chỉnh sửa hoặc hủy đơn.
+                      Nhập số điện thoại quý khách đã dùng khi đặt bàn hoặc đặt món để xem lịch sử và quản lý đơn.
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-[#FFF8E9] p-4 rounded-xl border border-[#B88932]/30 text-xs sm:text-sm text-[#65452F] space-y-1">
-                  <div className="flex items-center gap-2 text-[#68131C] font-bold">
-                    <Lock className="w-4 h-4 text-[#A52B25]" />
-                    <span>Quy trình bảo mật 2 lớp:</span>
-                  </div>
-                  <p>
-                    Nhập số điện thoại quý khách đã dùng khi đặt bàn hoặc đặt món. Hệ thống sẽ gửi mã xác thực OTP gồm 6 chữ số qua tin nhắn SMS để bảo đảm chỉ quý khách mới có quyền truy cập.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSendOtp} className="space-y-3 max-w-md">
+                <form onSubmit={handleLookup} className="space-y-3 max-w-md">
                   <label className="block text-xs font-bold text-[#68131C]">
-                    Số điện thoại đặt đơn của quý khách:
+                    Số điện thoại của quý khách:
                   </label>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <div className="relative flex-1">
@@ -705,129 +606,40 @@ export const MyOrdersSection: React.FC<Props> = ({
                     </div>
                     <button
                       type="submit"
-                      disabled={otpBusy || !phoneInput.trim()}
+                      disabled={loading || !phoneInput.trim()}
                       className="px-5 py-2.5 rounded-lg bg-[#68131C] text-[#FFF8E9] font-bold text-sm hover:bg-[#560F16] disabled:opacity-50 transition-colors cursor-pointer shadow-sm whitespace-nowrap flex items-center justify-center gap-2"
                     >
-                      {otpBusy ? (
+                      {loading ? (
                         <RefreshCw className="w-4 h-4 animate-spin text-[#D6A84F]" />
                       ) : (
-                        <ShieldCheck className="w-4 h-4 text-[#D6A84F]" />
+                        <Search className="w-4 h-4 text-[#D6A84F]" />
                       )}
-                      <span>Gửi mã OTP qua SMS</span>
+                      <span>Xem đơn hàng</span>
                     </button>
                   </div>
                 </form>
               </div>
             )}
 
-            {/* Step 2: Input 6-digit OTP */}
-            {authStep === 'otp' && (
-              <div className="bg-[#F4E8D2] border-2 border-[#B88932]/40 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4 animate-in fade-in">
-                <div className="flex items-center gap-3 text-[#68131C]">
-                  <div className="w-10 h-10 rounded-full bg-[#68131C] text-[#D6A84F] flex items-center justify-center shrink-0">
-                    <KeyRound className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-lg sm:text-xl text-[#68131C]">
-                      Nhập mã xác thực OTP
-                    </h3>
-                    <p className="text-xs text-[#65452F]">
-                      Mã OTP 6 chữ số đã được gửi qua SMS đến số điện thoại <strong>{phoneInput}</strong>.
-                    </p>
-                  </div>
-                </div>
-
-                {devOtpNotice && (
-                  <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-900 text-xs font-mono">
-                    {devOtpNotice}
-                  </div>
-                )}
-
-                <form onSubmit={handleVerifyOtp} className="space-y-4 max-w-md">
-                  <div>
-                    <label className="block text-xs font-bold text-[#68131C] mb-1">
-                      Mã xác thực OTP (6 chữ số):
-                    </label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={6}
-                      autoFocus
-                      required
-                      placeholder="• • • • • •"
-                      value={otpInput}
-                      onChange={(e) => setOtpInput(e.target.value.replace(/[^0-9]/g, ''))}
-                      className="w-full text-center tracking-[0.5em] font-mono font-bold text-2xl py-3 rounded-xl border-2 border-[#B88932]/60 bg-white text-[#68131C] focus:outline-none focus:ring-2 focus:ring-[#68131C]"
-                    />
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <button
-                      type="submit"
-                      disabled={otpBusy || otpInput.trim().length !== 6}
-                      className="flex-1 py-3 px-5 rounded-lg bg-[#68131C] text-[#FFF8E9] font-bold text-sm hover:bg-[#560F16] disabled:opacity-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-2"
-                    >
-                      {otpBusy ? (
-                        <RefreshCw className="w-4 h-4 animate-spin text-[#D6A84F]" />
-                      ) : (
-                        <CheckCircle2 className="w-4 h-4 text-[#D6A84F]" />
-                      )}
-                      <span>Xác nhận & Xem đơn</span>
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs pt-2 border-t border-[#B88932]/30">
-                    <button
-                      type="button"
-                      disabled={otpCooldown > 0 || otpBusy}
-                      onClick={() => handleSendOtp()}
-                      className="text-[#68131C] hover:text-[#A52B25] font-semibold disabled:text-[#65452F] disabled:opacity-60 cursor-pointer"
-                    >
-                      {otpCooldown > 0
-                        ? `Gửi lại mã sau ${otpCooldown}s`
-                        : 'Chưa nhận được? Gửi lại mã OTP'}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAuthStep('phone');
-                        setOtpInput('');
-                        setError('');
-                      }}
-                      className="text-[#65452F] hover:text-[#68131C] underline cursor-pointer"
-                    >
-                      Đổi số điện thoại khác
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* Step 3: Authenticated Customer Header & Controls */}
-            {authStep === 'authenticated' && currentPhone && (
+            {/* Customer Orders Header & Controls */}
+            {currentPhone && (
               <div className="space-y-4">
                 <div className="bg-[#F4E8D2] border border-[#B88932]/40 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-[#68131C] text-[#D6A84F] flex items-center justify-center font-bold">
-                      <ShieldCheck className="w-5 h-5 text-[#D6A84F]" />
+                      <Phone className="w-5 h-5 text-[#D6A84F]" />
                     </div>
                     <div>
-                      <div className="text-xs text-[#65452F] font-semibold">Khách hàng đã xác minh OTP:</div>
+                      <div className="text-xs text-[#65452F] font-semibold">Đang xem đơn theo số điện thoại:</div>
                       <div className="text-base sm:text-lg font-bold font-mono text-[#68131C] flex items-center gap-2">
                         <span>{currentPhone}</span>
-                        <span className="text-[11px] font-sans font-normal px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          <span>Đã bảo mật</span>
-                        </span>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => loadOrders()}
+                      onClick={() => loadOrders(currentPhone)}
                       disabled={loading}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FFF8E9] border border-[#B88932]/40 text-[#68131C] text-xs font-semibold hover:bg-[#FFF8E9]/70 cursor-pointer transition-colors"
                       title="Làm mới danh sách đơn"
@@ -838,10 +650,10 @@ export const MyOrdersSection: React.FC<Props> = ({
                     <button
                       onClick={handleLogout}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FFF8E9] border border-[#B88932]/40 text-[#65452F] hover:text-[#68131C] text-xs font-semibold cursor-pointer transition-colors"
-                      title="Đăng xuất / Đổi số khác"
+                      title="Đổi số điện thoại khác"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Đăng xuất</span>
+                      <span>Đổi số khác</span>
                     </button>
                   </div>
                 </div>

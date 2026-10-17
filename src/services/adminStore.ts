@@ -128,7 +128,7 @@ class AdminStoreService {
   }
   async addReservationFromClient(form: ReservationFormData, _branch: Branch): Promise<AdminReservation> {
     const record = await apiRequest<AdminReservation>('/api/reservations', { method: 'POST', body: JSON.stringify(form) });
-    // The public receipt is not added to a shared/private admin list.
+    if (form.phone) this.setCustomerPhone(form.phone);
     return record;
   }
   async createManualReservation(record: Omit<AdminReservation, 'id' | 'createdAt'>) {
@@ -157,12 +157,30 @@ class AdminStoreService {
     await this.save<AdminInquiry>('inquiries', 'PATCH', { id, status }); return true;
   }
   async createOrder(input: OrderInput) {
-    return apiRequest<Order>('/api/orders', { method: 'POST', body: JSON.stringify(input) });
+    const record = await apiRequest<Order>('/api/orders', { method: 'POST', body: JSON.stringify(input) });
+    if (input.phone) this.setCustomerPhone(input.phone);
+    return record;
   }
   async updateOrderStatus(id: string, status: OrderStatus) {
     await this.save<Order>('orders', 'PATCH', { id, status }); return true;
   }
   private customerToken: string | null = null;
+  private customerPhone: string | null = null;
+
+  setCustomerPhone(phone: string | null) {
+    this.customerPhone = phone;
+    if (typeof window !== 'undefined') {
+      if (phone) localStorage.setItem('pho_thin_customer_phone', phone);
+      else localStorage.removeItem('pho_thin_customer_phone');
+    }
+  }
+
+  getCustomerPhone(): string | null {
+    if (!this.customerPhone && typeof window !== 'undefined') {
+      this.customerPhone = localStorage.getItem('pho_thin_customer_phone');
+    }
+    return this.customerPhone;
+  }
 
   setCustomerToken(token: string | null) {
     this.customerToken = token;
@@ -197,6 +215,7 @@ class AdminStoreService {
       { method: 'POST', body: JSON.stringify({ phone, otp }) }
     );
     this.setCustomerToken(res.token);
+    this.setCustomerPhone(res.phone);
     return res;
   }
 
@@ -221,41 +240,48 @@ class AdminStoreService {
       /* ignore */
     }
     this.setCustomerToken(null);
+    this.setCustomerPhone(null);
   }
 
-  async fetchCustomerOrders(_phone?: string): Promise<{ orders: Order[]; reservations: AdminReservation[] }> {
+  async fetchCustomerOrders(phone?: string): Promise<{ orders: Order[]; reservations: AdminReservation[] }> {
+    const targetPhone = (phone || this.getCustomerPhone() || '').trim();
+    if (!targetPhone) return { orders: [], reservations: [] };
+    this.setCustomerPhone(targetPhone);
     return apiRequest<{ orders: Order[]; reservations: AdminReservation[] }>(
-      '/api/customer/orders',
+      `/api/customer/orders?phone=${encodeURIComponent(targetPhone)}`,
       { headers: this.customerAuthHeaders() }
     );
   }
 
-  async cancelCustomerOrder(orderId: string, _phone?: string): Promise<Order> {
+  async cancelCustomerOrder(orderId: string, phone?: string): Promise<Order> {
+    const targetPhone = (phone || this.getCustomerPhone() || '').trim();
     return apiRequest<Order>('/api/customer/orders', {
       method: 'PATCH',
       headers: this.customerAuthHeaders(),
-      body: JSON.stringify({ action: 'cancel', type: 'order', id: orderId }),
+      body: JSON.stringify({ action: 'cancel', type: 'order', id: orderId, phone: targetPhone }),
     });
   }
 
   async updateCustomerOrder(
     orderId: string,
-    _phone?: string,
+    phone?: string,
     items?: { dishId: string; quantity: number }[],
     notes?: string
   ): Promise<Order> {
+    const targetPhone = (phone || this.getCustomerPhone() || '').trim();
     return apiRequest<Order>('/api/customer/orders', {
       method: 'PATCH',
       headers: this.customerAuthHeaders(),
-      body: JSON.stringify({ action: 'update', id: orderId, items, notes }),
+      body: JSON.stringify({ action: 'update', id: orderId, phone: targetPhone, items, notes }),
     });
   }
 
-  async cancelCustomerReservation(reservationId: string, _phone?: string): Promise<AdminReservation> {
+  async cancelCustomerReservation(reservationId: string, phone?: string): Promise<AdminReservation> {
+    const targetPhone = (phone || this.getCustomerPhone() || '').trim();
     return apiRequest<AdminReservation>('/api/customer/orders', {
       method: 'PATCH',
       headers: this.customerAuthHeaders(),
-      body: JSON.stringify({ action: 'cancel', type: 'reservation', id: reservationId }),
+      body: JSON.stringify({ action: 'cancel', type: 'reservation', id: reservationId, phone: targetPhone }),
     });
   }
 }
