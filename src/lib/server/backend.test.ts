@@ -40,7 +40,10 @@ assert.equal(mapArticle({ image: 'https://cdn.test/src/assets/images/photo.jpg' 
 assertOrigin(new Request('https://pho.test/api/orders', { headers: { origin: 'https://pho.test' } }), 'https://pho.test');
 assertOrigin(new Request('http://0.0.0.0:3000/api/orders', { headers: { host: 'localhost:3000', origin: 'http://localhost:3000' } }), '');
 assertOrigin(new Request('http://internal/api/orders', { headers: { host: 'pho.test', 'x-forwarded-proto': 'https', origin: 'https://pho.test' } }), '');
+assertOrigin(new Request('http://0.0.0.0:3000/api/orders', { headers: { host: '192.168.1.15:3000', origin: 'http://192.168.1.15:3000' } }), 'http://localhost:3000');
+assertOrigin(new Request('http://internal/api/orders', { headers: { host: 'localhost:3000', 'x-forwarded-host': 'pho.test', 'x-forwarded-proto': 'https, http', origin: 'https://pho.test' } }), '');
 assert.throws(() => assertOrigin(new Request('http://0.0.0.0:3000/api/orders', { headers: { host: 'localhost:3000', origin: 'https://evil.test' } }), ''), ApiError);
+assert.throws(() => assertOrigin(new Request('http://0.0.0.0:3000/api/orders', { headers: { host: '192.168.1.15:3000', origin: 'https://evil.test' } }), 'http://localhost:3000'), ApiError);
 assert.throws(() => assertOrigin(new Request('https://pho.test/api/orders', { headers: { origin: 'https://evil.test' } }), 'https://pho.test'), ApiError);
 assert.throws(() => assertOrigin(new Request('https://pho.test/api/orders'), 'https://pho.test'), ApiError);
 const jsonRequest = (body: string, headers: Record<string, string> = { 'content-type': 'application/json' }) => new Request('https://pho.test/api/orders', { method: 'POST', headers, body });

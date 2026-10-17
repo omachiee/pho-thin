@@ -5,15 +5,29 @@ import { ApiError } from './validation';
 
 export interface ApiContext { request: Request; cookies: { name: string; value: string; options: CookieOptions }[] }
 export function assertOrigin(request: Request, configuredOrigin = process.env.APP_URL): void {
-  let expected: string;
+  const origin = request.headers.get('origin');
+  if (!origin) throw new ApiError(403, 'Nguồn yêu cầu không được phép.');
+
+  let expected: string | null = null;
+  let requestOrigin: string;
+
   try {
     const url = new URL(request.url);
-    const host = request.headers.get('host');
-    const forwardedProtocol = request.headers.get('x-forwarded-proto');
-    const protocol = forwardedProtocol === 'https' || forwardedProtocol === 'http' ? `${forwardedProtocol}:` : url.protocol;
-    expected = new URL(configuredOrigin || (host ? `${protocol}//${host}` : url.origin)).origin;
-  } catch { throw new ApiError(503, 'Cấu hình địa chỉ ứng dụng không hợp lệ.'); }
-  if (request.headers.get('origin') !== expected) throw new ApiError(403, 'Nguồn yêu cầu không được phép.');
+    const rawForwardedHost = request.headers.get('x-forwarded-host');
+    const host = (rawForwardedHost ? rawForwardedHost.split(',')[0].trim() : null) || request.headers.get('host') || url.host;
+    const rawForwardedProto = request.headers.get('x-forwarded-proto');
+    const forwardedProto = rawForwardedProto ? rawForwardedProto.split(',')[0].trim() : null;
+    const protocol = forwardedProto === 'https' || forwardedProto === 'http' ? `${forwardedProto}:` : url.protocol;
+    requestOrigin = new URL(`${protocol}//${host}`).origin;
+    if (configuredOrigin && configuredOrigin.trim() !== '') {
+      expected = new URL(configuredOrigin.trim()).origin;
+    }
+  } catch {
+    throw new ApiError(503, 'Cấu hình địa chỉ ứng dụng không hợp lệ.');
+  }
+
+  const isAllowed = origin === requestOrigin || (expected !== null && origin === expected);
+  if (!isAllowed) throw new ApiError(403, 'Nguồn yêu cầu không được phép.');
 }
 export async function readJson(request: Request, maxBytes = 128 * 1024): Promise<unknown> {
   if (request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json') throw new ApiError(400, 'Yêu cầu phải sử dụng application/json.');
