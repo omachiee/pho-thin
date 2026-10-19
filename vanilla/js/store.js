@@ -60,6 +60,47 @@ const PhoThinStore = {
     return dishes;
   },
 
+  // Thêm món ăn mới
+  addDish(dish) {
+    const dishes = this.getDishes();
+    const priceNum = Number(dish.price) || 0;
+    const newDish = {
+      ...dish,
+      id: dish.id || 'dish-' + Date.now(),
+      price: priceNum,
+      formattedPrice: priceNum.toLocaleString('vi-VN') + ' đ',
+      isAvailable: dish.isAvailable !== false
+    };
+    dishes.push(newDish);
+    localStorage.setItem('phothin_dishes', JSON.stringify(dishes));
+    return newDish;
+  },
+
+  // Cập nhật thông tin món ăn
+  updateDish(dish) {
+    const priceNum = Number(dish.price) || 0;
+    const dishes = this.getDishes().map(d => {
+      if (d.id === dish.id) {
+        return {
+          ...d,
+          ...dish,
+          price: priceNum,
+          formattedPrice: priceNum.toLocaleString('vi-VN') + ' đ'
+        };
+      }
+      return d;
+    });
+    localStorage.setItem('phothin_dishes', JSON.stringify(dishes));
+    return dishes;
+  },
+
+  // Xóa món ăn
+  deleteDish(id) {
+    const dishes = this.getDishes().filter(d => d.id !== id);
+    localStorage.setItem('phothin_dishes', JSON.stringify(dishes));
+    return dishes;
+  },
+
   // Lấy danh sách cơ sở
   getBranches() {
     this.init();
