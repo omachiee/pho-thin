@@ -3,59 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đặt Bàn Ăn Tại Quán - Phở Thìn Bờ Hồ (1955)</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Đặt Bàn Dùng Bữa - Phở Thìn Bờ Hồ (1955)</title>
+  
   <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- TOP TICKER -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <div class="top-ticker-alert-btn">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </div>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
   <header class="site-header">
     <div class="container nav-wrapper">
-      <a href="index.html" class="brand-logo">
-        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
-        <div class="brand-text">
-          <h1>Phở Thìn Bờ Hồ</h1>
-          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+      <a href="index.html" class="brand-link">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
         </div>
       </a>
 
       <nav>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
           <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
           <li><a href="thuc-don.html">Thực Đơn</a></li>
-          <li><a href="dat-ban.html" class="active">Đặt Bàn Ăn</a></li>
-          <li><a href="gio-hang.html">Đơn Mang Về</a></li>
-          <li><a href="tra-cuu.html">Tra Cứu Đơn</a></li>
-          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html">Liên Hệ</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
         <a href="gio-hang.html" class="cart-icon-btn">
-          <span>🛒 Giỏ món</span>
-          <span class="cart-badge" id="cartCount">0</span>
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
         </a>
-        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+        <a href="dat-ban.html" class="nav-cta-btn" style="background-color: var(--color-burgundy-deep);">Đặt Bàn</a>
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- BANNER TIÊU ĐỀ -->
-  <section style="background: var(--color-bg-alt); padding: 30px 0; border-bottom: 1px solid var(--color-border); text-align: center;">
+  <!-- BANNER HEADER -->
+  <section style="background-color: var(--bg-cream); padding: 40px 16px; border-bottom: 1px solid var(--color-gold-border-light); text-align: center;">
     <div class="container">
-      <h1 style="font-size: 32px; margin-bottom: 8px;">Đặt Bàn Dùng Món Tại Quán</h1>
-      <p style="color: var(--color-text-muted);">Giữ chỗ trước để được phục vụ chu đáo và thưởng thức phở nóng hổi ngay khi đến</p>
+      <div class="section-badge">❖ Trải Nghiệm Ẩm Thực Tại Quán ❖</div>
+      <h1 class="section-title">Đặt Bàn Dùng Phở Tại Quán</h1>
+      <p class="section-subtitle">
+        Giữ chỗ trước để được đón tiếp chu đáo, bát phở nóng hổi chan nước dùng sôi sùng sục ngay khi bạn bước vào quán
+      </p>
     </div>
   </section>
 
-  <!-- MAIN BOOKING FORM -->
+  <!-- MAIN BOOKING FORM & CONFIRMATION -->
   <main class="container">
-    <div class="booking-layout">
-      <!-- CỘT FORM CHÍNH -->
+    
+    <!-- MÀN HÌNH 1: FORM ĐẶT BÀN -->
+    <div class="booking-layout" id="bookingFormSection">
+      
+      <!-- CỘT TRÁI: FORM ĐẶT BÀN -->
       <div class="form-panel">
-        <h2 style="font-size: 22px; margin-bottom: 18px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
-          Thông Tin Đặt Bàn
+        <h2 style="font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
+          Thông Tin Đặt Bàn Giữ Chỗ
         </h2>
 
         <form id="reservationForm">
@@ -66,7 +94,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="dateInput">Ngày Đến (*)</label>
+              <label for="dateInput">Ngày Đến Ăn (*)</label>
               <input type="date" id="dateInput" class="form-control" required>
             </div>
             <div class="form-group">
@@ -103,324 +131,417 @@
             </div>
           </div>
 
-          <!-- NHÃN HIỂN THỊ SỐ BÀN TRỐNG (TỐI ĐA 20 BÀN) -->
-          <div id="capacityBadge" class="capacity-box capacity-available">
-            <span>🟢 Đang kiểm tra số bàn trống...</span>
+          <!-- Capacity Badge Live Monitor -->
+          <div id="capacityContainer" style="margin-bottom: 18px;">
+            <div class="capacity-badge available" id="capacityBadge">
+              <span>🟢</span>
+              <span id="capacityText">Đang kiểm tra số bàn trống...</span>
+            </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="nameInput">Họ Và Tên Khách (*)</label>
-              <input type="text" id="nameInput" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+              <label for="fullNameInput">Họ & Tên Quý Khách (*)</label>
+              <input type="text" id="fullNameInput" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
             </div>
             <div class="form-group">
-              <label for="phoneInput">Số Điện Thoại (*)</label>
+              <label for="phoneInput">Số Điện Thoại Nhận Mã (*)</label>
               <input type="tel" id="phoneInput" class="form-control" placeholder="Ví dụ: 0912345678" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="partySizeInput">Số Lượng Khách (1 - 50 người) (*)</label>
-              <input type="number" id="partySizeInput" class="form-control" min="1" max="50" value="2" required>
+              <label for="partySizeInput">Số Lượng Khách (*)</label>
+              <input type="number" id="partySizeInput" class="form-control" min="1" max="25" value="2" required>
             </div>
             <div class="form-group">
-              <label for="emailInput">Email (Không bắt buộc)</label>
-              <input type="email" id="emailInput" class="form-control" placeholder="email@example.com">
+              <label for="emailInput">Email (Tùy chọn)</label>
+              <input type="email" id="emailInput" class="form-control" placeholder="nhanphieu@email.com">
             </div>
-          </div>
-
-          <!-- KHAY MÓN ĂN GỌI TRƯỚC (NẾU CÓ) -->
-          <div class="preorder-tray" id="preorderCard" style="display: none;">
-            <div class="preorder-header">
-              <h4 style="font-size: 14px; color: var(--color-red-primary);">🍜 Món Ăn Chọn Dùng Tại Bàn</h4>
-              <button type="button" class="btn btn-outline btn-sm" id="clearPreorderBtn" style="padding: 2px 8px; font-size: 11px;">Bỏ chọn hết</button>
-            </div>
-            <div id="preorderList"></div>
-            <div style="display: flex; justify-content: space-between; font-weight: 700; margin-top: 12px; font-size: 15px; color: var(--color-red-primary);">
-              <span>Tạm tính món ăn:</span>
-              <span id="preorderTotalText">0 đ</span>
-            </div>
-            <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 4px;">* Thanh toán tiền món khi dùng bữa tại quán.</p>
           </div>
 
           <div class="form-group">
-            <label for="notesInput">Ghi Chú Thêm Cho Quán</label>
-            <textarea id="notesInput" class="form-control" rows="3" placeholder="Ví dụ: Cần bàn gần cửa sổ, ăn ít cay..."></textarea>
+            <label for="notesInput">Ghi Chú Đặc Biệt (Ăn nhiều hành, không mì chính...)</label>
+            <textarea id="notesInput" class="form-control" rows="2" placeholder="Ví dụ: Bàn gần cửa sổ, ăn phở nhiều nước béo..."></textarea>
           </div>
 
-          <div id="errorMessage" style="display: none; padding: 10px; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 6px; margin-bottom: 16px; font-size: 13px;"></div>
+          <!-- KHAY MÓN ĂN GỌI TRƯỚC (PRE-ORDER TRAY) -->
+          <div class="preorder-tray" id="preorderTray">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <strong style="color: var(--color-burgundy); font-size: 14px;">🍜 Món Ăn Gọi Trước Kèm Bàn:</strong>
+              <button type="button" class="btn btn-outline-burgundy btn-sm" id="btnSelectMoreDishes">
+                + Chọn thêm món
+              </button>
+            </div>
+            
+            <div id="preorderItemsList">
+              <p style="font-size: 13px; color: var(--color-text-brown-light); font-style: italic;">
+                Chưa có món gọi trước. Quý khách có thể chọn món trước để khi tới quán có ngay phở nóng!
+              </p>
+            </div>
 
-          <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 16px;">
-            Gửi Yêu Cầu Đặt Bàn Giữ Chỗ →
-          </button>
+            <div id="preorderTotalBar" style="display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(184, 137, 50, 0.4); text-align: right;">
+              <span style="font-size: 13px; color: var(--color-text-brown-light);">Tổng tiền món dự kiến: </span>
+              <strong style="font-family: var(--font-mono); font-size: 16px; color: var(--color-red-accent);" id="preorderTotalValue">0 đ</strong>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <button type="submit" class="btn btn-gold btn-lg" id="btnSubmitReservation" style="width: 100%;">
+              Xác Nhận Đặt Bàn Giữ Chỗ Ngay →
+            </button>
+          </div>
         </form>
       </div>
 
-      <!-- CỘT HƯỚNG DẪN & CHÍNH SÁCH -->
-      <div>
-        <div class="newspaper-box" style="margin: 0 0 20px 0; padding: 20px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--color-red-primary);">Chính Sách Giữ Bàn</h3>
-          <ul style="font-size: 13px; line-height: 1.8; padding-left: 18px; color: var(--color-text-muted);">
-            <li><strong>Giữ bàn tối đa 15 phút:</strong> Bàn đặt trước sẽ được giữ trong vòng 15 phút tính từ giờ hẹn. Sau 15 phút quán xin phép nhường cho khách tiếp theo.</li>
-            <li><strong>Số lượng bàn online:</strong> Mỗi khung giờ quán chỉ nhận tối đa <strong>20 đơn đặt online</strong> để đảm bảo chất lượng phục vụ và chỗ ngồi cho khách vãng lai.</li>
-            <li><strong>Món ăn chuẩn bị nóng:</strong> Các món gọi trước sẽ được chuẩn bị ngay khi bạn có mặt và quét mã bàn.</li>
+      <!-- CỘT PHẢI: QUY ĐỊNH & THÔNG TIN CƠ SỞ -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div style="background-color: var(--bg-cream); border: 1px solid var(--color-gold-border); border-radius: 12px; padding: 24px;">
+          <h3 style="font-size: 16px; color: var(--color-burgundy); margin-bottom: 12px; border-bottom: 1px solid rgba(184, 137, 50, 0.3); padding-bottom: 6px;">
+            🛡️ Chính Sách Giữ Bàn Tối Đa 20 Bàn / Lượt
+          </h3>
+          <ul style="padding-left: 20px; font-size: 13px; color: var(--color-text-brown); line-height: 1.7;">
+            <li>Mỗi khung giờ tại từng cơ sở <strong>chỉ nhận tối đa 20 bàn đặt trước</strong> để đảm bảo không gian phục vụ chu đáo nhất.</li>
+            <li>Bàn của quý khách sẽ được <strong>giữ tối đa 15 phút</strong> so với giờ hẹn trước khi chuyển quyền ưu tiên cho khách đến trực tiếp.</li>
+            <li>Quý khách có thể hủy hoặc đổi lịch dễ dàng bất cứ lúc nào qua mục <strong>"Tra cứu đơn"</strong>.</li>
           </ul>
         </div>
 
-        <div class="newspaper-box" style="margin: 0; padding: 20px; text-align: center;">
-          <h4 style="font-size: 15px; margin-bottom: 8px;">Cần Hỗ Trợ Đặt Bàn Đoàn Lớn?</h4>
-          <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 14px;">
-            Đoàn từ 15 người trở lên vui lòng liên hệ hotline trực tiếp để được xếp phòng riêng:
-          </p>
-          <a href="tel:0339253464" class="btn btn-gold btn-sm" style="font-size: 14px;">📞 Gọi 033 9253 464</a>
+        <div style="background-color: var(--bg-ivory); border: 1px solid rgba(184, 137, 50, 0.35); border-radius: 12px; padding: 24px;">
+          <h3 style="font-size: 16px; color: var(--color-burgundy); margin-bottom: 12px;">
+            🏬 Giờ Mở Cửa 4 Cơ Sở
+          </h3>
+          <div style="font-size: 13px; color: var(--color-text-brown); line-height: 1.8;">
+            <p><strong>• Buổi sáng:</strong> 06:00 – 13:00</p>
+            <p><strong>• Buổi chiều/tối:</strong> 17:00 – 22:00</p>
+            <p style="margin-top: 8px; color: var(--color-text-brown-light);">
+              Hotline hỗ trợ giải đáp & chăm sóc khách hàng:<br>
+              <strong style="color: var(--color-burgundy); font-family: var(--font-mono); font-size: 15px;">0912 345 678</strong>
+            </p>
+          </div>
         </div>
+
+      </div>
+
+    </div>
+
+    <!-- MÀN HÌNH 2: PHIẾU XÁC NHẬN ĐẶT BÀN (CONFIRMATION VOUCHER) -->
+    <div id="voucherSection" style="display: none; padding: 40px 0 80px 0;">
+      <div style="max-width: 680px; margin: 0 auto; background: var(--bg-cream); border: 2px dashed var(--color-burgundy); border-radius: 16px; padding: 36px; box-shadow: 0 16px 40px rgba(0,0,0,0.1);">
+        
+        <div style="text-align: center; border-bottom: 2px solid var(--color-gold); padding-bottom: 16px; margin-bottom: 24px;">
+          <div style="display: inline-block; background-color: #ecfdf5; color: #065f46; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 9999px; margin-bottom: 10px;">
+            ✓ ĐẶT BÀN THÀNH CÔNG
+          </div>
+          <h2 style="font-size: 26px; color: var(--color-burgundy);">PHIẾU XÁC NHẬN GIỮ CHỖ</h2>
+          <p style="font-size: 13px; color: var(--color-text-brown-light);">Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px; margin-bottom: 24px;">
+          <div>
+            <span style="color: var(--color-text-brown-light); font-size: 12px;">Mã Đặt Bàn:</span>
+            <div style="font-family: var(--font-mono); font-weight: 800; font-size: 18px; color: var(--color-red-accent);" id="voucherCode"></div>
+          </div>
+          <div>
+            <span style="color: var(--color-text-brown-light); font-size: 12px;">Khách Hàng:</span>
+            <div style="font-weight: 700; color: var(--color-burgundy);" id="voucherName"></div>
+          </div>
+          <div>
+            <span style="color: var(--color-text-brown-light); font-size: 12px;">Cơ Sở Đến Ăn:</span>
+            <div style="font-weight: 700; color: var(--color-burgundy);" id="voucherBranch"></div>
+          </div>
+          <div>
+            <span style="color: var(--color-text-brown-light); font-size: 12px;">Thời Gian & Số Khách:</span>
+            <div style="font-weight: 700; color: var(--color-burgundy);" id="voucherDateTime"></div>
+          </div>
+        </div>
+
+        <!-- Món gọi trước trên phiếu -->
+        <div id="voucherPreordersBox" style="background-color: var(--bg-ivory); border: 1px solid rgba(184, 137, 50, 0.4); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+          <h4 style="font-size: 13px; color: var(--color-burgundy); margin-bottom: 8px; text-transform: uppercase;">
+            Món ăn chuẩn bị trước:
+          </h4>
+          <div id="voucherPreordersList" style="font-size: 13px;"></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button type="button" class="btn btn-outline-burgundy" onclick="window.print()">
+            🖨️ In Phiếu Xác Nhận
+          </button>
+          <a href="tra-cuu.html" class="btn btn-primary">
+            Quản Lý Lịch Đặt Của Tôi →
+          </a>
+        </div>
+
       </div>
     </div>
+
   </main>
-
-  <!-- MODAL XÁC NHẬN ĐẶT BÀN THÀNH CÔNG -->
-  <div class="modal-overlay" id="successModal">
-    <div class="modal-content" style="text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
-      <h3 style="font-size: 24px; color: var(--color-red-primary); margin-bottom: 8px;">Đã Tiếp Nhận Đơn Đặt Bàn</h3>
-      <p style="font-size: 14px; color: var(--color-text-muted); margin-bottom: 16px;">
-        Mã số giữ chỗ của bạn: <strong id="successCode" style="font-family: var(--font-mono); font-size: 18px; color: var(--color-gold-dark);"></strong>
-      </p>
-
-      <div style="background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 8px; padding: 16px; text-align: left; font-size: 13px; margin-bottom: 20px;">
-        <p><strong>Khách hàng:</strong> <span id="successName"></span> (<span id="successPhone"></span>)</p>
-        <p><strong>Cơ sở:</strong> <span id="successBranch"></span></p>
-        <p><strong>Thời gian:</strong> <span id="successTime"></span> - Ngày <span id="successDate"></span></p>
-        <p><strong>Số lượng khách:</strong> <span id="successParty"></span> người</p>
-        <div id="successPreorders" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--color-border);"></div>
-      </div>
-
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <a href="tra-cuu.html" class="btn btn-gold">Tra Cứu Đơn Của Tôi</a>
-        <button class="btn btn-primary" onclick="window.location.href='index.html'">Về Trang Chủ</button>
-      </div>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container footer-bottom">
-      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Hotline: 033 9253 464</p>
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="thuc-don.html">Thực Đơn</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
+          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
+            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
+            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
+            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
+            • CS4: 28 Liễu Giai, Ba Đình
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
+      </div>
     </div>
   </footer>
 
-  <!-- SCRIPT -->
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>
   <script>
-    function updateCartBadge() {
-      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
-    }
-    updateCartBadge();
-    window.addEventListener('phothin_cart_updated', updateCartBadge);
+    document.addEventListener('DOMContentLoaded', () => {
+      PhoThinStore.init();
 
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('show');
-    });
+      // Cart count badge
+      const badge = document.getElementById('navCartCount');
+      if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
 
-    // Điền danh sách cơ sở
-    const branches = PhoThinStore.getBranches();
-    const branchSelect = document.getElementById('branchSelect');
-    branchSelect.innerHTML = branches.map(b => `<option value="${b.id}">${b.code}: ${b.name}</option>`).join('');
+      // Set default date to today
+      const dateInput = document.getElementById('dateInput');
+      const todayStr = new Date().toISOString().split('T')[0];
+      dateInput.value = todayStr;
+      dateInput.min = todayStr;
 
-    // Mặc định ngày hôm nay
-    const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
-    const dateInput = document.getElementById('dateInput');
-    dateInput.min = todayStr;
-    dateInput.value = todayStr;
-
-    const timeSelect = document.getElementById('timeSelect');
-    const capacityBadge = document.getElementById('capacityBadge');
-    const submitBtn = document.getElementById('submitBtn');
-
-    // TÍNH TOÁN VÀ HIỂN THỊ SỐ BÀN TRỐNG THEO THỜI GIAN THỰC (TỐI ĐA 20 BÀN)
-    function checkCapacity() {
-      const branchId = branchSelect.value;
-      const date = dateInput.value;
-      const time = timeSelect.value;
-
-      if (!branchId || !date || !time) return;
-
-      const availability = PhoThinStore.getReservationAvailability(branchId, date);
-      const slot = availability[time] || { booked: 0, remaining: 20 };
-      const remaining = slot.remaining;
-
-      // Cập nhật text trong dropdown giờ
-      Array.from(timeSelect.options).forEach(opt => {
-        const optSlot = availability[opt.value] || { booked: 0, remaining: 20 };
-        const baseTime = opt.value;
-        if (optSlot.remaining === 0) {
-          opt.text = `${baseTime} (HẾT BÀN)`;
-        } else {
-          opt.text = `${baseTime} (Còn ${optSlot.remaining} bàn)`;
-        }
+      // Render branch options
+      const branches = PhoThinStore.getBranches();
+      const branchSelect = document.getElementById('branchSelect');
+      branchSelect.innerHTML = '';
+      branches.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.code}: ${b.name} (${b.address})`;
+        if (b.isOriginal) opt.selected = true;
+        branchSelect.appendChild(opt);
       });
 
-      // Hiển thị badge trực quan
-      capacityBadge.className = 'capacity-box';
-      if (remaining === 0) {
-        capacityBadge.classList.add('capacity-full');
-        capacityBadge.innerHTML = '<span>🔴 Khung giờ này đã kín 20/20 bàn online. Vui lòng chọn giờ khác hoặc gọi hotline quán.</span>';
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '0.5';
-        submitBtn.innerText = 'Khung Giờ Đã Kín Bàn';
-      } else if (remaining <= 5) {
-        capacityBadge.classList.add('capacity-warning');
-        capacityBadge.innerHTML = `<span>⚡ Chỉ còn ${remaining} bàn cuối trong khung giờ này!</span>`;
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        submitBtn.innerText = 'Gửi Yêu Cầu Đặt Bàn Giữ Chỗ →';
-      } else {
-        capacityBadge.classList.add('capacity-available');
-        capacityBadge.innerHTML = `<span>🟢 Còn ${remaining} bàn trống trong khung giờ ${time}</span>`;
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        submitBtn.innerText = 'Gửi Yêu Cầu Đặt Bàn Giữ Chỗ →';
+      // Check query params for branch
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('branch')) {
+        branchSelect.value = urlParams.get('branch');
       }
-    }
 
-    branchSelect.addEventListener('change', checkCapacity);
-    dateInput.addEventListener('change', checkCapacity);
-    timeSelect.addEventListener('change', checkCapacity);
+      // Pre-ordered items list
+      let preOrderedItems = [];
 
-    // ==========================================
-    // XỬ LÝ MÓN ĂN GỌI TRƯỚC (PRE-ORDER DISHES)
-    // ==========================================
-    let preOrderedItems = [];
+      // Check query param for single preorder dish
+      const preorderDishId = urlParams.get('preorder');
+      if (preorderDishId) {
+        const dish = PhoThinStore.getDishById(preorderDishId);
+        if (dish) {
+          preOrderedItems.push({
+            dishId: dish.id,
+            name: dish.name,
+            unitPrice: dish.price,
+            quantity: 1
+          });
+        }
+      }
 
-    // Kiểm tra xem khách có chọn trước món từ trang thực đơn hoặc giỏ hàng không
-    const savedPreorder = localStorage.getItem('phothin_preselected_dish');
-    const savedCart = localStorage.getItem('phothin_cart_for_reservation');
-
-    if (savedCart) {
-      try {
-        const cartItems = JSON.parse(savedCart);
-        preOrderedItems = cartItems.map(item => {
+      // Check if user came from cart with switch
+      if (urlParams.get('from') === 'cart') {
+        const cart = PhoThinStore.getCart();
+        cart.forEach(item => {
           const dish = PhoThinStore.getDishById(item.dishId);
-          return dish ? { dishId: dish.id, name: dish.name, unitPrice: dish.price, quantity: item.quantity } : null;
-        }).filter(Boolean);
-        localStorage.removeItem('phothin_cart_for_reservation');
-      } catch {}
-    } else if (savedPreorder) {
-      try {
-        preOrderedItems = [JSON.parse(savedPreorder)];
-        localStorage.removeItem('phothin_preselected_dish');
-      } catch {}
-    }
-
-    function renderPreorders() {
-      const card = document.getElementById('preorderCard');
-      const list = document.getElementById('preorderList');
-      const totalText = document.getElementById('preorderTotalText');
-
-      if (!preOrderedItems.length) {
-        card.style.display = 'none';
-        return;
+          if (dish) {
+            preOrderedItems.push({
+              dishId: dish.id,
+              name: dish.name,
+              unitPrice: dish.price,
+              quantity: item.quantity
+            });
+          }
+        });
       }
 
-      card.style.display = 'block';
-      let total = 0;
+      const renderPreorders = () => {
+        const listDiv = document.getElementById('preorderItemsList');
+        const totalBar = document.getElementById('preorderTotalBar');
+        const totalVal = document.getElementById('preorderTotalValue');
 
-      list.innerHTML = preOrderedItems.map((item, idx) => {
-        const subtotal = item.unitPrice * item.quantity;
-        total += subtotal;
-        return `
-          <div class="preorder-item">
+        if (preOrderedItems.length === 0) {
+          listDiv.innerHTML = `
+            <p style="font-size: 13px; color: var(--color-text-brown-light); font-style: italic;">
+              Chưa có món gọi trước. Quý khách có thể chọn món trước để khi tới quán có ngay phở nóng!
+            </p>
+          `;
+          totalBar.style.display = 'none';
+          return;
+        }
+
+        let total = 0;
+        listDiv.innerHTML = '';
+        preOrderedItems.forEach((item, idx) => {
+          total += item.unitPrice * item.quantity;
+          const row = document.createElement('div');
+          row.className = 'preorder-item';
+          row.innerHTML = `
             <div>
               <strong>${item.name}</strong>
-              <div style="font-size: 12px; color: var(--color-text-muted);">${item.unitPrice.toLocaleString('vi-VN')} đ/món</div>
+              <div style="font-size: 11px; color: var(--color-text-brown-light); font-family: var(--font-mono);">
+                ${item.unitPrice.toLocaleString('vi-VN')} đ x ${item.quantity}
+              </div>
             </div>
-            <div class="preorder-qty-ctrl">
-              <button type="button" class="qty-btn" onclick="adjustPreorderQty(${idx}, -1)">-</button>
-              <span style="font-weight: 700; width: 20px; text-align: center;">${item.quantity}</span>
-              <button type="button" class="qty-btn" onclick="adjustPreorderQty(${idx}, 1)">+</button>
-              <button type="button" onclick="removePreorderItem(${idx})" style="border: none; background: none; color: red; font-size: 14px; cursor: pointer; margin-left: 6px;">✕</button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <strong style="color: var(--color-red-accent); font-family: var(--font-mono);">
+                ${(item.unitPrice * item.quantity).toLocaleString('vi-VN')} đ
+              </strong>
+              <button type="button" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 14px;" title="Xóa món này">
+                ✕
+              </button>
             </div>
-          </div>
-        `;
-      }).join('');
+          `;
+          row.querySelector('button').addEventListener('click', () => {
+            preOrderedItems.splice(idx, 1);
+            renderPreorders();
+          });
+          listDiv.appendChild(row);
+        });
 
-      totalText.innerText = total.toLocaleString('vi-VN') + ' đ';
-    }
+        totalVal.textContent = total.toLocaleString('vi-VN') + ' đ';
+        totalBar.style.display = 'block';
+      };
 
-    window.adjustPreorderQty = function(idx, delta) {
-      if (!preOrderedItems[idx]) return;
-      preOrderedItems[idx].quantity += delta;
-      if (preOrderedItems[idx].quantity <= 0) {
-        preOrderedItems.splice(idx, 1);
-      }
+      document.getElementById('btnSelectMoreDishes')?.addEventListener('click', () => {
+        window.location.href = 'thuc-don.html';
+      });
+
       renderPreorders();
-    };
 
-    window.removePreorderItem = function(idx) {
-      preOrderedItems.splice(idx, 1);
-      renderPreorders();
-    };
+      // LIVE CAPACITY CHECK LOGIC (MAX 20 TABLES)
+      const timeSelect = document.getElementById('timeSelect');
+      const capacityBadge = document.getElementById('capacityBadge');
+      const capacityText = document.getElementById('capacityText');
+      const submitBtn = document.getElementById('btnSubmitReservation');
 
-    document.getElementById('clearPreorderBtn').addEventListener('click', () => {
-      preOrderedItems = [];
-      renderPreorders();
-    });
+      const checkLiveCapacity = () => {
+        const branchId = branchSelect.value;
+        const date = dateInput.value;
+        const time = timeSelect.value;
 
-    renderPreorders();
-    checkCapacity();
+        if (!branchId || !date || !time) return;
 
-    // ==========================================
-    // XỬ LÝ SUBMIT FORM ĐẶT BÀN
-    // ==========================================
-    document.getElementById('reservationForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const errBox = document.getElementById('errorMessage');
-      errBox.style.display = 'none';
+        const availability = PhoThinStore.getReservationAvailability(branchId, date);
+        const slot = availability[time] || { booked: 0, remaining: 20 };
 
-      try {
-        const formData = {
-          fullName: document.getElementById('nameInput').value,
-          phone: document.getElementById('phoneInput').value,
-          email: document.getElementById('emailInput').value,
+        capacityBadge.className = 'capacity-badge';
+        if (slot.remaining > 5) {
+          capacityBadge.classList.add('available');
+          capacityText.textContent = `🟢 Còn ${slot.remaining}/20 bàn trống trực tuyến cho khung giờ ${time}`;
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.cursor = 'pointer';
+        } else if (slot.remaining > 0) {
+          capacityBadge.classList.add('warning');
+          capacityText.textContent = `🟡 Chỉ còn ${slot.remaining}/20 bàn trống cho khung giờ ${time} - Quý khách nên giữ chỗ sớm!`;
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.cursor = 'pointer';
+        } else {
+          capacityBadge.classList.add('full');
+          capacityText.textContent = `🔴 Đã hết bàn trống trực tuyến (${slot.booked}/20). Vui lòng chọn khung giờ khác!`;
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.5';
+          submitBtn.style.cursor = 'not-allowed';
+        }
+      };
+
+      branchSelect.addEventListener('change', checkLiveCapacity);
+      dateInput.addEventListener('change', checkLiveCapacity);
+      timeSelect.addEventListener('change', checkLiveCapacity);
+      checkLiveCapacity();
+
+      // Xử lý gửi form đặt bàn
+      const form = document.getElementById('reservationForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = {
           branchId: branchSelect.value,
           reservationDate: dateInput.value,
           reservationTime: timeSelect.value,
+          fullName: document.getElementById('fullNameInput').value,
+          phone: document.getElementById('phoneInput').value,
+          email: document.getElementById('emailInput').value,
           partySize: document.getElementById('partySizeInput').value,
           notes: document.getElementById('notesInput').value,
           preOrderedItems: preOrderedItems
         };
 
-        const res = PhoThinStore.createReservation(formData);
+        try {
+          const newReservation = PhoThinStore.createReservation(data);
 
-        // Hiển thị modal thành công
-        document.getElementById('successCode').innerText = res.id;
-        document.getElementById('successName').innerText = res.fullName;
-        document.getElementById('successPhone').innerText = res.phone;
-        document.getElementById('successBranch').innerText = res.branchName;
-        document.getElementById('successTime').innerText = res.reservationTime;
-        document.getElementById('successDate').innerText = res.reservationDate;
-        document.getElementById('successParty').innerText = res.partySize;
+          // Hiển thị Phiếu xác nhận
+          document.getElementById('bookingFormSection').style.display = 'none';
+          document.getElementById('voucherSection').style.display = 'block';
 
-        const preBox = document.getElementById('successPreorders');
-        if (res.preOrderedItems && res.preOrderedItems.length > 0) {
-          preBox.innerHTML = `
-            <p><strong>Món gọi trước (${res.preOrderedItems.length} món):</strong></p>
-            <ul style="padding-left: 20px; margin-top: 4px;">
-              ${res.preOrderedItems.map(item => `<li>${item.name} × ${item.quantity} (${(item.unitPrice * item.quantity).toLocaleString('vi-VN')} đ)</li>`).join('')}
-            </ul>
-            <p style="font-weight: 700; color: var(--color-red-primary); margin-top: 4px;">Tổng tiền món: ${res.preOrderTotal.toLocaleString('vi-VN')} đ</p>
-          `;
-        } else {
-          preBox.innerHTML = '<p style="color: var(--color-text-muted); font-style: italic;">Không có món ăn gọi trước.</p>';
+          document.getElementById('voucherCode').textContent = newReservation.id;
+          document.getElementById('voucherName').textContent = `${newReservation.fullName} (${newReservation.phone})`;
+          document.getElementById('voucherBranch').textContent = newReservation.branchName;
+          document.getElementById('voucherDateTime').textContent = `${newReservation.reservationTime} • Ngày ${newReservation.reservationDate} (${newReservation.partySize} khách)`;
+
+          const vPreordersList = document.getElementById('voucherPreordersList');
+          if (newReservation.preOrderedItems && newReservation.preOrderedItems.length > 0) {
+            vPreordersList.innerHTML = newReservation.preOrderedItems.map(item => `
+              <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                <span>• ${item.name} (x${item.quantity})</span>
+                <span style="font-family: var(--font-mono); font-weight: 700;">${(item.unitPrice * item.quantity).toLocaleString('vi-VN')} đ</span>
+              </div>
+            `).join('') + `
+              <div style="text-align: right; margin-top: 8px; font-weight: 800; color: var(--color-red-accent); border-top: 1px dashed rgba(184,137,50,0.3); padding-top: 6px;">
+                Tổng tiền món: ${newReservation.preOrderTotal.toLocaleString('vi-VN')} đ
+              </div>
+            `;
+            document.getElementById('voucherPreordersBox').style.display = 'block';
+          } else {
+            document.getElementById('voucherPreordersBox').style.display = 'none';
+          }
+
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+          alert(err.message);
         }
-
-        document.getElementById('successModal').classList.add('active');
-      } catch (err) {
-        errBox.innerText = err.message;
-        errBox.style.display = 'block';
-      }
+      });
     });
   </script>
 </body>

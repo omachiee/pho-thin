@@ -3,189 +3,309 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thực Đơn - Phở Thìn Bờ Hồ (1955)</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Thực Đơn Gia Truyền - Phở Thìn Bờ Hồ (1955)</title>
+  
   <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: 9999px;
+      border: 1px solid rgba(184, 137, 50, 0.4);
+      background-color: var(--bg-ivory);
+      color: var(--color-burgundy);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      background-color: var(--bg-cream);
+    }
+    .filter-btn.active {
+      background-color: var(--color-burgundy);
+      color: var(--bg-cream);
+      border-color: var(--color-burgundy);
+      box-shadow: 0 2px 6px rgba(104, 19, 28, 0.2);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- TOP TICKER -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <div class="top-ticker-alert-btn">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </div>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
   <header class="site-header">
     <div class="container nav-wrapper">
-      <a href="index.html" class="brand-logo">
-        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
-        <div class="brand-text">
-          <h1>Phở Thìn Bờ Hồ</h1>
-          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+      <a href="index.html" class="brand-link">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
         </div>
       </a>
 
       <nav>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
           <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
           <li><a href="thuc-don.html" class="active">Thực Đơn</a></li>
-          <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
-          <li><a href="gio-hang.html">Đơn Mang Về</a></li>
-          <li><a href="tra-cuu.html">Tra Cứu Đơn</a></li>
-          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html">Liên Hệ</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
         <a href="gio-hang.html" class="cart-icon-btn">
-          <span>🛒 Giỏ món</span>
-          <span class="cart-badge" id="cartCount">0</span>
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
         </a>
-        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+        <a href="dat-ban.html" class="nav-cta-btn">Đặt Bàn</a>
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- BANNER TIÊU ĐỀ -->
-  <section style="background: var(--color-bg-alt); padding: 30px 0; border-bottom: 1px solid var(--color-border); text-align: center;">
+  <!-- BANNER HEADER -->
+  <section style="background-color: var(--bg-cream); padding: 40px 16px; border-bottom: 1px solid var(--color-gold-border-light); text-align: center;">
     <div class="container">
-      <h1 style="font-size: 32px; margin-bottom: 8px;">Thực Đơn Gia Truyền</h1>
-      <p style="color: var(--color-text-muted);">Những bát phở nóng hổi chan nước dùng hầm xương 12 giờ bốc khói nghi ngút</p>
+      <div class="section-badge">❖ Thực Đơn Truyền Thống 1955 ❖</div>
+      <h1 class="section-title">Thực Đơn Gia Truyền Phở Thìn Bờ Hồ</h1>
+      <p class="section-subtitle">
+        Những bát phở nóng hổi chan nước dùng hầm xương ống bò 12 giờ bí truyền, bánh phở tươi tráng thủ công và thức quà ăn kèm nức tiếng
+      </p>
     </div>
   </section>
 
-  <!-- DANH MỤC & MÓN ĂN -->
-  <main class="container" style="padding: 30px 16px;">
-    <!-- Nút Lọc Danh Mục -->
-    <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
-      <button class="btn btn-primary filter-btn active" data-category="all">Tất Cả Món</button>
-      <button class="btn btn-outline filter-btn" data-category="pho">Phở Bò Truyền Thống</button>
-      <button class="btn btn-outline filter-btn" data-category="others">Món Ăn Kèm</button>
-      <button class="btn btn-outline filter-btn" data-category="drinks">Đồ Uống Hà Nội</button>
+  <!-- MAIN MENU SECTION -->
+  <main class="container" style="padding: 40px 16px 80px 16px;">
+    
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button type="button" class="filter-btn active" data-category="all">Tất Cả Món Ăn</button>
+      <button type="button" class="filter-btn" data-category="pho">Phở Bò Truyền Thống</button>
+      <button type="button" class="filter-btn" data-category="others">Món Ăn Kèm</button>
+      <button type="button" class="filter-btn" data-category="drinks">Đồ Uống Hà Nội</button>
     </div>
 
-    <!-- Grid Món Ăn -->
-    <div class="dish-grid" id="menuGrid">
-      <!-- Render bằng JavaScript -->
+    <!-- Dishes Showcase Grid (3-4 cols) -->
+    <div class="dishes-showcase-grid" id="menuGrid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
+      <!-- Dynamic Dishes -->
     </div>
+
   </main>
 
-  <!-- MODAL XEM CHI TIẾT MÓN ĂN -->
-  <div class="modal-overlay" id="dishModal">
-    <div class="modal-content">
-      <button class="modal-close-btn" id="closeDishModal">&times;</button>
-      <img id="modalDishImg" src="" alt="" style="width: 100%; height: 240px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
-      <h3 id="modalDishTitle" style="font-size: 22px; margin-bottom: 6px;"></h3>
-      <p id="modalDishPrice" style="font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--color-red-primary); margin-bottom: 12px;"></p>
-      <p id="modalDishDesc" style="font-size: 14px; margin-bottom: 16px; line-height: 1.6;"></p>
-      <div style="background: var(--color-bg-alt); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-        <h4 style="font-size: 13px; margin-bottom: 6px;">Nguyên liệu đặc tuyển:</h4>
-        <ul id="modalDishIngredients" style="padding-left: 20px; font-size: 13px; color: var(--color-text-muted);"></ul>
+  <!-- MODAL CHI TIẾT MÓN ĂN -->
+  <div class="modal-backdrop" id="dishModalBackdrop">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <span id="modalDishCategory" style="font-size: 12px; font-weight: 700; text-transform: uppercase;">Chi Tiết Món</span>
+        <button type="button" class="modal-close-btn" id="btnCloseDishModal">✕</button>
       </div>
-      <div style="display: flex; gap: 10px;">
-        <button id="modalAddToCartBtn" class="btn btn-primary" style="flex: 1;">Thêm Vào Giỏ Món</button>
-        <button id="modalBookWithDishBtn" class="btn btn-gold" style="flex: 1;">Đặt Bàn Kèm Món Này</button>
+
+      <div class="dish-modal-grid">
+        <div>
+          <div class="dish-modal-img-wrap">
+            <img src="" alt="" id="modalDishImage">
+          </div>
+        </div>
+
+        <div>
+          <h2 id="modalDishName" style="font-size: 22px; margin-bottom: 6px; line-height: 1.25;"></h2>
+          <div class="dish-modal-price" id="modalDishPrice"></div>
+          
+          <p class="dish-modal-desc" id="modalDishDesc"></p>
+
+          <div class="dish-modal-ingredients">
+            <h4>Thành Phần & Bí Quyết:</h4>
+            <ul id="modalDishIngredients"></ul>
+          </div>
+
+          <div class="dish-modal-actions">
+            <button type="button" class="btn btn-primary" id="btnModalAddToCart">
+              🛒 Thêm Vào Đơn Mang Về
+            </button>
+            <button type="button" class="btn btn-gold" id="btnModalReserve">
+              📅 Đặt Bàn Với Món Này
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container footer-bottom">
-      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Hotline: 033 9253 464</p>
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="thuc-don.html">Thực Đơn</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
+          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
+            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
+            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
+            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
+            • CS4: 28 Liễu Giai, Ba Đình
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
+      </div>
     </div>
   </footer>
 
-  <!-- SCRIPT -->
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>
   <script>
-    function updateCartBadge() {
-      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
-    }
-    updateCartBadge();
-    window.addEventListener('phothin_cart_updated', updateCartBadge);
+    document.addEventListener('DOMContentLoaded', () => {
+      PhoThinStore.init();
 
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('show');
-    });
-
-    const dishes = PhoThinStore.getDishes();
-    const menuGrid = document.getElementById('menuGrid');
-
-    function renderMenu(category = 'all') {
-      const filtered = category === 'all' ? dishes : dishes.filter(d => d.category === category);
-      menuGrid.innerHTML = filtered.map(dish => `
-        <div class="dish-card">
-          <img src="${dish.image}" alt="${dish.name}" class="dish-card-img">
-          <div class="dish-card-body">
-            <h3 class="dish-card-title">${dish.name}</h3>
-            <p class="dish-card-desc">${dish.shortDescription}</p>
-            <div class="dish-card-price">${dish.formattedPrice} ${!dish.isAvailable ? '<span style="color:red; font-size:12px;">(Tạm hết)</span>' : ''}</div>
-            <div class="dish-card-actions">
-              <button class="btn btn-outline btn-sm" onclick="openDishDetail('${dish.id}')">Chi tiết</button>
-              <button class="btn btn-primary btn-sm" ${!dish.isAvailable ? 'disabled style="opacity:0.5;"' : ''} onclick="addToCartClick('${dish.id}')">
-                ${dish.isAvailable ? '+ Thêm vào giỏ' : 'Tạm hết'}
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    renderMenu('all');
-
-    // Xử lý nút lọc danh mục
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.classList.remove('btn-primary', 'active');
-          b.classList.add('btn-outline');
-        });
-        e.currentTarget.classList.add('btn-primary', 'active');
-        e.currentTarget.classList.remove('btn-outline');
-        renderMenu(e.currentTarget.dataset.category);
+      // Cart count badge
+      const badge = document.getElementById('navCartCount');
+      if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
+      window.addEventListener('phothin_cart_updated', () => {
+        if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
       });
-    });
 
-    // Modal Chi tiết món
-    let currentSelectedDish = null;
-    const modal = document.getElementById('dishModal');
+      let currentCategory = 'all';
+      const menuGrid = document.getElementById('menuGrid');
 
-    function openDishDetail(id) {
-      currentSelectedDish = PhoThinStore.getDishById(id);
-      if (!currentSelectedDish) return;
-      document.getElementById('modalDishImg').src = currentSelectedDish.image;
-      document.getElementById('modalDishTitle').innerText = currentSelectedDish.name;
-      document.getElementById('modalDishPrice').innerText = currentSelectedDish.formattedPrice;
-      document.getElementById('modalDishDesc').innerText = currentSelectedDish.fullDescription || currentSelectedDish.shortDescription;
-      
-      const ingList = document.getElementById('modalDishIngredients');
-      ingList.innerHTML = (currentSelectedDish.ingredients || []).map(i => `<li>${i}</li>`).join('');
+      const renderDishes = () => {
+        const dishes = PhoThinStore.getDishes();
+        const filtered = currentCategory === 'all' 
+          ? dishes 
+          : dishes.filter(d => d.category === currentCategory);
 
-      modal.classList.add('active');
-    }
+        menuGrid.innerHTML = '';
+        filtered.forEach(dish => {
+          const card = document.createElement('div');
+          card.className = `dish-card ${dish.isSignature ? 'is-signature' : ''}`;
+          card.innerHTML = `
+            <div class="dish-card-img-wrap">
+              <img src="${dish.image}" alt="${dish.name}" class="dish-card-img">
+              <div class="dish-card-gradient"></div>
+              ${dish.isSignature ? '<div class="signature-badge"><span class="star">★</span> SIGNATURE</div>' : ''}
+              <div class="dish-card-price">${dish.formattedPrice}</div>
+            </div>
+            <div class="dish-card-body">
+              <div>
+                <h3 class="dish-card-name">${dish.name}</h3>
+                <p class="dish-card-desc">${dish.shortDescription}</p>
+              </div>
+              <div class="dish-card-footer">
+                <span>Xem chi tiết</span>
+                <span class="arrow">→</span>
+              </div>
+            </div>
+          `;
+          card.addEventListener('click', () => openDishDetail(dish));
+          menuGrid.appendChild(card);
+        });
+      };
 
-    document.getElementById('closeDishModal').addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+      // Category filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category');
+          renderDishes();
+        });
+      });
 
-    function addToCartClick(dishId) {
-      PhoThinStore.addToCart(dishId, 1);
-      alert('Đã thêm món vào giỏ hàng!');
-    }
+      // Dish detail modal
+      const openDishDetail = (dish) => {
+        document.getElementById('modalDishName').textContent = dish.name;
+        document.getElementById('modalDishPrice').textContent = dish.formattedPrice;
+        document.getElementById('modalDishDesc').textContent = dish.fullDescription || dish.shortDescription;
+        document.getElementById('modalDishImage').src = dish.image;
+        document.getElementById('modalDishCategory').textContent = dish.isSignature ? 'SIGNATURE • ĐẶC SẢN GIA TRUYỀN' : 'MÓN PHỞ GIA TRUYỀN';
+        
+        const ul = document.getElementById('modalDishIngredients');
+        ul.innerHTML = '';
+        (dish.ingredients || []).forEach(ing => {
+          const li = document.createElement('li');
+          li.textContent = ing;
+          ul.appendChild(li);
+        });
 
-    document.getElementById('modalAddToCartBtn').addEventListener('click', () => {
-      if (currentSelectedDish) {
-        addToCartClick(currentSelectedDish.id);
-        modal.classList.remove('active');
-      }
-    });
+        document.getElementById('btnModalAddToCart').onclick = () => {
+          PhoThinStore.addToCart(dish.id, 1);
+          closeDishModal();
+          alert(`Đã thêm 1 "${dish.name}" vào đơn món mang về!`);
+        };
 
-    document.getElementById('modalBookWithDishBtn').addEventListener('click', () => {
-      if (currentSelectedDish) {
-        localStorage.setItem('phothin_preselected_dish', JSON.stringify({
-          dishId: currentSelectedDish.id,
-          name: currentSelectedDish.name,
-          unitPrice: currentSelectedDish.price,
-          quantity: 1
-        }));
-        window.location.href = 'dat-ban.html';
-      }
+        document.getElementById('btnModalReserve').onclick = () => {
+          closeDishModal();
+          window.location.href = `dat-ban.html?preorder=${dish.id}`;
+        };
+
+        document.getElementById('dishModalBackdrop').classList.add('open');
+      };
+
+      const closeDishModal = () => {
+        document.getElementById('dishModalBackdrop').classList.remove('open');
+      };
+      document.getElementById('btnCloseDishModal')?.addEventListener('click', closeDishModal);
+      document.getElementById('dishModalBackdrop')?.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('dishModalBackdrop')) closeDishModal();
+      });
+
+      renderDishes();
     });
   </script>
 </body>

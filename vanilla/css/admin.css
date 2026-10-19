@@ -3,6 +3,8 @@
    Dark Mahogany & Gold Retro Style
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap');
+
 :root {
   --admin-bg: #160305;
   --admin-card-bg: #200609;
@@ -19,7 +21,7 @@
 body.admin-body {
   background-color: var(--admin-bg);
   color: var(--admin-text);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
 }

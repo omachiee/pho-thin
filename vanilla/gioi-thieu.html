@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giới Thiệu - Phở Thìn Bờ Hồ (Báo Cũ 1955)</title>
+  
+  <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    /* Styling riêng cho trang báo cổ broadsheet */
+    .drop-cap {
+      float: left;
+      font-size: 42px;
+      line-height: 0.85;
+      font-family: var(--font-serif);
+      font-weight: 900;
+      color: #721F1B;
+      margin-right: 8px;
+    }
+    .polaroid-box {
+      background-color: #DFCCA8;
+      border: 1px solid rgba(84, 61, 43, 0.5);
+      padding: 8px;
+      box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+      transform: rotate(1deg);
+      max-width: 200px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP TICKER -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <button type="button" class="top-ticker-alert-btn" id="btnOpenWarningFromTicker">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </button>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-link">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html" class="active">Giới Thiệu</a></li>
+          <li><a href="thuc-don.html">Thực Đơn</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html">Liên Hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="gio-hang.html" class="cart-icon-btn">
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
+        </a>
+        <a href="dat-ban.html" class="nav-cta-btn">Đặt Bàn</a>
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN BROADSHEET NEWSPAPER -->
+  <main class="newspaper-stage">
+    <div class="container-narrow">
+      
+      <!-- Breadcrumb -->
+      <div style="font-size: 12px; color: var(--color-text-brown-light); margin-bottom: 20px;">
+        <a href="index.html" style="color: var(--color-burgundy); font-weight: 600;">Trang Chủ</a> /
+        <span>Giới Thiệu (Báo Cổ Hà Nội Xưa)</span>
+      </div>
+
+      <article class="vintage-broadsheet">
+        <div class="broadsheet-inner">
+          
+          <!-- Top running header -->
+          <div class="broadsheet-running-head">
+            <span>HÀ NỘI BỜ HỒ • NĂM THỨ 71</span>
+            <span>SỐ ĐẶC BIỆT KỶ NIỆM • MÙA THU HÀ NỘI • DI SẢN ẨM THỰC TỪ 1955</span>
+            <span>GIÁ TRỊ DI SẢN: VÔ GIÁ</span>
+          </div>
+
+          <!-- Masthead & Hero Split -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; padding-bottom: 20px; border-bottom: 1px solid #543D2B;">
+            <div>
+              <span style="font-family: var(--font-serif); font-style: italic; color: #721F1B; font-size: 14px; display: block; margin-bottom: 6px;">
+                Ký ức Phố Cổ Hà Nội
+              </span>
+              <h1 style="font-family: var(--font-serif); font-size: 32px; font-weight: 900; line-height: 1.15; color: #1E120A; text-transform: uppercase;">
+                PHỞ THÌN BỜ HỒ<br>
+                VÀ 70 NĂM LƯU GIỮ<br>
+                LINH HỒN ẨM THỰC THỦ ĐÔ
+              </h1>
+              <p style="font-family: var(--font-serif); font-style: italic; color: #4A3525; font-size: 13px; margin-top: 10px;">
+                Từ gánh phở rong bên Tháp Rùa đến biểu tượng ẩm thực vươn tầm thế giới
+              </p>
+            </div>
+
+            <div style="text-align: center;">
+              <div class="polaroid-box">
+                <div style="aspect-ratio: 3/4; overflow: hidden; background: #24150B;">
+                  <img src="images/regenerated_image_1790964215309.webp" alt="Ông chủ Phở Thìn Bờ Hồ" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="margin-top: 6px; font-size: 10px; font-family: var(--font-serif); font-weight: 700; color: #2A180E;">
+                  Ông chủ Phở Thìn Bờ Hồ
+                </div>
+                <div style="font-size: 9px; font-family: var(--font-serif); font-style: italic; color: #543D2B;">
+                  — những năm 1980
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Centerpiece Photo -->
+          <div style="margin: 20px 0; text-align: center;">
+            <div style="border: 2px solid #543D2B; padding: 4px; background: #DECEB0;">
+              <img src="images/regenerated_image_1790911897093.png" alt="Gánh phở rong bên Tháp Rùa" style="width: 100%; max-height: 380px; object-fit: cover;">
+            </div>
+            <p style="font-family: var(--font-serif); font-style: italic; font-size: 12px; color: #4A3525; margin-top: 6px;">
+              Gánh phở rong bên Tháp Rùa – Hà Nội xưa buổi đầu giải phóng 1955
+            </p>
+          </div>
+
+          <!-- Metadata Line -->
+          <div style="border-top: 1px solid #543D2B; border-bottom: 1px solid #543D2B; padding: 6px 0; margin-bottom: 24px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #4A3525; display: flex; justify-content: space-between; flex-wrap: wrap;">
+            <span>* SÁNG LẬP: CỤ BÙI CHÍ THÌN (1955)</span>
+            <span>* ĐỊA CHỈ GỐC: 61 ĐINH TIÊN HOÀNG</span>
+            <span>* 4 CƠ SỞ CHÍNH THỨC TẠI HÀ NỘI</span>
+          </div>
+
+          <!-- 2 Columns Articles -->
+          <div class="broadsheet-columns">
+            <div>
+              <h2 style="font-size: 14px; font-weight: 900; color: #1E120A; text-transform: uppercase; border-bottom: 1px solid rgba(84,61,43,0.4); padding-bottom: 4px; margin-bottom: 10px;">
+                I. GIỚI THIỆU PHỞ THÌN BỜ HỒ
+              </h2>
+              <p>
+                <span class="drop-cap">T</span>rong muôn vàn thức quà của Hà Nội, phở luôn chiếm giữ vị trí độc tôn. Và giữa lòng ba mươi sáu phố phường, nhắc tới phở bò truyền thống thanh tao, không ai là không nhớ tới Phở Thìn Bờ Hồ. Đây không đơn thuần là một quán ăn, mà là chứng nhân lịch sử, là nếp sinh hoạt văn hoá tao nhã gắn liền với bao thế hệ người Hà Nội gốc.
+              </p>
+              <p style="margin-top: 12px;">
+                Khác biệt lớn nhất của Phở Thìn Bờ Hồ chính là triết lý ẩm thực: giữ trọn sự tinh tế nguyên bản, tôn vinh độ ngọt lành thuần khiết của thịt bò tươi và xương ống ninh nhừ suốt 12 giờ, không lạm dụng gia vị nhân tạo hay dầu mỡ ngấy ngán.
+              </p>
+
+              <h2 style="font-size: 14px; font-weight: 900; color: #1E120A; text-transform: uppercase; border-bottom: 1px solid rgba(84,61,43,0.4); padding-bottom: 4px; margin: 24px 0 10px 0;">
+                III. XUẤT THÂN VÀ GIA TỘC CỤ THÌN
+              </h2>
+              <p>
+                <span class="drop-cap">C</span>ụ Bùi Chí Thìn sinh ra tại vùng quê giàu truyền thống. Cụ luôn tâm niệm: “Nấu bát phở cho người ăn cũng như nấu cho chính cha mẹ, con cái mình ăn”.
+              </p>
+              <p style="margin-top: 12px;">
+                Bí quyết gia truyền của cụ được truyền lại nghiêm ngặt qua 3 đời: từ tỷ lệ nước, thời gian ủ than, cách hớt bọt cho đến kỹ thuật dùng sống dao bản đập dập miếng thịt thăn bò trên thớt gỗ nghiến. Nhờ sự khắt khe đó, hương vị năm 1955 vẫn vẹn nguyên tới tận hôm nay.
+              </p>
+            </div>
+
+            <div>
+              <h2 style="font-size: 14px; font-weight: 900; color: #1E120A; text-transform: uppercase; border-bottom: 1px solid rgba(84,61,43,0.4); padding-bottom: 4px; margin-bottom: 10px;">
+                II. LỊCH SỬ HÌNH THÀNH NĂM 1955
+              </h2>
+              <p>
+                <span class="drop-cap">N</span>ăm 1955, Thủ Đô bước vào những ngày đầu tiên của thời kỳ hòa bình sau ngày tiếp quản giải phóng. Chàng trai Bùi Chí Thìn quẩy đôi quang gánh phở đầu tiên ra gốc đa Đinh Tiên Hoàng, ngay trước Đền Ngọc Sơn cổ kính.
+              </p>
+              <p style="margin-top: 12px;">
+                Gánh phở của cụ Thìn nhanh chóng nức tiếng khắp phố phường bởi hương thơm nồng ấm và vị thanh ngọt khác lạ. Dù qua thời kỳ bao cấp khó khăn phân phối tem phiếu, gánh phở vẫn bền bỉ đỏ lửa, phục vụ từ các bậc văn nghệ sĩ, trí thức cho đến bà con lao động phố cổ.
+              </p>
+
+              <h2 style="font-size: 14px; font-weight: 900; color: #1E120A; text-transform: uppercase; border-bottom: 1px solid rgba(84,61,43,0.4); padding-bottom: 4px; margin: 24px 0 10px 0;">
+                IV. TINH HOA BÁT PHỞ TRUYỀN THỐNG
+              </h2>
+              <p>
+                <span class="drop-cap">B</span>át phở Thìn Bờ Hồ chuẩn vị là sự tổng hòa của bánh phở mỏng mượt, từng thớ thịt bò tái dằn mềm ngọt mọng, hành hoa thái nhỏ phủ xanh ngắt và nước dùng trong veo bốc khói nghi ngút ở nhiệt độ 98°C.
+              </p>
+              <p style="margin-top: 12px;">
+                Năm 2019, Phở Thìn Bờ Hồ vinh dự đại diện tinh hoa ẩm thực Việt Nam phục vụ hơn 4.000 bát phở tại Hội nghị Thượng đỉnh Mỹ - Triều, khẳng định vị thế di sản trường tồn của ẩm thực Hà Nội.
+              </p>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 36px; padding-top: 20px; border-top: 1px solid #543D2B;">
+            <a href="dat-ban.html" class="btn btn-gold btn-lg">
+              Đặt Bàn Thưởng Thức Bát Phở 70 Năm →
+            </a>
+          </div>
+
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="thuc-don.html">Thực Đơn</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
+          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
+            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
+            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
+            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
+            • CS4: 28 Liễu Giai, Ba Đình
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      PhoThinStore.init();
+      const badge = document.getElementById('navCartCount');
+      if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
+      window.addEventListener('phothin_cart_updated', () => {
+        if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
+      });
+    });
+  </script>
+</body>
+</html>

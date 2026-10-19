@@ -3,253 +3,672 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phở Thìn Bờ Hồ (1955) - Đệ Nhất Phở Tái Chín Hà Nội</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955</title>
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+
+  <!-- Google Fonts Preconnect & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pure Vanilla CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- ======================================================================
+       1. TOP MICRO-ALERT TICKER (CẢNH BÁO GIẢ MẠO & DI SẢN)
+       ====================================================================== -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <button type="button" class="top-ticker-alert-btn" id="btnOpenWarningFromTicker">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </button>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       2. STICKY TOP NAVBAR
+       ====================================================================== -->
   <header class="site-header">
     <div class="container nav-wrapper">
-      <a href="index.html" class="brand-logo">
-        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
-        <div class="brand-text">
-          <h1>Phở Thìn Bờ Hồ</h1>
-          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+      
+      <!-- Logo & Wordmark Brand -->
+      <a href="index.html" class="brand-link" title="Phở Thìn Bờ Hồ - Về trang chủ">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn Bờ Hồ" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
         </div>
       </a>
 
+      <!-- Main Navigation Links -->
       <nav>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
           <li><a href="index.html" class="active">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
           <li><a href="thuc-don.html">Thực Đơn</a></li>
-          <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
-          <li><a href="gio-hang.html">Đơn Mang Về</a></li>
-          <li><a href="tra-cuu.html">Tra Cứu Đơn</a></li>
-          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html">Liên Hệ</a></li>
         </ul>
       </nav>
 
+      <!-- Right Action CTAs -->
       <div class="nav-actions">
-        <a href="gio-hang.html" class="cart-icon-btn">
-          <span>🛒 Giỏ món</span>
-          <span class="cart-badge" id="cartCount">0</span>
+        <!-- Giỏ hàng / Đơn mang về -->
+        <a href="gio-hang.html" class="cart-icon-btn" title="Xem giỏ hàng đơn mang về">
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
         </a>
-        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+
+        <!-- Đặt bàn giữ chỗ -->
+        <a href="dat-ban.html" class="nav-cta-btn">
+          Đặt Bàn
+        </a>
+
+        <!-- Mobile Hamburger -->
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu" aria-label="Mở menu">
+          ☰
+        </button>
       </div>
+
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <ul class="mobile-nav-links">
+        <li><a href="index.html" class="active">Trang Chủ</a></li>
+        <li><a href="gioi-thieu.html">Giới Thiệu (Báo Cũ 1955)</a></li>
+        <li><a href="thuc-don.html">Thực Đơn Gia Truyền</a></li>
+        <li><a href="dat-ban.html">Đặt Bàn Dùng Bữa</a></li>
+        <li><a href="gio-hang.html">Đơn Mang Về (<span id="mobileCartCount">0</span> món)</a></li>
+        <li><a href="tra-cuu.html">Tra Cứu Lịch Đặt</a></li>
+        <li><a href="tin-tuc.html">Bảng Tin & Di Sản</a></li>
+        <li><a href="doi-tac.html">Đối Tác Masan Chin-Su</a></li>
+        <li><a href="lien-he.html">Liên Hệ & 4 Cơ Sở</a></li>
+        <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị Hệ Thống</a></li>
+      </ul>
     </div>
   </header>
 
-  <!-- HERO BANNER -->
-  <section class="hero-section">
-    <div class="container hero-grid">
-      <div>
-        <span class="hero-badge">HÀ NỘI 1955 • ĐỆ NHẤT PHỞ BỜ HỒ</span>
-        <h1 class="hero-title">Hương Vị Phở Gia Truyền Qua Bảy Thập Kỷ</h1>
-        <p class="hero-subtitle">
-          Từ gánh phở rong buổi đầu giải phóng Thủ đô của cụ Bùi Chí Thìn bên gốc đa Bờ Hồ, đến biểu tượng ẩm thực vươn tầm quốc tế tại Hội nghị Thượng đỉnh Mỹ - Triều 2019.
+  <main>
+    <!-- ======================================================================
+         3. HERO BANNER (ĐỎ ĐÔ TRẦM ĐIỆN ẢNH #200609 + QUẦNG SÁNG HỔ PHÁCH)
+         ====================================================================== -->
+    <section class="hero-stage">
+      <img src="images/regenerated_image_1790911567588.png" alt="Phở Thìn Bờ Hồ Hoàn Kiếm" class="hero-backdrop-img">
+      <div class="hero-overlay-gradient"></div>
+      <div class="hero-overlay-radial"></div>
+
+      <div class="hero-content">
+        <!-- Logo Emblem -->
+        <div class="hero-logo-seal" id="heroLogoTrigger" title="Bấm xem cảnh báo bảo hộ thương hiệu">
+          <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo Seal" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Tagline Badge -->
+        <div class="hero-heritage-badge" id="heroBadgeTrigger">
+          <span>❖ GIA TRUYỀN TỪ NĂM 1955 • 61 ĐINH TIÊN HOÀNG ❖</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="hero-main-title">
+          Bát phở bò nồng ấm
+          <span class="highlight">giữa lòng Phố Cổ</span>
+        </h1>
+
+        <!-- Story Hook -->
+        <p class="hero-description">
+          Thưởng thức bát phở gia truyền qua ba thế hệ bên Hồ Hoàn Kiếm, nơi gìn giữ vẹn nguyên phong vị phở cổ truyền Hà Thành với nước dùng ngọt sâu ninh xương bò 12 tiếng.
         </p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="dat-ban.html" class="btn btn-primary">Đặt Bàn Giữ Chỗ Ngay →</a>
-          <a href="thuc-don.html" class="btn btn-outline">Xem Thực Đơn Phở</a>
+
+        <!-- CTA Buttons -->
+        <div class="hero-cta-group">
+          <a href="dat-ban.html" class="btn btn-gold btn-lg">
+            <span>📅 Đặt Bàn Ngay</span>
+          </a>
+          <a href="lien-he.html" class="btn btn-outline-gold btn-lg">
+            <span>🧭 Chỉ Đường 4 Cơ Sở</span>
+          </a>
         </div>
       </div>
-      <div class="hero-image-wrap">
-        <img src="images/hero_pho_thin_bo_ho_1790702796317.jpg" alt="Quán Phở Thìn Bờ Hồ">
+    </section>
+
+    <!-- Stats Strip Below Hero -->
+    <div class="hero-stats-strip">
+      <div class="hero-stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">📅</div>
+          <div class="stat-value">1955</div>
+          <div class="stat-label">70 năm giữ trọn vị gốc Bờ Hồ</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">🏬</div>
+          <div class="stat-value">4 Cơ Sở Chính Thức</div>
+          <div class="stat-label">Hoàn Kiếm • Đinh Tiên Hoàng • Hai Bà Trưng</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-value">Di Sản Ẩm Thực</div>
+          <div class="stat-label">Bí kíp ninh xương bò 12 giờ gia truyền</div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- BÁO CŨ GIỚI THIỆU LỊCH SỬ -->
-  <section class="container">
-    <div class="newspaper-box">
-      <div class="newspaper-header">
-        <span class="newspaper-meta">Số Đặc Biệt • Báo Cũ Hà Nội Xưa • Gìn Giữ Tinh Hoa</span>
-        <h2>Chuyện Nồi Nước Dùng Bảy Mươi Năm Bên Bờ Hồ Hoàn Kiếm</h2>
+    <!-- ======================================================================
+         4. SECTION 1: 4 INTRO CARDS (TINH HOA 70 NĂM)
+         ====================================================================== -->
+    <section class="intro-cards-section">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-badge">❖ Tinh Hoa 70 Năm ❖</div>
+          <h2 class="section-title">Hành Trình Gìn Giữ & Lan Tỏa Tinh Hoa Phở Hà Nội</h2>
+          <p class="section-subtitle">
+            Từ gánh phở rong của cụ Bùi Chí Thìn năm 1955 đến biểu tượng ẩm thực đại diện Việt Nam tại Hội nghị Thượng đỉnh Mỹ - Triều.
+          </p>
+          <div class="section-divider">
+            <span class="line"></span>
+            <span class="diamond">❖</span>
+            <span class="line"></span>
+          </div>
+        </div>
+
+        <div class="intro-grid">
+          
+          <!-- Card 1 -->
+          <div class="intro-card">
+            <img src="images/regenerated_image_1790911897093.png" alt="Gốc đa Bờ Hồ" class="intro-card-bg-img">
+            <div class="intro-card-overlay"></div>
+            <div class="intro-card-inner">
+              <div class="intro-card-top">
+                <div class="intro-card-icon-circle">📖</div>
+                <span class="intro-card-pill">01 • 1955</span>
+              </div>
+              <h3 class="intro-card-title">Gốc Đa Bờ Hồ</h3>
+              <p class="intro-card-desc">
+                Khởi nguồn từ gánh phở rong của cụ Bùi Chí Thìn bên gốc đa Bờ Hồ Hoàn Kiếm buổi đầu tiếp quản Thủ đô năm 1955.
+              </p>
+            </div>
+            <div class="intro-card-bottom">
+              <a href="gioi-thieu.html" class="intro-card-btn">
+                <span>Khám phá lịch sử</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="intro-card">
+            <img src="images/regenerated_image_1790911567588.png" alt="Bí quyết gia truyền" class="intro-card-bg-img">
+            <div class="intro-card-overlay"></div>
+            <div class="intro-card-inner">
+              <div class="intro-card-top">
+                <div class="intro-card-icon-circle">🧭</div>
+                <span class="intro-card-pill">02 • 70 Năm</span>
+              </div>
+              <h3 class="intro-card-title">Bí Quyết Nước Dùng</h3>
+              <p class="intro-card-desc">
+                Nước dùng thanh trong, ngọt sâu cuống họng hầm từ 100% xương ống bò tươi suốt 12 tiếng, không lẫn tạp vị mì chính.
+              </p>
+            </div>
+            <div class="intro-card-bottom">
+              <a href="gioi-thieu.html" class="intro-card-btn">
+                <span>Xem tư liệu</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="intro-card">
+            <img src="images/regenerated_image_1790911567588.png" alt="Gia tộc Bùi Chí" class="intro-card-bg-img">
+            <div class="intro-card-overlay"></div>
+            <div class="intro-card-inner">
+              <div class="intro-card-top">
+                <div class="intro-card-icon-circle">🔥</div>
+                <span class="intro-card-pill">03 • Gia Tộc</span>
+              </div>
+              <h3 class="intro-card-title">Gia Tộc Bùi Chí</h3>
+              <p class="intro-card-desc">
+                Ba thế hệ cha truyền con nối kiên định giữ vững linh hồn phở Hà Thành xưa giữa dòng chảy công nghiệp hóa.
+              </p>
+            </div>
+            <div class="intro-card-bottom">
+              <a href="gioi-thieu.html" class="intro-card-btn">
+                <span>Thế hệ gìn giữ</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="intro-card">
+            <img src="images/loading_pho_bowl_1790702809711.jpg" alt="Vươn tầm thế giới" class="intro-card-bg-img">
+            <div class="intro-card-overlay"></div>
+            <div class="intro-card-inner">
+              <div class="intro-card-top">
+                <div class="intro-card-icon-circle">✨</div>
+                <span class="intro-card-pill">04 • Tinh Hoa</span>
+              </div>
+              <h3 class="intro-card-title">Vươn Tầm Quốc Tế</h3>
+              <p class="intro-card-desc">
+                Đại diện ẩm thực Thủ đô phục vụ hơn 4.000 bát phở cho phóng viên quốc tế tại Hội nghị Thượng đỉnh Mỹ - Triều 2019.
+              </p>
+            </div>
+            <div class="intro-card-bottom">
+              <a href="gioi-thieu.html" class="intro-card-btn">
+                <span>Xem cột mốc</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
       </div>
-      <div class="newspaper-columns">
-        <p>
-          Phở Thìn Bờ Hồ do cụ <strong>Bùi Chí Thìn (1928 - 2001)</strong> sáng lập từ năm 1955 tại số 61 Đinh Tiên Hoàng, ngay đối diện đền Ngọc Sơn và tháp Rùa cổ kính. Khác biệt với phong cách xào lăn nhiều mỡ hành của các hàng phở mở sau này, Phở Thìn Bờ Hồ trước sau như một trung thành với nước dùng thanh trong, ngọt sâu cuống họng nấu hoàn toàn từ xương ống bò hầm liên tục 12 tiếng.
-        </p>
-        <p>
-          Từng thớ thịt bò tái được dằn nhẹ trên mặt thớt gỗ nghiến bằng sống dao bài bản, nhúng vào nồi nước dùng sôi sùng sục 98°C bốc khói nghi ngút. Năm 2019, Phở Thìn Bờ Hồ vinh dự đại diện tinh hoa ẩm thực Thủ đô phục vụ hơn 4.000 bát phở cho các nguyên thủ và phóng viên quốc tế tại Trung tâm Báo chí Hội nghị Thượng đỉnh Mỹ - Triều.
-        </p>
+    </section>
+
+    <!-- ======================================================================
+         5. SECTION 2: 5 FEATURED DISHES (THỰC ĐƠN TINH HOA 1955)
+         ====================================================================== -->
+    <section class="featured-dishes-section">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-badge">❖ Thực Đơn Tinh Hoa 1955 ❖</div>
+          <h2 class="section-title">Món Ngon Gia Truyền Bờ Hồ</h2>
+          <p class="section-subtitle">
+            Những bát phở nóng hổi chan nước dùng sôi sùng sục và thức quà ăn kèm nức tiếng làm nên tên tuổi Phở Thìn Bờ Hồ
+          </p>
+          <div class="section-divider">
+            <span class="line"></span>
+            <span class="diamond">❖</span>
+            <span class="line"></span>
+          </div>
+        </div>
+
+        <!-- 5 Dishes Showcase Grid -->
+        <div class="dishes-showcase-grid" id="homeDishesGrid">
+          <!-- Render dynamically via JavaScript -->
+        </div>
+
+        <div style="text-align: center; margin-top: 48px;">
+          <a href="thuc-don.html" class="btn btn-primary btn-lg">
+            <span>Xem Toàn Bộ Thực Đơn & Gọi Món</span>
+            <span>→</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. SECTION 3: 3 FEATURED NEWS (BẢNG TIN & CÂU CHUYỆN DI SẢN)
+         ====================================================================== -->
+    <section class="featured-news-section">
+      <div class="container">
+        
+        <div class="news-header-flex">
+          <div>
+            <div class="section-badge">❖ Góc Tin Tức & Di Sản Văn Hoá ❖</div>
+            <h2 class="section-title" style="margin-bottom: 0;">Bảng Tin & Câu Chuyện Di Sản</h2>
+            <p class="section-subtitle" style="margin-top: 6px;">
+              Cập nhật sự kiện, tư liệu lịch sử và những câu chuyện về bát phở Bờ Hồ qua 70 năm
+            </p>
+          </div>
+          <a href="tin-tuc.html" class="btn btn-outline-burgundy">
+            <span>Xem tất cả bảng tin</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="news-grid" id="homeNewsGrid">
+          <!-- Render via JavaScript -->
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================
+       7. FOOTER (4 CƠ SỞ CHÍNH THỨC & DI SẢN)
+       ====================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        
+        <!-- Col 1: Brand & Impersonation Warning -->
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm. Thương hiệu bảo hộ độc quyền, không nhượng quyền xô bồ, kiên định giữ trọn hương vị truyền thống.
+          </p>
+
+          <button type="button" class="footer-warning-btn" id="btnOpenWarningFromFooter">
+            <span>⚠️</span>
+            <span>Cảnh báo mạo danh & Bản đồ giả mạo</span>
+          </button>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu (Báo Cũ 1955)</a></li>
+            <li><a href="thuc-don.html">Thực Đơn Phở & Món Kèm</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn Tại Quán</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về (Takeaway)</a></li>
+            <li><a href="tin-tuc.html">Bảng Tin & Sự Kiện</a></li>
+            <li><a href="doi-tac.html">Hợp Tác Masan Chin-Su</a></li>
+            <li><a href="lien-he.html">Liên Hệ & Tuyển Dụng</a></li>
+            <li><a href="admin.html">Cổng Quản Trị</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: 4 Official Branches -->
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất Tại Hà Nội</h4>
+          <div class="footer-branches-grid" id="footerBranchesGrid">
+            <!-- Render branches dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Legal Copyright -->
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí). Tất cả quyền được bảo lưu.</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
       </div>
     </div>
-  </section>
+  </footer>
 
-  <!-- MÓN ĂN NỔI BẬT -->
-  <section class="container">
-    <div class="section-heading">
-      <h2>Món Ăn Nổi Bật Gia Truyền</h2>
-      <p>Những bát phở nóng hổi và món ăn kèm nức tiếng làm nên tên tuổi Phở Thìn Bờ Hồ</p>
-    </div>
-
-    <div class="dish-grid" id="featuredDishes">
-      <!-- Render bằng JavaScript -->
-    </div>
-
-    <div style="text-align: center; margin-bottom: 40px;">
-      <a href="thuc-don.html" class="btn btn-gold">Xem Toàn Bộ Thực Đơn & Chọn Món →</a>
-    </div>
-  </section>
-
-  <!-- BẢNG TIN & ĐỐI TÁC -->
-  <section class="container" style="margin-bottom: 50px;">
-    <div class="section-heading">
-      <h2>Tin Tức & Dấu Ấn</h2>
-      <p>Hành trình lan tỏa văn hóa phở Việt ra khắp mọi miền</p>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-      <div class="newspaper-box" style="margin: 0; padding: 20px;">
-        <img src="images/regenerated_image_1790961081614.jpg" alt="Masan Chin-su Phở Story" style="border-radius: 6px; margin-bottom: 12px; height: 180px; width: 100%; object-fit: cover;">
-        <h3 style="font-size: 18px; margin-bottom: 8px;">Chin-su & Phở Thìn Bờ Hồ Ra Mắt "Phở Story"</h3>
-        <p style="font-size: 13px; color: var(--color-text-muted);">
-          Đánh dấu bước tiến đưa hương vị phở thanh tao gia truyền hơn 70 năm của dòng họ Bùi đến mọi gia đình Việt Nam.
-        </p>
+  <!-- ======================================================================
+       8. MODAL CẢNH BÁO MẠO DANH & BẢN ĐỒ GIẢ MẠO (FAKE MAP WARNING)
+       ====================================================================== -->
+  <div class="modal-backdrop" id="warningModalBackdrop">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header-bar">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; text-transform: uppercase;">
+          <span>⚠️</span>
+          <span>Cảnh Báo Mạo Danh & Bản Đồ Giả Mạo</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseWarningModal">✕</button>
       </div>
-      <div class="newspaper-box" style="margin: 0; padding: 20px;">
-        <img src="images/vintage_hanoi_pho_stall_1790702834461.jpg" alt="Phở Thìn 1955" style="border-radius: 6px; margin-bottom: 12px; height: 180px; width: 100%; object-fit: cover;">
-        <h3 style="font-size: 18px; margin-bottom: 8px;">Gánh Phở Xưa Bên Cây Đa Bờ Hồ</h3>
-        <p style="font-size: 13px; color: var(--color-text-muted);">
-          Ký ức về góc phố Đinh Tiên Hoàng, nơi tiếng gõ muôi chan phở của cụ Thìn đã trở thành thanh âm quen thuộc của người Hà Nội.
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <!-- MODAL XEM CHI TIẾT MÓN ĂN -->
-  <div class="modal-overlay" id="dishModal">
-    <div class="modal-content">
-      <button class="modal-close-btn" id="closeDishModal">&times;</button>
-      <img id="modalDishImg" src="" alt="" style="width: 100%; height: 240px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
-      <h3 id="modalDishTitle" style="font-size: 22px; margin-bottom: 6px;"></h3>
-      <p id="modalDishPrice" style="font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--color-red-primary); margin-bottom: 12px;"></p>
-      <p id="modalDishDesc" style="font-size: 14px; margin-bottom: 16px; line-height: 1.6;"></p>
-      <div style="background: var(--color-bg-alt); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-        <h4 style="font-size: 13px; margin-bottom: 6px;">Nguyên liệu đặc tuyển:</h4>
-        <ul id="modalDishIngredients" style="padding-left: 20px; font-size: 13px; color: var(--color-text-muted);"></ul>
-      </div>
-      <div style="display: flex; gap: 10px;">
-        <button id="modalAddToCartBtn" class="btn btn-primary" style="flex: 1;">Thêm Vào Giỏ Món</button>
-        <button id="modalBookWithDishBtn" class="btn btn-gold" style="flex: 1;">Đặt Bàn Kèm Món Này</button>
+      <div style="padding: 24px; color: var(--color-burgundy);">
+        <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px; margin-bottom: 20px;">
+          <h4 style="color: #991b1b; font-size: 14px; margin-bottom: 6px;">QUAN TRỌNG: PHÂN BIỆT RÕ THƯƠNG HIỆU</h4>
+          <p style="font-size: 13px; color: #7f1d1d; line-height: 1.5;">
+            <strong>Phở Thìn Bờ Hồ</strong> (do cụ <strong>Bùi Chí Thìn</strong> sáng lập năm 1955 tại 61 Đinh Tiên Hoàng) là thương hiệu phở truyền thống nước trong thanh ngọt. Quán <em>HOÀN TOÀN TÁCH BIỆT</em> với quán Phở Thìn Lò Đúc (chuyên phở xào lăn mỡ hành ra đời năm 1979).
+          </p>
+        </div>
+
+        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--color-burgundy);">
+          Danh sách 4 cơ sở CHÍNH THỨC duy nhất được gia tộc công nhận:
+        </h4>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong style="color: var(--color-red-accent);">✓ CS1 (GỐC): 61 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Đối diện Tháp Rùa và Đền Ngọc Sơn • Hotline: 0912 345 678</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS2: 01 Lê Văn Hưu, Hai Bà Trưng, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 679</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS3: 19B Bát Đàn, Hoàn Kiếm, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 680</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS4: 28 Liễu Giai, Ba Đình, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 681</p>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <button type="button" class="btn btn-primary" id="btnConfirmWarningModal">
+            Đã Hiểu & Tiếp Tục Xem
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <h3 style="color: var(--color-gold); font-size: 18px; margin-bottom: 12px;">Phở Thìn Bờ Hồ (1955)</h3>
-        <p style="font-size: 13px; line-height: 1.7; color: rgba(255,248,233,0.85);">
-          Thương hiệu phở bò gia truyền danh tiếng Hà Nội do cụ Bùi Chí Thìn sáng lập năm 1955. Giữ trọn công thức nấu nước dùng thanh ngọt nguyên bản từ xương ống bò tươi.
-        </p>
+  <!-- ======================================================================
+       9. MODAL CHI TIẾT MÓN ĂN (DISH DETAIL MODAL)
+       ====================================================================== -->
+  <div class="modal-backdrop" id="dishModalBackdrop">
+    <div class="modal-dialog">
+      <div class="modal-header-bar">
+        <span id="modalDishCategory" style="font-size: 12px; font-weight: 700; text-transform: uppercase;">Món Ăn Gia Truyền</span>
+        <button type="button" class="modal-close-btn" id="btnCloseDishModal">✕</button>
       </div>
-      <div>
-        <h4 style="color: var(--color-gold); font-size: 14px; margin-bottom: 12px;">Cơ Sở Chính Thức</h4>
-        <ul style="list-style: none; font-size: 12px; line-height: 2; color: rgba(255,248,233,0.85);">
-          <li>• CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm</li>
-          <li>• CS2: 1 Lê Văn Hưu, Hai Bà Trưng</li>
-          <li>• CS3: 1 Hàng Tre, Hoàn Kiếm</li>
-          <li>• CS4: 289 Kim Mã, Ba Đình</li>
-        </ul>
-      </div>
-      <div>
-        <h4 style="color: var(--color-gold); font-size: 14px; margin-bottom: 12px;">Giờ Mở Cửa</h4>
-        <p style="font-size: 12px; line-height: 1.8; color: rgba(255,248,233,0.85);">
-          Sáng: 06:00 – 13:00<br>
-          Chiều: 17:00 – 22:00<br>
-          Hotline: 033 9253 464
-        </p>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Bảo lưu mọi quyền.</p>
-    </div>
-  </footer>
 
-  <!-- SCRIPT -->
-  <script src="js/data.js"></script>
-  <script src="js/store.js"></script>
-  <script>
-    // Cập nhật số lượng giỏ hàng
-    function updateCartBadge() {
-      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
-    }
-    updateCartBadge();
-    window.addEventListener('phothin_cart_updated', updateCartBadge);
+      <div class="dish-modal-grid">
+        <div>
+          <div class="dish-modal-img-wrap">
+            <img src="" alt="" id="modalDishImage">
+          </div>
+        </div>
 
-    // Toggle Mobile Menu
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('show');
-    });
+        <div>
+          <h2 id="modalDishName" style="font-size: 22px; margin-bottom: 6px; line-height: 1.25;"></h2>
+          <div class="dish-modal-price" id="modalDishPrice"></div>
+          
+          <p class="dish-modal-desc" id="modalDishDesc"></p>
 
-    // Render món ăn nổi bật
-    const dishes = PhoThinStore.getDishes();
-    const featuredList = dishes.filter(d => d.isFeatured);
-    const container = document.getElementById('featuredDishes');
+          <div class="dish-modal-ingredients">
+            <h4>Thành Phần & Bí Quyết:</h4>
+            <ul id="modalDishIngredients"></ul>
+          </div>
 
-    container.innerHTML = featuredList.map(dish => `
-      <div class="dish-card">
-        <img src="${dish.image}" alt="${dish.name}" class="dish-card-img">
-        <div class="dish-card-body">
-          <h3 class="dish-card-title">${dish.name}</h3>
-          <p class="dish-card-desc">${dish.shortDescription}</p>
-          <div class="dish-card-price">${dish.formattedPrice}</div>
-          <div class="dish-card-actions">
-            <button class="btn btn-outline btn-sm" onclick="openDishDetail('${dish.id}')">Chi tiết</button>
-            <button class="btn btn-primary btn-sm" onclick="addToCartClick('${dish.id}')">Chọn món</button>
+          <div class="dish-modal-actions">
+            <button type="button" class="btn btn-primary" id="btnModalAddToCart">
+              🛒 Thêm Vào Đơn Mang Về
+            </button>
+            <button type="button" class="btn btn-gold" id="btnModalReserve">
+              📅 Đặt Bàn Với Món Này
+            </button>
           </div>
         </div>
       </div>
-    `).join('');
+    </div>
+  </div>
 
-    // Modal Chi tiết món
-    let currentSelectedDish = null;
-    const modal = document.getElementById('dishModal');
+  <!-- JavaScript Modules -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Khởi tạo store
+      PhoThinStore.init();
 
-    function openDishDetail(id) {
-      currentSelectedDish = PhoThinStore.getDishById(id);
-      if (!currentSelectedDish) return;
-      document.getElementById('modalDishImg').src = currentSelectedDish.image;
-      document.getElementById('modalDishTitle').innerText = currentSelectedDish.name;
-      document.getElementById('modalDishPrice').innerText = currentSelectedDish.formattedPrice;
-      document.getElementById('modalDishDesc').innerText = currentSelectedDish.fullDescription || currentSelectedDish.shortDescription;
-      
-      const ingList = document.getElementById('modalDishIngredients');
-      ingList.innerHTML = (currentSelectedDish.ingredients || []).map(i => `<li>${i}</li>`).join('');
+      // 2. Cập nhật số lượng giỏ hàng trên navbar
+      const updateCartBadges = () => {
+        const count = PhoThinStore.getCartTotalCount();
+        const badge1 = document.getElementById('navCartCount');
+        const badge2 = document.getElementById('mobileCartCount');
+        if (badge1) badge1.textContent = count;
+        if (badge2) badge2.textContent = count;
+      };
+      updateCartBadges();
+      window.addEventListener('phothin_cart_updated', updateCartBadges);
 
-      modal.classList.add('active');
-    }
-
-    document.getElementById('closeDishModal').addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-    function addToCartClick(dishId) {
-      PhoThinStore.addToCart(dishId, 1);
-      alert('Đã thêm món vào giỏ!');
-    }
-
-    document.getElementById('modalAddToCartBtn').addEventListener('click', () => {
-      if (currentSelectedDish) {
-        addToCartClick(currentSelectedDish.id);
-        modal.classList.remove('active');
+      // 3. Mobile drawer toggle
+      const btnToggle = document.getElementById('btnToggleMobileMenu');
+      const drawer = document.getElementById('mobileDrawer');
+      if (btnToggle && drawer) {
+        btnToggle.addEventListener('click', () => {
+          drawer.classList.toggle('open');
+        });
       }
-    });
 
-    document.getElementById('modalBookWithDishBtn').addEventListener('click', () => {
-      if (currentSelectedDish) {
-        // Lưu tạm món để trang đặt bàn tự động nhận
-        localStorage.setItem('phothin_preselected_dish', JSON.stringify({
-          dishId: currentSelectedDish.id,
-          name: currentSelectedDish.name,
-          unitPrice: currentSelectedDish.price,
-          quantity: 1
-        }));
-        window.location.href = 'dat-ban.html';
+      // 4. Modal Cảnh Báo Giả Mạo
+      const warningModal = document.getElementById('warningModalBackdrop');
+      const openWarning = () => warningModal.classList.add('open');
+      const closeWarning = () => warningModal.classList.remove('open');
+
+      document.getElementById('btnOpenWarningFromTicker')?.addEventListener('click', openWarning);
+      document.getElementById('btnOpenWarningFromFooter')?.addEventListener('click', openWarning);
+      document.getElementById('heroLogoTrigger')?.addEventListener('click', openWarning);
+      document.getElementById('heroBadgeTrigger')?.addEventListener('click', openWarning);
+      document.getElementById('btnCloseWarningModal')?.addEventListener('click', closeWarning);
+      document.getElementById('btnConfirmWarningModal')?.addEventListener('click', closeWarning);
+      warningModal.addEventListener('click', (e) => {
+        if (e.target === warningModal) closeWarning();
+      });
+
+      // 5. Render 5 Featured Dishes
+      const dishes = PhoThinStore.getDishes().filter(d => d.isFeatured);
+      const dishesGrid = document.getElementById('homeDishesGrid');
+      
+      const openDishDetail = (dish) => {
+        document.getElementById('modalDishName').textContent = dish.name;
+        document.getElementById('modalDishPrice').textContent = dish.formattedPrice;
+        document.getElementById('modalDishDesc').textContent = dish.fullDescription || dish.shortDescription;
+        document.getElementById('modalDishImage').src = dish.image;
+        document.getElementById('modalDishCategory').textContent = dish.isSignature ? 'SIGNATURE • ĐẶC SẢN GIA TRUYỀN' : 'MÓN PHỞ GIA TRUYỀN';
+        
+        const ul = document.getElementById('modalDishIngredients');
+        ul.innerHTML = '';
+        (dish.ingredients || []).forEach(ing => {
+          const li = document.createElement('li');
+          li.textContent = ing;
+          ul.appendChild(li);
+        });
+
+        // Nút thêm vào giỏ
+        const btnAdd = document.getElementById('btnModalAddToCart');
+        btnAdd.onclick = () => {
+          PhoThinStore.addToCart(dish.id, 1);
+          closeDishModal();
+          alert(`Đã thêm 1 "${dish.name}" vào đơn món mang về!`);
+        };
+
+        // Nút đặt bàn với món này
+        const btnReserve = document.getElementById('btnModalReserve');
+        btnReserve.onclick = () => {
+          closeDishModal();
+          window.location.href = `dat-ban.html?preorder=${dish.id}`;
+        };
+
+        document.getElementById('dishModalBackdrop').classList.add('open');
+      };
+
+      const closeDishModal = () => {
+        document.getElementById('dishModalBackdrop').classList.remove('open');
+      };
+      document.getElementById('btnCloseDishModal')?.addEventListener('click', closeDishModal);
+      document.getElementById('dishModalBackdrop')?.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('dishModalBackdrop')) closeDishModal();
+      });
+
+      if (dishesGrid) {
+        dishesGrid.innerHTML = '';
+        dishes.forEach(dish => {
+          const card = document.createElement('div');
+          card.className = `dish-card ${dish.isSignature ? 'is-signature' : ''}`;
+          card.innerHTML = `
+            <div class="dish-card-img-wrap">
+              <img src="${dish.image}" alt="${dish.name}" class="dish-card-img">
+              <div class="dish-card-gradient"></div>
+              ${dish.isSignature ? '<div class="signature-badge"><span class="star">★</span> SIGNATURE</div>' : ''}
+              <div class="dish-card-price">${dish.formattedPrice}</div>
+            </div>
+            <div class="dish-card-body">
+              <div>
+                <h3 class="dish-card-name">${dish.name}</h3>
+                <p class="dish-card-desc">${dish.shortDescription}</p>
+              </div>
+              <div class="dish-card-footer">
+                <span>Xem chi tiết</span>
+                <span class="arrow">→</span>
+              </div>
+            </div>
+          `;
+          card.addEventListener('click', () => openDishDetail(dish));
+          dishesGrid.appendChild(card);
+        });
+      }
+
+      // 6. Render 3 Tin Tức Nổi Bật
+      const articles = PhoThinStore.getArticles().slice(0, 3);
+      const newsGrid = document.getElementById('homeNewsGrid');
+      if (newsGrid) {
+        newsGrid.innerHTML = '';
+        articles.forEach((art, idx) => {
+          const card = document.createElement('article');
+          card.className = 'news-card';
+          card.innerHTML = `
+            <div>
+              <div class="news-card-img-wrap">
+                <img src="${art.image}" alt="${art.title}" class="news-card-img">
+                <span class="news-category-badge">${art.category}</span>
+                ${idx === 0 ? '<span class="news-highlight-badge">★ Nổi bật</span>' : ''}
+              </div>
+              <div class="news-card-body">
+                <div class="news-card-meta">
+                  <span>📅 ${art.date}</span>
+                  <span>•</span>
+                  <span>⏱ ${art.readTime}</span>
+                </div>
+                <h3 class="news-card-title">${art.title}</h3>
+                <p class="news-card-excerpt">${art.excerpt}</p>
+              </div>
+            </div>
+            <div class="news-card-bottom">
+              <a href="tin-tuc.html?id=${art.id}" class="btn btn-outline-burgundy" style="width: 100%;">
+                Đọc bài viết →
+              </a>
+            </div>
+          `;
+          newsGrid.appendChild(card);
+        });
+      }
+
+      // 7. Render 4 Cơ sở ở Footer
+      const branches = PhoThinStore.getBranches();
+      const branchesGrid = document.getElementById('footerBranchesGrid');
+      if (branchesGrid) {
+        branchesGrid.innerHTML = '';
+        branches.forEach(b => {
+          const bCard = document.createElement('div');
+          bCard.className = 'footer-branch-card';
+          bCard.innerHTML = `
+            ${b.isOriginal ? '<span class="branch-original-tag">GỐC</span>' : ''}
+            <div class="branch-name">${b.code}: ${b.name}</div>
+            <div class="branch-addr">${b.address}</div>
+            <div class="branch-actions">
+              <a href="tel:${b.phone.replace(/\\s/g, '')}" class="branch-phone">${b.phone}</a>
+              <a href="dat-ban.html?branch=${b.id}" class="branch-reserve-link">Đặt bàn →</a>
+            </div>
+          `;
+          branchesGrid.appendChild(bCard);
+        });
       }
     });
   </script>

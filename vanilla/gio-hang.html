@@ -3,96 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giỏ Món & Đặt Mang Về - Phở Thìn Bờ Hồ (1955)</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Đơn Mang Về (Takeaway) - Phở Thìn Bờ Hồ (1955)</title>
+  
   <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+    .cart-table th {
+      background-color: var(--bg-cream);
+      color: var(--color-burgundy);
+      padding: 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--color-gold-border);
+    }
+    .cart-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(184, 137, 50, 0.2);
+      font-size: 14px;
+    }
+    .qty-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      border: 1px solid rgba(184, 137, 50, 0.4);
+      background-color: var(--bg-ivory);
+      color: var(--color-burgundy);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .qty-btn:hover {
+      background-color: var(--color-burgundy);
+      color: var(--bg-cream);
+    }
+    .switch-banner {
+      background-color: var(--bg-cream);
+      border: 1px solid var(--color-gold);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- TOP TICKER -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <div class="top-ticker-alert-btn">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </div>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
   <header class="site-header">
     <div class="container nav-wrapper">
-      <a href="index.html" class="brand-logo">
-        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
-        <div class="brand-text">
-          <h1>Phở Thìn Bờ Hồ</h1>
-          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+      <a href="index.html" class="brand-link">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
         </div>
       </a>
 
       <nav>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
           <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
           <li><a href="thuc-don.html">Thực Đơn</a></li>
-          <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
-          <li><a href="gio-hang.html" class="active">Đơn Mang Về</a></li>
-          <li><a href="tra-cuu.html">Tra Cứu Đơn</a></li>
-          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html">Liên Hệ</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <a href="gio-hang.html" class="cart-icon-btn">
-          <span>🛒 Giỏ món</span>
-          <span class="cart-badge" id="cartCount">0</span>
+        <a href="gio-hang.html" class="cart-icon-btn" style="background-color: var(--bg-cream);">
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
         </a>
-        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+        <a href="dat-ban.html" class="nav-cta-btn">Đặt Bàn</a>
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu">☰</button>
       </div>
     </div>
   </header>
 
-  <!-- BANNER TIÊU ĐỀ -->
-  <section style="background: var(--color-bg-alt); padding: 30px 0; border-bottom: 1px solid var(--color-border); text-align: center;">
+  <!-- BANNER HEADER -->
+  <section style="background-color: var(--bg-cream); padding: 40px 16px; border-bottom: 1px solid var(--color-gold-border-light); text-align: center;">
     <div class="container">
-      <h1 style="font-size: 32px; margin-bottom: 8px;">Đặt Món Mang Về (Takeaway - Nhận Tại Quầy)</h1>
-      <p style="color: var(--color-text-muted);">Đóng gói chu đáo, phở và nước dùng riêng biệt, nhận thanh toán tại cơ sở</p>
+      <div class="section-badge">❖ Đơn Món Mang Về (Takeaway) ❖</div>
+      <h1 class="section-title">Giỏ Món & Đặt Mang Về Nhận Tại Quán</h1>
+      <p class="section-subtitle">
+        Bánh phở và nước dùng 98°C được đóng gói riêng biệt trong hộp giấy thực phẩm giữ nóng, bảo đảm trọn vẹn hương vị
+      </p>
     </div>
   </section>
 
   <!-- MAIN CART & CHECKOUT -->
-  <main class="container" style="padding: 40px 16px;">
+  <main class="container" style="padding: 40px 16px 80px 16px;">
+    
     <!-- BANNER CHUYỂN SANG ĐẶT BÀN NẾU MUỐN ĂN TẠI QUÁN -->
     <div class="switch-banner" id="switchBanner" style="display: none;">
       <div>
-        <h4 style="color: var(--color-red-primary);">🍜 Quý khách muốn thưởng thức phở nóng tại bàn?</h4>
-        <p>Đặt bàn trước để được giữ chỗ ngồi và quán chuẩn bị món nóng hổi ngay khi bạn đến!</p>
+        <h4 style="color: var(--color-burgundy); font-size: 15px; margin-bottom: 4px;">
+          🍜 Quý khách muốn thưởng thức phở nóng tại bàn?
+        </h4>
+        <p style="font-size: 13px; color: var(--color-text-brown-light);">
+          Đặt bàn trước để được giữ chỗ ngồi và quán chuẩn bị món nóng hổi ngay khi bạn đến!
+        </p>
       </div>
       <button type="button" class="btn btn-primary btn-sm" id="btnSwitchToBooking">
-        Chuyển sang Đặt bàn kèm món này →
+        Chuyển Sang Đặt Bàn Với Món Này →
       </button>
     </div>
 
-    <div class="booking-layout" id="cartContainer">
-      <!-- CỘT 1: DANH SÁCH MÓN ĐÃ CHỌN -->
+    <div class="booking-layout" id="cartLayout">
+      
+      <!-- CỘT TRÁI: DANH SÁCH MÓN TRONG GIỎ -->
       <div class="form-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
-          <h2 style="font-size: 20px;">Món Đã Chọn Trong Giỏ</h2>
-          <button type="button" class="btn btn-outline btn-sm" id="clearAllCartBtn">Xóa giỏ hàng</button>
-        </div>
-
-        <div id="cartItemsList">
-          <!-- Render danh sách món -->
-        </div>
-
-        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border);">
-          <span>Tổng tiền tạm tính:</span>
-          <span id="cartTotalPrice" style="font-family: var(--font-mono); color: var(--color-red-primary);">0 đ</span>
-        </div>
-        <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 8px;">
-          * Giá đã bao gồm thuế. Thanh toán trực tiếp tại quầy khi nhận món.
-        </p>
-      </div>
-
-      <!-- CỘT 2: THÔNG TIN NHẬN MÓN MANG VỀ -->
-      <div class="form-panel">
-        <h2 style="font-size: 20px; margin-bottom: 16px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
-          Thông Tin Nhận Món
+        <h2 style="font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
+          Các Món Đã Chọn (<span id="cartTotalItemsText">0</span> món)
         </h2>
 
-        <form id="takeawayForm">
+        <div id="cartEmptyState" style="text-align: center; padding: 40px 16px; display: none;">
+          <div style="font-size: 40px; margin-bottom: 12px;">🛒</div>
+          <p style="font-size: 16px; font-weight: 700; color: var(--color-burgundy);">Giỏ món của bạn đang trống</p>
+          <p style="font-size: 13px; color: var(--color-text-brown-light); margin: 6px 0 20px 0;">Hãy khám phá thực đơn truyền thống của chúng tôi</p>
+          <a href="thuc-don.html" class="btn btn-primary">Xem Thực Đơn Ngay →</a>
+        </div>
+
+        <div id="cartContentState">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Món ăn</th>
+                <th style="text-align: center;">Số lượng</th>
+                <th style="text-align: right;">Đơn giá</th>
+                <th style="text-align: right;">Thành tiền</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartTableBody"></tbody>
+          </table>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-gold-border-light); padding-top: 16px;">
+            <a href="thuc-don.html" style="font-size: 13px; font-weight: 700; color: var(--color-burgundy);">
+              + Chọn thêm món khác
+            </a>
+            <button type="button" id="btnClearCart" style="background: none; border: none; font-size: 13px; color: #dc2626; cursor: pointer;">
+              Xóa sạch giỏ hàng
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: FORM ĐẶT MANG VỀ -->
+      <div class="form-panel" id="checkoutPanel">
+        <h2 style="font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
+          Thông Tin Nhận Món Tại Quầy
+        </h2>
+
+        <form id="takeawayOrderForm">
           <div class="form-group">
-            <label for="takeawayName">Họ Và Tên (*)</label>
-            <input type="text" id="takeawayName" class="form-control" placeholder="Tên người nhận món" required>
+            <label for="takeawayBranch">Cơ Sở Nhận Món (*)</label>
+            <select id="takeawayBranch" class="form-control" required></select>
+          </div>
+
+          <div class="form-group">
+            <label for="takeawayTime">Thời Gian Dự Kiến Đến Lấy (*)</label>
+            <input type="time" id="takeawayTime" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="takeawayName">Họ & Tên Người Đặt (*)</label>
+            <input type="text" id="takeawayName" class="form-control" placeholder="Nguyễn Văn A" required>
           </div>
 
           <div class="form-group">
@@ -101,221 +208,290 @@
           </div>
 
           <div class="form-group">
-            <label for="takeawayBranch">Cơ Sở Nhận Món (*)</label>
-            <select id="takeawayBranch" class="form-control" required></select>
+            <label for="takeawayNotes">Ghi Chú Đóng Gói (Nước béo, nhiều hành...)</label>
+            <textarea id="takeawayNotes" class="form-control" rows="2" placeholder="Ví dụ: Bỏ riêng ớt, lấy thêm chanh quất..."></textarea>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="takeawayDate">Ngày Lấy Món (*)</label>
-              <input type="date" id="takeawayDate" class="form-control" required>
+          <!-- TỔNG TIỀN THANH TOÁN -->
+          <div style="background-color: var(--bg-cream); border: 1px solid rgba(184, 137, 50, 0.4); border-radius: 8px; padding: 16px; margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+              <span>Tạm tính món:</span>
+              <strong style="font-family: var(--font-mono);" id="subtotalText">0 đ</strong>
             </div>
-            <div class="form-group">
-              <label for="takeawayTime">Giờ Lấy (*)</label>
-              <input type="time" id="takeawayTime" class="form-control" value="11:45" required>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; color: var(--color-text-brown-light);">
+              <span>Phí đóng gói hộp giấy:</span>
+              <span>Miễn phí</span>
             </div>
+            <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; border-top: 1px dashed rgba(184, 137, 50, 0.4); padding-top: 10px; color: var(--color-burgundy);">
+              <span>Tổng thanh toán:</span>
+              <span style="color: var(--color-red-accent); font-family: var(--font-mono);" id="totalText">0 đ</span>
+            </div>
+            <p style="font-size: 11px; color: var(--color-text-brown-light); margin-top: 8px;">
+              * Thanh toán trực tiếp bằng tiền mặt hoặc chuyển khoản tại quầy khi nhận món.
+            </p>
           </div>
 
-          <div class="form-group">
-            <label for="takeawayNotes">Ghi Chú Đóng Gói</label>
-            <textarea id="takeawayNotes" class="form-control" rows="2" placeholder="Ví dụ: Nước dùng và bánh phở để túi riêng, xin thêm ớt..."></textarea>
-          </div>
-
-          <div id="takeawayError" style="display: none; padding: 10px; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 6px; margin-bottom: 14px; font-size: 13px;"></div>
-
-          <button type="submit" id="btnSubmitTakeaway" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 15px;">
-            Gửi Đơn Mang Về · Thanh Toán Khi Nhận
+          <button type="submit" class="btn btn-gold btn-lg" id="btnSubmitOrder" style="width: 100%;">
+            Xác Nhận Đặt Mang Về Ngay →
           </button>
         </form>
       </div>
+
     </div>
 
-    <!-- KHỐI KHI GIỎ HÀNG TRỐNG -->
-    <div id="emptyCartBox" style="display: none; text-align: center; padding: 60px 20px;">
-      <div style="font-size: 64px; margin-bottom: 16px;">🍜</div>
-      <h3 style="font-size: 24px; margin-bottom: 8px;">Giỏ hàng của bạn đang trống</h3>
-      <p style="color: var(--color-text-muted); margin-bottom: 24px;">Hãy dạo qua thực đơn để chọn những bát phở nóng hổi đậm đà nhé!</p>
-      <a href="thuc-don.html" class="btn btn-primary">Xem Thực Đơn Ngay →</a>
+    <!-- MÀN HÌNH HOÀN TẤT ĐƠN HÀNG -->
+    <div id="orderSuccessScreen" style="display: none; padding: 40px 0; text-align: center;">
+      <div style="max-width: 580px; margin: 0 auto; background: var(--bg-cream); border: 2px solid var(--color-gold); border-radius: 16px; padding: 40px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div style="font-size: 48px; margin-bottom: 16px;">🍜</div>
+        <h2 style="font-size: 26px; color: var(--color-burgundy); margin-bottom: 8px;">Đặt Đơn Mang Về Thành Công!</h2>
+        <p style="font-size: 14px; color: var(--color-text-brown-light); margin-bottom: 20px;">
+          Cơ sở đã tiếp nhận đơn của bạn. Vui lòng đến nhận món theo đúng thời gian đã hẹn.
+        </p>
+
+        <div style="background-color: var(--bg-ivory); border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: left; font-size: 14px;">
+          <div>Mã Đơn: <strong style="font-family: var(--font-mono); color: var(--color-red-accent);" id="successOrderCode"></strong></div>
+          <div style="margin-top: 4px;">Khách hàng: <strong id="successOrderName"></strong></div>
+          <div style="margin-top: 4px;">Cơ sở nhận: <strong id="successOrderBranch"></strong></div>
+          <div style="margin-top: 4px;">Tổng tiền thanh toán tại quầy: <strong style="color: var(--color-red-accent); font-family: var(--font-mono);" id="successOrderTotal"></strong></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="tra-cuu.html" class="btn btn-primary">Tra Cứu Đơn Của Tôi →</a>
+          <a href="thuc-don.html" class="btn btn-outline-burgundy">Tiếp Tục Đặt Món</a>
+        </div>
+      </div>
     </div>
+
   </main>
-
-  <!-- MODAL XÁC NHẬN ĐƠN MANG VỀ THÀNH CÔNG -->
-  <div class="modal-overlay" id="orderSuccessModal">
-    <div class="modal-content" style="text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 12px;">📦</div>
-      <h3 style="font-size: 24px; color: var(--color-red-primary); margin-bottom: 8px;">Đã Tiếp Nhận Đơn Mang Về</h3>
-      <p style="font-size: 14px; color: var(--color-text-muted); margin-bottom: 16px;">
-        Mã đơn hàng: <strong id="orderSuccessCode" style="font-family: var(--font-mono); font-size: 18px; color: var(--color-gold-dark);"></strong>
-      </p>
-
-      <div style="background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 8px; padding: 16px; text-align: left; font-size: 13px; margin-bottom: 20px;">
-        <p><strong>Khách hàng:</strong> <span id="orderSuccessName"></span> (<span id="orderSuccessPhone"></span>)</p>
-        <p><strong>Cơ sở nhận:</strong> <span id="orderSuccessBranch"></span></p>
-        <p><strong>Hẹn lấy món lúc:</strong> <span id="orderSuccessTime"></span></p>
-        <div id="orderSuccessItems" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--color-border);"></div>
-      </div>
-
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <a href="tra-cuu.html" class="btn btn-gold">Xem Đơn Của Tôi</a>
-        <button class="btn btn-primary" onclick="window.location.href='index.html'">Về Trang Chủ</button>
-      </div>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
-    <div class="container footer-bottom">
-      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Hotline: 033 9253 464</p>
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="thuc-don.html">Thực Đơn</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
+          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
+            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
+            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
+            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
+            • CS4: 28 Liễu Giai, Ba Đình
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
+      </div>
     </div>
   </footer>
 
-  <!-- SCRIPT -->
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>
   <script>
-    function updateCartBadge() {
-      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
-    }
-    updateCartBadge();
-    window.addEventListener('phothin_cart_updated', updateCartBadge);
+    document.addEventListener('DOMContentLoaded', () => {
+      PhoThinStore.init();
 
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('show');
-    });
+      // Branch select
+      const branches = PhoThinStore.getBranches();
+      const branchSelect = document.getElementById('takeawayBranch');
+      branchSelect.innerHTML = '';
+      branches.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.code}: ${b.name} (${b.address})`;
+        if (b.isOriginal) opt.selected = true;
+        branchSelect.appendChild(opt);
+      });
 
-    // Điền chi nhánh
-    const branches = PhoThinStore.getBranches();
-    const takeawayBranch = document.getElementById('takeawayBranch');
-    takeawayBranch.innerHTML = branches.map(b => `<option value="${b.id}">${b.code}: ${b.name}</option>`).join('');
+      // Default pickup time: +30 minutes
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 30);
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('takeawayTime').value = `${hours}:${mins}`;
 
-    // Ngày hẹn
-    const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
-    const takeawayDate = document.getElementById('takeawayDate');
-    takeawayDate.min = todayStr;
-    takeawayDate.value = todayStr;
+      const updateUI = () => {
+        const cart = PhoThinStore.getCart();
+        const badge = document.getElementById('navCartCount');
+        if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
 
-    // Render danh sách giỏ hàng
-    function renderCartPage() {
-      const cart = PhoThinStore.getCart();
-      const list = document.getElementById('cartItemsList');
-      const totalText = document.getElementById('cartTotalPrice');
-      const container = document.getElementById('cartContainer');
-      const emptyBox = document.getElementById('emptyCartBox');
-      const banner = document.getElementById('switchBanner');
+        const emptyState = document.getElementById('cartEmptyState');
+        const contentState = document.getElementById('cartContentState');
+        const checkoutPanel = document.getElementById('checkoutPanel');
+        const switchBanner = document.getElementById('switchBanner');
+        const totalItemsText = document.getElementById('cartTotalItemsText');
+        const tbody = document.getElementById('cartTableBody');
 
-      if (!cart.length) {
-        container.style.display = 'none';
-        banner.style.display = 'none';
-        emptyBox.style.display = 'block';
-        return;
-      }
+        if (cart.length === 0) {
+          emptyState.style.display = 'block';
+          contentState.style.display = 'none';
+          checkoutPanel.style.opacity = '0.5';
+          document.getElementById('btnSubmitOrder').disabled = true;
+          switchBanner.style.display = 'none';
+          totalItemsText.textContent = '0';
+          return;
+        }
 
-      container.style.display = 'grid';
-      banner.style.display = 'flex';
-      emptyBox.style.display = 'none';
+        emptyState.style.display = 'none';
+        contentState.style.display = 'block';
+        checkoutPanel.style.opacity = '1';
+        document.getElementById('btnSubmitOrder').disabled = false;
+        switchBanner.style.display = 'flex';
 
-      let total = 0;
-      list.innerHTML = cart.map(item => {
-        const dish = PhoThinStore.getDishById(item.dishId);
-        if (!dish) return '';
-        const subtotal = dish.price * item.quantity;
-        total += subtotal;
+        let total = 0;
+        let count = 0;
+        tbody.innerHTML = '';
 
-        return `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--color-border);">
-            <div style="display: flex; gap: 12px; align-items: center;">
-              <img src="${dish.image}" alt="${dish.name}" style="width: 56px; height: 56px; object-fit: cover; border-radius: 6px;">
-              <div>
-                <strong style="font-size: 14px; display: block;">${dish.name}</strong>
-                <span style="font-size: 12px; color: var(--color-text-muted); font-family: var(--font-mono);">${dish.price.toLocaleString('vi-VN')} đ/món</span>
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <button class="qty-btn" onclick="changeQty('${dish.id}', ${item.quantity - 1})">-</button>
-              <span style="font-weight: 700; width: 24px; text-align: center;">${item.quantity}</span>
-              <button class="qty-btn" onclick="changeQty('${dish.id}', ${item.quantity + 1})">+</button>
-              <button onclick="changeQty('${dish.id}', 0)" style="border: none; background: none; color: red; font-size: 16px; cursor: pointer; margin-left: 8px;" title="Xóa">✕</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      totalText.innerText = total.toLocaleString('vi-VN') + ' đ';
-    }
-
-    window.changeQty = function(dishId, qty) {
-      PhoThinStore.updateCartQuantity(dishId, qty);
-      renderCartPage();
-    };
-
-    document.getElementById('clearAllCartBtn').addEventListener('click', () => {
-      if (confirm('Bạn có chắc muốn xóa sạch giỏ hàng không?')) {
-        PhoThinStore.clearCart();
-        renderCartPage();
-      }
-    });
-
-    // CHUYỂN SANG ĐẶT BÀN KÈM MÓN
-    document.getElementById('btnSwitchToBooking').addEventListener('click', () => {
-      const cart = PhoThinStore.getCart();
-      if (!cart.length) return;
-      localStorage.setItem('phothin_cart_for_reservation', JSON.stringify(cart));
-      window.location.href = 'dat-ban.html';
-    });
-
-    renderCartPage();
-
-    // SUBMIT ĐƠN MANG VỀ
-    document.getElementById('takeawayForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const errBox = document.getElementById('takeawayError');
-      errBox.style.display = 'none';
-
-      const cart = PhoThinStore.getCart();
-      if (!cart.length) {
-        errBox.innerText = 'Giỏ hàng của bạn đang trống!';
-        errBox.style.display = 'block';
-        return;
-      }
-
-      try {
-        const items = cart.map(item => {
+        cart.forEach(item => {
           const dish = PhoThinStore.getDishById(item.dishId);
-          return dish ? { dishId: dish.id, name: dish.name, unitPrice: dish.price, quantity: item.quantity } : null;
-        }).filter(Boolean);
+          if (!dish) return;
 
-        const pickupAt = `${takeawayDate.value}T${document.getElementById('takeawayTime').value}:00`;
+          const itemTotal = dish.price * item.quantity;
+          total += itemTotal;
+          count += item.quantity;
 
-        const newOrder = PhoThinStore.createOrder({
-          fullName: document.getElementById('takeawayName').value,
-          phone: document.getElementById('takeawayPhone').value,
-          branchId: takeawayBranch.value,
-          pickupAt,
-          notes: document.getElementById('takeawayNotes').value,
-          items
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="${dish.image}" alt="${dish.name}" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover;">
+                <div>
+                  <strong style="color: var(--color-burgundy);">${dish.name}</strong>
+                </div>
+              </div>
+            </td>
+            <td style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; gap: 6px;">
+                <button type="button" class="qty-btn btn-minus">-</button>
+                <span style="font-weight: 700; min-width: 20px; font-family: var(--font-mono);">${item.quantity}</span>
+                <button type="button" class="qty-btn btn-plus">+</button>
+              </div>
+            </td>
+            <td style="text-align: right; font-family: var(--font-mono);">${dish.price.toLocaleString('vi-VN')} đ</td>
+            <td style="text-align: right; font-weight: 700; color: var(--color-red-accent); font-family: var(--font-mono);">${itemTotal.toLocaleString('vi-VN')} đ</td>
+            <td style="text-align: center;">
+              <button type="button" class="btn-del" style="background:none; border:none; color:#dc2626; cursor:pointer;">✕</button>
+            </td>
+          `;
+
+          tr.querySelector('.btn-minus').onclick = () => {
+            PhoThinStore.updateCartQuantity(item.dishId, item.quantity - 1);
+            updateUI();
+          };
+          tr.querySelector('.btn-plus').onclick = () => {
+            PhoThinStore.updateCartQuantity(item.dishId, item.quantity + 1);
+            updateUI();
+          };
+          tr.querySelector('.btn-del').onclick = () => {
+            PhoThinStore.updateCartQuantity(item.dishId, 0);
+            updateUI();
+          };
+
+          tbody.appendChild(tr);
         });
 
-        // Hiển thị modal thành công
-        document.getElementById('orderSuccessCode').innerText = newOrder.id;
-        document.getElementById('orderSuccessName').innerText = newOrder.fullName;
-        document.getElementById('orderSuccessPhone').innerText = newOrder.phone;
-        document.getElementById('orderSuccessBranch').innerText = newOrder.branchName;
-        document.getElementById('orderSuccessTime').innerText = new Date(newOrder.pickupAt).toLocaleString('vi-VN');
+        totalItemsText.textContent = count;
+        document.getElementById('subtotalText').textContent = total.toLocaleString('vi-VN') + ' đ';
+        document.getElementById('totalText').textContent = total.toLocaleString('vi-VN') + ' đ';
+      };
 
-        const itemsBox = document.getElementById('orderSuccessItems');
-        itemsBox.innerHTML = `
-          <ul style="padding-left: 20px;">
-            ${newOrder.items.map(i => `<li>${i.name} × ${i.quantity} — ${(i.unitPrice * i.quantity).toLocaleString('vi-VN')} đ</li>`).join('')}
-          </ul>
-          <p style="font-weight: 700; color: var(--color-red-primary); margin-top: 6px;">Tổng tiền: ${newOrder.total.toLocaleString('vi-VN')} đ</p>
-        `;
+      document.getElementById('btnClearCart')?.addEventListener('click', () => {
+        if (confirm('Bạn có chắc muốn xóa toàn bộ món trong giỏ?')) {
+          PhoThinStore.clearCart();
+          updateUI();
+        }
+      });
 
-        document.getElementById('orderSuccessModal').classList.add('active');
-        renderCartPage();
-      } catch (err) {
-        errBox.innerText = err.message || 'Chưa gửi được đơn.';
-        errBox.style.display = 'block';
-      }
+      // Chuyển sang đặt bàn
+      document.getElementById('btnSwitchToBooking')?.addEventListener('click', () => {
+        window.location.href = 'dat-ban.html?from=cart';
+      });
+
+      // Submit đơn mang về
+      const form = document.getElementById('takeawayOrderForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const cart = PhoThinStore.getCart();
+        if (cart.length === 0) {
+          alert('Giỏ hàng trống!');
+          return;
+        }
+
+        const items = cart.map(item => {
+          const dish = PhoThinStore.getDishById(item.dishId);
+          return {
+            dishId: item.dishId,
+            name: dish ? dish.name : item.dishId,
+            unitPrice: dish ? dish.price : 0,
+            quantity: item.quantity
+          };
+        });
+
+        const totalAmount = items.reduce((sum, it) => sum + (it.unitPrice * it.quantity), 0);
+        const branch = PhoThinStore.getBranchById(branchSelect.value);
+
+        const newOrder = {
+          id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+          fullName: document.getElementById('takeawayName').value.trim(),
+          phone: document.getElementById('takeawayPhone').value.trim(),
+          branchId: branchSelect.value,
+          branchName: branch ? `${branch.code}: ${branch.name}` : branchSelect.value,
+          pickupTime: document.getElementById('takeawayTime').value,
+          items: items,
+          totalAmount: totalAmount,
+          notes: document.getElementById('takeawayNotes').value.trim(),
+          status: 'confirmed',
+          createdAt: new Date().toISOString()
+        };
+
+        const orders = PhoThinStore.getOrders();
+        orders.unshift(newOrder);
+        localStorage.setItem('phothin_orders', JSON.stringify(orders));
+        localStorage.setItem('phothin_customer_phone', newOrder.phone);
+
+        PhoThinStore.clearCart();
+
+        // Hiển thị màn hình thành công
+        document.getElementById('cartLayout').style.display = 'none';
+        document.getElementById('switchBanner').style.display = 'none';
+        document.getElementById('orderSuccessScreen').style.display = 'block';
+
+        document.getElementById('successOrderCode').textContent = newOrder.id;
+        document.getElementById('successOrderName').textContent = `${newOrder.fullName} (${newOrder.phone})`;
+        document.getElementById('successOrderBranch').textContent = newOrder.branchName;
+        document.getElementById('successOrderTotal').textContent = newOrder.totalAmount.toLocaleString('vi-VN') + ' đ';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      updateUI();
     });
   </script>
 </body>

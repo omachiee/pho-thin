@@ -186,6 +186,16 @@ const INITIAL_DATA = {
       category: 'Lịch Sử & Văn Hóa',
       image: 'images/vintage_hanoi_pho_stall_1790702834461.jpg',
       author: 'Ban Văn Hóa'
+    },
+    {
+      id: 'news-3',
+      title: 'Ngày Việt Nam ở nước ngoài 2023: Mang Phở Thìn, tranh Đông Hồ đến bạn bè quốc tế',
+      excerpt: 'Hình ảnh bát Phở Thìn Bờ Hồ thơm nức cùng những bức tranh dân gian Đông Hồ đã trở thành đại sứ văn hoá chạm đến trái tim bạn bè quốc tế.',
+      date: '09/11/2023',
+      readTime: '4 phút đọc',
+      category: 'Giao Lưu Quốc Tế',
+      image: 'images/regenerated_image_1790965639507.webp',
+      author: 'Admin'
     }
   ],
 

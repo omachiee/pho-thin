@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liên Hệ & 4 Cơ Sở - Phở Thìn Bờ Hồ (1955)</title>
+  
+  <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .branch-detail-card {
+      background: var(--bg-ivory);
+      border: 1px solid var(--color-gold-border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .branch-detail-card:hover {
+      border-color: var(--color-gold);
+      box-shadow: 0 8px 24px rgba(104, 19, 28, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP TICKER -->
+  <div class="top-ticker">
+    <div class="top-ticker-inner">
+      <div class="top-ticker-alert-btn">
+        <span class="icon">⚠️</span>
+        <span>Lưu ý: Chỉ có 4 cơ sở chính thức tại Hà Nội • Cảnh báo giả mạo địa điểm</span>
+      </div>
+      <span class="top-ticker-slogan">
+        Phở Thìn Bờ Hồ - Tinh Hoa Ẩm Thực Hà Nội Từ 1955
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-link">
+        <div class="brand-seal-wrapper">
+          <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">PHỞ THÌN BỜ HỒ</span>
+          <span class="brand-subtitle">HÀ NỘI TỪ 1955 • 4 CƠ SỞ</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+          <li><a href="thuc-don.html">Thực Đơn</a></li>
+          <li><a href="tra-cuu.html">Đơn Của Tôi</a></li>
+          <li><a href="tin-tuc.html">Tin Tức</a></li>
+          <li><a href="doi-tac.html">Đối Tác</a></li>
+          <li><a href="lien-he.html" class="active">Liên Hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="gio-hang.html" class="cart-icon-btn">
+          <span>🛒</span>
+          <span>Đơn món</span>
+          <span class="cart-badge" id="navCartCount">0</span>
+        </a>
+        <a href="dat-ban.html" class="nav-cta-btn">Đặt Bàn</a>
+        <button type="button" class="hamburger-btn" id="btnToggleMobileMenu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER HEADER -->
+  <section style="background-color: var(--bg-cream); padding: 40px 16px; border-bottom: 1px solid var(--color-gold-border-light); text-align: center;">
+    <div class="container">
+      <div class="section-badge">❖ Địa Chỉ & Kết Nối ❖</div>
+      <h1 class="section-title">Hệ Thống 4 Cơ Sở & Tuyển Dụng</h1>
+      <p class="section-subtitle">
+        Danh sách 4 địa chỉ chính thức duy nhất tại Thủ đô Hà Nội của gia tộc cụ Bùi Chí Thìn
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTACT CONTENT -->
+  <main class="container" style="padding: 40px 16px 80px 16px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 40px;" id="branchesDetailGrid">
+      <!-- Render 4 branches details via JS -->
+    </div>
+
+    <!-- Tuyển dụng & Liên hệ gia tộc -->
+    <div style="background: var(--bg-cream); border: 1px solid var(--color-gold-border); border-radius: 12px; padding: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+      <div>
+        <h3 style="font-size: 18px; color: var(--color-burgundy); margin-bottom: 10px;">
+          👨‍🍳 Cơ Hội Nghề Nghiệp Tại Phở Thìn Bờ Hồ
+        </h3>
+        <p style="font-size: 13px; color: var(--color-text-brown); line-height: 1.7; margin-bottom: 14px;">
+          Chúng tôi liên tục tìm kiếm những nhân sự tâm huyết, yêu nghề ẩm thực truyền thống để tham gia đội ngũ:
+        </p>
+        <ul style="padding-left: 20px; font-size: 13px; color: var(--color-text-brown); line-height: 1.8;">
+          <li><strong>Phụ bếp / Nấu phở:</strong> Học hỏi bí quyết nấu nước dùng 12 giờ.</li>
+          <li><strong>Thu ngân & Lễ tân:</strong> Giao tiếp thân thiện, đón tiếp khách quốc tế.</li>
+          <li><strong>Nhân viên phục vụ:</strong> Nhanh nhẹn, chu đáo, giữ gìn nét thanh lịch Tràng An.</li>
+        </ul>
+      </div>
+
+      <div style="border-left: 1px solid rgba(184, 137, 50, 0.3); padding-left: 30px;">
+        <h3 style="font-size: 18px; color: var(--color-burgundy); margin-bottom: 10px;">
+          📞 Kênh Thông Tin Chính Thức
+        </h3>
+        <div style="font-size: 13px; color: var(--color-text-brown); line-height: 1.8;">
+          <p><strong>Hotline tổng đài:</strong> <span style="font-family: var(--font-mono); font-weight: 700; color: var(--color-red-accent);">0912 345 678</span></p>
+          <p><strong>Email đại diện:</strong> lienhe@phothinboho1955.vn</p>
+          <p><strong>Giờ mở cửa phục vụ:</strong> 06:00 – 13:00 & 17:00 – 22:00 hàng ngày</p>
+          <p><strong>Cơ sở số 1 (GỐC):</strong> 61 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội</p>
+        </div>
+        <div style="margin-top: 18px;">
+          <a href="dat-ban.html" class="btn btn-primary">
+            Đặt Bàn Tại Quán Ngay →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
+              <img src="images/logo-pho-thin.svg" alt="Logo Phở Thìn" class="brand-seal-img">
+            </div>
+            <div>
+              <h3 class="footer-brand-title">PHỞ THÌN BỜ HỒ</h3>
+              <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
+            </div>
+          </div>
+          <p class="footer-brand-desc">
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Liên Kết Nhanh</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
+            <li><a href="thuc-don.html">Thực Đơn</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-branches-col">
+          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
+          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
+            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
+            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
+            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
+            • CS4: 28 Liễu Giai, Ba Đình
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      PhoThinStore.init();
+
+      // Cart count badge
+      const badge = document.getElementById('navCartCount');
+      if (badge) badge.textContent = PhoThinStore.getCartTotalCount();
+
+      // Render 4 Branches
+      const branches = PhoThinStore.getBranches();
+      const grid = document.getElementById('branchesDetailGrid');
+      grid.innerHTML = '';
+      branches.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'branch-detail-card';
+        card.innerHTML = `
+          ${b.isOriginal ? '<span class="branch-original-tag" style="top: 16px; right: 16px;">GỐC 1955</span>' : ''}
+          <h2 style="font-size: 18px; color: var(--color-burgundy); margin-bottom: 6px;">
+            ${b.code}: ${b.name}
+          </h2>
+          <p style="font-size: 13px; color: var(--color-text-brown); margin-bottom: 8px;">
+            📍 <strong>Địa chỉ:</strong> ${b.address}
+          </p>
+          <p style="font-size: 13px; color: var(--color-text-brown); margin-bottom: 8px;">
+            📞 <strong>Hotline:</strong> <a href="tel:${b.phone.replace(/\\s/g, '')}" style="color: var(--color-red-accent); font-family: var(--font-mono); font-weight: 700;">${b.phone}</a>
+          </p>
+          <p style="font-size: 13px; color: var(--color-text-brown-light); margin-bottom: 16px;">
+            ⏱ <strong>Giờ mở cửa:</strong> 06:00 – 13:00 & 17:00 – 22:00
+          </p>
+          <div style="display: flex; gap: 10px;">
+            <a href="dat-ban.html?branch=${b.id}" class="btn btn-primary btn-sm">
+              Đặt bàn tại cơ sở này →
+            </a>
+            <a href="https://maps.google.com/?q=${encodeURIComponent(b.address)}" target="_blank" class="btn btn-outline-burgundy btn-sm">
+              Xem chỉ đường
+            </a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>
