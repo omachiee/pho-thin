@@ -4,8 +4,28 @@
  */
 
 const PhoThinStore = {
-  // Khởi tạo dữ liệu vào localStorage nếu chưa có
+  // Khởi tạo dữ liệu vào localStorage và tự động đồng bộ khi có phiên bản dữ liệu mới
   init() {
+    const currentVersion = localStorage.getItem('phothin_data_version');
+    const targetVersion = (typeof DATA_VERSION !== 'undefined') ? DATA_VERSION : '2026.10.19-full';
+
+    if (currentVersion !== targetVersion) {
+      localStorage.setItem('phothin_data_version', targetVersion);
+      localStorage.setItem('phothin_dishes', JSON.stringify(INITIAL_DATA.dishes));
+      localStorage.setItem('phothin_branches', JSON.stringify(INITIAL_DATA.branches));
+      localStorage.setItem('phothin_articles', JSON.stringify(INITIAL_DATA.articles));
+      if (!localStorage.getItem('phothin_reservations')) {
+        localStorage.setItem('phothin_reservations', JSON.stringify(INITIAL_DATA.sampleReservations));
+      }
+      if (!localStorage.getItem('phothin_orders')) {
+        localStorage.setItem('phothin_orders', JSON.stringify(INITIAL_DATA.sampleOrders));
+      }
+      if (!localStorage.getItem('phothin_cart')) {
+        localStorage.setItem('phothin_cart', JSON.stringify([]));
+      }
+      return;
+    }
+
     if (!localStorage.getItem('phothin_dishes')) {
       localStorage.setItem('phothin_dishes', JSON.stringify(INITIAL_DATA.dishes));
     }
