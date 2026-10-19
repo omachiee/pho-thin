@@ -52,6 +52,7 @@ export default function App() {
   const [isAdminViewActive, setIsAdminViewActive] = useState(false);
 
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartForReservation, setCartForReservation] = useState<CartItem[]>([]);
   const [backendError, setBackendError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -302,6 +303,8 @@ export default function App() {
             onHeadingClick={handleHeadingClick}
             preselectedDish={dishForReservation}
             initialBranchId={branchForReservation}
+            preselectedCart={cartForReservation}
+            onClearPreselectedCart={() => setCartForReservation([])}
           />
         )}
 
