@@ -1,7 +1,7 @@
-import type { AdminDish, AdminInquiry, Article, Branch, OrderInput, ReservationFormData } from '../../types';
+import type { AdminDish, AdminInquiry, Article, Branch, OrderInput, OrderItem, ReservationFormData } from '../../types';
 
 export class ApiError extends Error {
-  constructor(public status: 400 | 401 | 403 | 429 | 503, message: string) { super(message); }
+  constructor(public status: 400 | 401 | 403 | 409 | 429 | 503, message: string) { super(message); }
 }
 const invalid = (message: string): never => { throw new ApiError(400, message); };
 export function object(value: unknown, fields: readonly string[]): Record<string, unknown> {
@@ -45,7 +45,7 @@ export function email(value: unknown, required = false): string {
   if (result && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result)) invalid('Email không hợp lệ.');
   return result;
 }
-function date(value: unknown): string {
+export function date(value: unknown): string {
   const result = text(value, 'Ngày', 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(result) || !Number.isFinite(Date.parse(result)) || new Date(result).toISOString().slice(0, 10) !== result) invalid('Ngày không hợp lệ.');
   return result;
@@ -59,7 +59,7 @@ export function futureTimestamp(value: unknown, now = Date.now()): string {
   return new Date(result).toISOString();
 }
 export function reservation(value: unknown, manual = false, now = Date.now()): ReservationFormData & { status: 'pending' | 'confirmed' | 'completed' | 'cancelled'; isWalkIn: boolean } {
-  const body = object(value, ['fullName', 'phone', 'email', 'reservationDate', 'reservationTime', 'partySize', 'branchId', 'notes', ...(manual ? ['branchName', 'status', 'isWalkIn'] : [])]);
+  const body = object(value, ['fullName', 'phone', 'email', 'reservationDate', 'reservationTime', 'partySize', 'branchId', 'notes', 'preOrderedItems', 'preOrderTotal', ...(manual ? ['branchName', 'status', 'isWalkIn'] : [])]);
   const reservationDate = date(body.reservationDate);
   const reservationTime = text(body.reservationTime, 'Giờ đặt bàn', 5);
   if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(reservationTime)) invalid('Giờ đặt bàn không hợp lệ.');
@@ -67,9 +67,25 @@ export function reservation(value: unknown, manual = false, now = Date.now()): R
   const timestamp = Date.parse(`${reservationDate}T${reservationTime}:00+07:00`);
   const today = new Date(now + 7 * 3600000).toISOString().slice(0, 10);
   if ((isWalkIn ? reservationDate !== today : timestamp <= now) || timestamp > now + 90 * 86400000) invalid('Chọn ngày giờ đặt bàn trong tương lai, tối đa 90 ngày (khách tại quầy: hôm nay).');
+  let preOrderedItems: OrderItem[] | undefined;
+  let preOrderTotal: number | undefined;
+  if (body.preOrderedItems !== undefined && body.preOrderedItems !== null) {
+    if (!Array.isArray(body.preOrderedItems)) invalid('Danh sách món đặt trước không hợp lệ.');
+    preOrderedItems = (body.preOrderedItems as unknown[]).map(val => {
+      const item = object(val, ['dishId', 'name', 'unitPrice', 'quantity']);
+      return {
+        dishId: id(item.dishId),
+        name: text(item.name, 'Tên món', 200),
+        unitPrice: integer(item.unitPrice, 'Đơn giá', 0, 100000000),
+        quantity: integer(item.quantity, 'Số lượng', 1, 50),
+      };
+    });
+    preOrderTotal = preOrderedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  }
   return { fullName: text(body.fullName, 'Họ tên', 120), phone: phone(body.phone), email: email(body.email), reservationDate, reservationTime,
     partySize: integer(body.partySize, 'Số khách', 1, 50), branchId: id(body.branchId), notes: text(body.notes, 'Ghi chú', 2000, true), isWalkIn,
-    status: manual && body.status !== undefined ? choice(body.status, ['pending', 'confirmed', 'completed', 'cancelled'], 'Trạng thái') : 'pending' };
+    status: manual && body.status !== undefined ? choice(body.status, ['pending', 'confirmed', 'completed', 'cancelled'], 'Trạng thái') : 'pending',
+    ...(preOrderedItems !== undefined ? { preOrderedItems, preOrderTotal } : {}) };
 }
 export function inquiry(value: unknown): Omit<AdminInquiry, 'id' | 'status' | 'createdAt'> {
   const body = object(value, ['type', 'fullName', 'phone', 'email', 'position', 'message']);

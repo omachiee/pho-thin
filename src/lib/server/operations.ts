@@ -15,12 +15,55 @@ export async function catalog(client: SupabaseClient): Promise<Catalog> {
   for (const result of [dishes, branches, articles]) databaseError(result.error, 'Không thể tải danh mục.');
   return { dishes: (dishes.data || []).map(mapDish), branches: (branches.data || []).map(mapBranch), articles: (articles.data || []).map(mapArticle) };
 }
+export async function reservationAvailability(client: SupabaseClient, branchId: string, date: string) {
+  const validBranchId = validate.id(branchId);
+  const validDate = validate.date(date);
+  const { data, error } = await client
+    .from('reservations')
+    .select('reservation_time, status')
+    .eq('branch_id', validBranchId)
+    .eq('reservation_date', validDate)
+    .neq('status', 'cancelled');
+  databaseError(error);
+
+  const availability: Record<string, { booked: number; remaining: number }> = {};
+  for (const row of data || []) {
+    const time = row.reservation_time;
+    if (!time) continue;
+    if (!availability[time]) {
+      availability[time] = { booked: 0, remaining: 20 };
+    }
+    availability[time].booked += 1;
+    availability[time].remaining = Math.max(0, 20 - availability[time].booked);
+  }
+
+  return {
+    branchId: validBranchId,
+    date: validDate,
+    maxTablesPerSlot: 20,
+    availability,
+  };
+}
 export async function createReservation(client: SupabaseClient, body: unknown, manual = false) {
   const r = validate.reservation(body, manual);
+  if (!manual) {
+    const { data: existing, error: countErr } = await client
+      .from('reservations')
+      .select('id')
+      .eq('branch_id', r.branchId)
+      .eq('reservation_date', r.reservationDate)
+      .eq('reservation_time', r.reservationTime)
+      .neq('status', 'cancelled');
+    databaseError(countErr);
+    if (existing && existing.length >= 20) {
+      throw new ApiError(409, 'Khung giờ này tại cơ sở đã đạt giới hạn 20 bàn đặt trước. Vui lòng chọn khung giờ khác.');
+    }
+  }
   const { data, error } = await client.from('reservations').insert({
     full_name: r.fullName, phone: r.phone, email: r.email || null, reservation_date: r.reservationDate,
     reservation_time: r.reservationTime, party_size: r.partySize, branch_id: r.branchId,
-    notes: r.notes, ...(manual ? { status: r.status, is_walk_in: r.isWalkIn } : {}),
+    notes: r.notes, pre_ordered_items: r.preOrderedItems || [], pre_order_total: r.preOrderTotal || 0,
+    ...(manual ? { status: r.status, is_walk_in: r.isWalkIn } : {}),
   }).select('*').single();
   databaseError(error);
   if (!data) throw new ApiError(503, 'Không thể tạo đặt bàn.');
