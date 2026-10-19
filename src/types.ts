@@ -110,6 +110,8 @@ export interface ReservationFormData {
   partySize: number;
   branchId: string;
   notes: string;
+  preOrderedItems?: OrderItem[];
+  preOrderTotal?: number;
 }
 
 export interface ReservationRecord {
@@ -117,6 +119,8 @@ export interface ReservationRecord {
   createdAt: string;
   data: ReservationFormData;
   branch: Branch;
+  preOrderedItems?: OrderItem[];
+  preOrderTotal?: number;
 }
 
 export type ReservationStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
@@ -126,6 +130,8 @@ export interface AdminReservation extends ReservationFormData {
   status: ReservationStatus;
   createdAt: string;
   isWalkIn?: boolean;
+  preOrderedItems?: OrderItem[];
+  preOrderTotal?: number;
 }
 export interface AdminDish extends Dish { isAvailable: boolean }
 export interface AdminInquiry {

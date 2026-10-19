@@ -36,7 +36,9 @@ export function articleRow(a: Article) {
 export function mapReservation(r: Row): AdminReservation {
   return { id: r.id, fullName: r.full_name, phone: r.phone, email: r.email || '', reservationDate: r.reservation_date,
     reservationTime: r.reservation_time, partySize: Number(r.party_size), branchId: r.branch_id || '', branchName: r.branch_name,
-    notes: r.notes || '', status: r.status, createdAt: r.created_at, isWalkIn: Boolean(r.is_walk_in) };
+    notes: r.notes || '', status: r.status, createdAt: r.created_at, isWalkIn: Boolean(r.is_walk_in),
+    preOrderedItems: Array.isArray(r.pre_ordered_items) ? r.pre_ordered_items : [],
+    preOrderTotal: Number(r.pre_order_total || 0) };
 }
 export function mapInquiry(i: Row): AdminInquiry {
   return { id: i.id, type: i.type, fullName: i.full_name, phone: i.phone, email: i.email || '', position: i.position || '',
