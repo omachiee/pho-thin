@@ -60,6 +60,8 @@ CREATE TABLE IF NOT EXISTS public.reservations (
   notes text DEFAULT '',
   status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')),
   is_walk_in boolean DEFAULT false,
+  pre_ordered_items jsonb DEFAULT '[]'::jsonb,
+  pre_order_total bigint DEFAULT 0,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );

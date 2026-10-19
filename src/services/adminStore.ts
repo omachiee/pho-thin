@@ -126,10 +126,28 @@ class AdminStoreService {
     this.notify();
     return true;
   }
-  async addReservationFromClient(form: ReservationFormData, _branch: Branch): Promise<AdminReservation> {
-    const record = await apiRequest<AdminReservation>('/api/reservations', { method: 'POST', body: JSON.stringify(form) });
+  async getReservationAvailability(branchId: string, date: string): Promise<Record<string, { booked: number; remaining: number }>> {
+    try {
+      const res = await fetch(`/api/reservations/availability?branchId=${encodeURIComponent(branchId)}&date=${encodeURIComponent(date)}`);
+      if (!res.ok) return {};
+      const data = await res.json();
+      return data.availability || data.data?.availability || {};
+    } catch {
+      return {};
+    }
+  }
+  async addReservationFromClient(form: ReservationFormData, _branch?: Branch): Promise<AdminReservation> {
+    const payload = {
+      ...form,
+      preOrderedItems: form.preOrderedItems,
+      preOrderTotal: form.preOrderTotal,
+    };
+    const record = await apiRequest<AdminReservation>('/api/reservations', { method: 'POST', body: JSON.stringify(payload) });
     if (form.phone) this.setCustomerPhone(form.phone);
     return record;
+  }
+  async createReservation(form: ReservationFormData, branch?: Branch): Promise<AdminReservation> {
+    return this.addReservationFromClient(form, branch);
   }
   async createManualReservation(record: Omit<AdminReservation, 'id' | 'createdAt'>) {
     return this.save<AdminReservation>('reservations', 'POST', record);

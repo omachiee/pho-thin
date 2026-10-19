@@ -393,7 +393,7 @@ export const MyOrdersSection: React.FC<Props> = ({
             }`}
           >
             <Utensils className="w-4 h-4" />
-            <span>Đơn đặt món / Bàn</span>
+            <span>Đơn mang về</span>
             {orders.length > 0 && (
               <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                 activeTab === 'orders' ? 'bg-[#A52B25] text-[#FFF8E9]' : 'bg-[#B88932] text-white'
@@ -937,6 +937,17 @@ export const MyOrdersSection: React.FC<Props> = ({
                           </div>
                         </div>
 
+                        {res.preOrderedItems && res.preOrderedItems.length > 0 && (
+                          <div className="rounded-xl border border-[#D6A84F] bg-[#FFF8E9] p-3 text-xs text-[#68131C] flex flex-wrap items-center justify-between gap-2 shadow-xs">
+                            <span className="font-bold">
+                              🍜 Món gọi trước ({res.preOrderedItems.length} món • {(res.preOrderTotal || 0).toLocaleString('vi-VN')} đ)
+                            </span>
+                            <span className="text-[11px] text-[#68131C]/80">
+                              Phục vụ khi đến quán
+                            </span>
+                          </div>
+                        )}
+
                         <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                           <span className="text-xs text-[#65452F]">
                             Vui lòng có mặt đúng giờ để cơ sở sắp xếp bàn chu đáo.
@@ -1085,7 +1096,7 @@ export const MyOrdersSection: React.FC<Props> = ({
       {/* MODAL 2: VIEW RESERVATION DETAILS */}
       {detailReservation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-[#FFF8E9] border-2 border-[#B88932] rounded-2xl shadow-2xl p-6 sm:p-8 space-y-4">
+          <div className="relative w-full max-w-xl bg-[#FFF8E9] border-2 border-[#B88932] rounded-2xl shadow-2xl p-6 sm:p-8 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[#B88932]/30 pb-3">
               <h3 className="text-xl font-serif font-black text-[#68131C]">PHIẾU ĐẶT BÀN</h3>
               <button
@@ -1110,6 +1121,37 @@ export const MyOrdersSection: React.FC<Props> = ({
                 </span>
               </div>
             </div>
+
+            {detailReservation.preOrderedItems && detailReservation.preOrderedItems.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-serif font-bold text-sm text-[#68131C]">
+                    🍜 Món gọi trước ({detailReservation.preOrderedItems.length} món)
+                  </h4>
+                  <span className="font-mono font-bold text-xs text-[#A52B25]">
+                    Tổng tiền: {(detailReservation.preOrderTotal || 0).toLocaleString('vi-VN')} đ
+                  </span>
+                </div>
+                <div className="border border-[#B88932]/30 rounded-xl overflow-hidden divide-y divide-[#B88932]/20">
+                  {detailReservation.preOrderedItems.map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-center p-3 text-xs sm:text-sm bg-[#FFF8E9]">
+                      <div>
+                        <div className="font-bold text-[#68131C]">{item.name}</div>
+                        <div className="text-xs text-[#65452F]">
+                          {money(item.unitPrice)} × {item.quantity}
+                        </div>
+                      </div>
+                      <div className="font-mono font-bold text-[#68131C]">
+                        {money(item.unitPrice * item.quantity)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[11px] text-[#65452F] italic">
+                  * Món ăn gọi trước sẽ được phục vụ khi quý khách đến bàn. Thanh toán khi dùng bữa.
+                </div>
+              </div>
+            )}
 
             <p className="text-xs text-[#65452F]">
               Quý khách vui lòng xuất trình mã đơn hoặc đọc số điện thoại khi đến cơ sở để được nhân viên xếp bàn.

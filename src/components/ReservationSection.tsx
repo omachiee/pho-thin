@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Language, PageView, Branch, Dish, ReservationFormData, ReservationRecord } from '../types';
+import { Language, PageView, Branch, Dish, ReservationFormData, ReservationRecord, CartItem, OrderItem } from '../types';
 import { translations } from '../data/translations';
 import { adminStore } from '../services/adminStore';
 import { 
@@ -24,7 +24,11 @@ import {
   FileText,
   ShieldCheck,
   Award,
-  ClipboardList
+  ClipboardList,
+  Trash2,
+  Plus,
+  Minus,
+  UtensilsCrossed
 } from 'lucide-react';
 import { PhoThinLogo } from './PhoThinLogo';
 
@@ -34,6 +38,8 @@ interface ReservationSectionProps {
   onHeadingClick: () => void;
   preselectedDish?: Dish | null;
   initialBranchId?: string;
+  preselectedCart?: CartItem[];
+  onClearPreselectedCart?: () => void;
 }
 
 export const ReservationSection: React.FC<ReservationSectionProps> = ({
@@ -42,6 +48,8 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
   onHeadingClick,
   preselectedDish,
   initialBranchId,
+  preselectedCart,
+  onClearPreselectedCart,
 }) => {
   const t = translations[lang].reservation;
 
@@ -88,6 +96,95 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [pdfSuccessMessage, setPdfSuccessMessage] = useState(false);
   const voucherRef = useRef<HTMLDivElement>(null);
+
+  // Real-time table capacity availability state
+  const [availability, setAvailability] = useState<Record<string, { booked: number; remaining: number }>>({});
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
+
+  useEffect(() => {
+    if (!formData.branchId || !formData.reservationDate) return;
+    let cancelled = false;
+    setLoadingAvailability(true);
+    adminStore.getReservationAvailability(formData.branchId, formData.reservationDate)
+      .then((data) => {
+        if (!cancelled) setAvailability(data || {});
+      })
+      .catch(() => {
+        if (!cancelled) setAvailability({});
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingAvailability(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [formData.branchId, formData.reservationDate]);
+
+  const currentSlot = availability[formData.reservationTime] || { booked: 0, remaining: 20 };
+  const isFull = currentSlot.remaining === 0;
+
+  // Pre-ordered dishes state
+  const [preOrderedItems, setPreOrderedItems] = useState<OrderItem[]>(() => {
+    if (!preselectedCart || preselectedCart.length === 0) return [];
+    const dishes = adminStore.getDishes();
+    return preselectedCart
+      .map((item) => {
+        const dish = dishes.find((d) => d.id === item.dishId);
+        if (!dish) return null;
+        return {
+          dishId: dish.id,
+          name: dish.name[lang] || dish.name.vi,
+          unitPrice: dish.price,
+          quantity: item.quantity,
+        };
+      })
+      .filter((item): item is OrderItem => item !== null);
+  });
+
+  useEffect(() => {
+    if (preselectedCart && preselectedCart.length > 0) {
+      const dishes = adminStore.getDishes();
+      const mapped: OrderItem[] = preselectedCart
+        .map((item) => {
+          const dish = dishes.find((d) => d.id === item.dishId);
+          if (!dish) return null;
+          return {
+            dishId: dish.id,
+            name: dish.name[lang] || dish.name.vi,
+            unitPrice: dish.price,
+            quantity: item.quantity,
+          };
+        })
+        .filter((item): item is OrderItem => item !== null);
+      setPreOrderedItems(mapped);
+    }
+  }, [preselectedCart, lang]);
+
+  const preOrderTotal = preOrderedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+
+  const handleUpdateItemQuantity = (dishId: string, newQty: number) => {
+    setPreOrderedItems((prev) =>
+      prev
+        .map((item) => {
+          if (item.dishId === dishId) {
+            return newQty > 0 ? { ...item, quantity: Math.min(50, newQty) } : null;
+          }
+          return item;
+        })
+        .filter((item): item is OrderItem => item !== null)
+    );
+  };
+
+  const handleRemoveItem = (dishId: string) => {
+    setPreOrderedItems((prev) => prev.filter((item) => item.dishId !== dishId));
+  };
+
+  const handleClearPreOrderedItems = () => {
+    setPreOrderedItems([]);
+    if (onClearPreselectedCart) {
+      onClearPreselectedCart();
+    }
+  };
 
   useEffect(() => {
     if (initialBranchId) {
@@ -181,19 +278,31 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting || !validate() || !selectedBranch) return;
+    if (isSubmitting || isFull || !validate() || !selectedBranch) return;
     setIsSubmitting(true);
     setSubmitError('');
-    const submittedData = { ...formData, fullName: formData.fullName.trim(), phone: formData.phone.replace(/[\s.()\-]/g, ''), partySize: Number(formData.partySize) };
+    const submittedData: ReservationFormData = {
+      ...formData,
+      fullName: formData.fullName.trim(),
+      phone: formData.phone.replace(/[\s.()\-]/g, ''),
+      partySize: Number(formData.partySize),
+      preOrderedItems: preOrderedItems.length > 0 ? preOrderedItems : undefined,
+      preOrderTotal: preOrderedItems.length > 0 ? preOrderTotal : undefined,
+    };
     try {
-      const createdRecord = await adminStore.addReservationFromClient(submittedData, selectedBranch);
+      const createdRecord = await adminStore.createReservation(submittedData, selectedBranch);
       setIsSample(false);
       setConfirmation({
         id: createdRecord.id,
         createdAt: new Date(createdRecord.createdAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
         data: { ...submittedData, ...createdRecord },
         branch: selectedBranch,
+        preOrderedItems: createdRecord.preOrderedItems || submittedData.preOrderedItems,
+        preOrderTotal: createdRecord.preOrderTotal ?? submittedData.preOrderTotal,
       });
+      if (onClearPreselectedCart) {
+        onClearPreselectedCart();
+      }
       try {
         localStorage.setItem('pho_thin_customer_phone', submittedData.phone);
       } catch {}
@@ -276,8 +385,12 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
         partySize: formData.partySize || 2,
         branchId: formData.branchId || 'cs1-dinh-tien-hoang',
         notes: formData.notes || (lang === 'vi' ? 'Bàn cạnh cửa sổ, 2 bát phở tái chín nước trong đậm đà' : 'Table near window, 2 bowls of signature pho'),
+        preOrderedItems: preOrderedItems.length > 0 ? preOrderedItems : undefined,
+        preOrderTotal: preOrderedItems.length > 0 ? preOrderTotal : undefined,
       },
       branch: selectedBranch,
+      preOrderedItems: preOrderedItems.length > 0 ? preOrderedItems : undefined,
+      preOrderTotal: preOrderedItems.length > 0 ? preOrderTotal : undefined,
     };
     setConfirmation(sampleRecord);
     window.scrollTo({ top: 100, behavior: 'smooth' });
@@ -421,6 +534,38 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Pre-ordered Dishes Itemized List in Voucher */}
+              {((confirmation.preOrderedItems && confirmation.preOrderedItems.length > 0) || (confirmation.data.preOrderedItems && confirmation.data.preOrderedItems.length > 0)) && (
+                <div className="bg-[#FFF8E9] p-5 rounded-xl border border-[#B88932]/35 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between border-b border-[#B88932]/25 pb-2">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#68131C] flex items-center gap-2">
+                      <UtensilsCrossed className="w-4 h-4 text-[#D6A84F]" />
+                      <span>Món ăn chọn dùng tại bàn</span>
+                    </h3>
+                    <span className="text-sm font-mono font-bold text-[#A52B25]">
+                      {(confirmation.preOrderTotal || confirmation.data.preOrderTotal || 0).toLocaleString('vi-VN')}đ
+                    </span>
+                  </div>
+                  <div className="divide-y divide-[#B88932]/20 text-sm">
+                    {(confirmation.preOrderedItems || confirmation.data.preOrderedItems || []).map((item, idx) => (
+                      <div key={idx} className="py-2 flex items-center justify-between gap-4">
+                        <div>
+                          <p className="font-bold text-[#68131C]">{item.name}</p>
+                          <p className="text-xs text-[#65452F]">{item.unitPrice.toLocaleString('vi-VN')}đ × {item.quantity}</p>
+                        </div>
+                        <p className="font-mono font-bold text-[#A52B25]">
+                          {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}đ
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pt-2 border-t border-[#B88932]/25 flex items-center justify-between text-xs font-medium text-[#65452F]">
+                    <span>Hình thức thanh toán:</span>
+                    <span className="font-bold text-[#68131C]">Thanh toán trực tiếp tại quầy khi dùng bữa</span>
+                  </div>
+                </div>
+              )}
 
               {/* QR Code & Barcode verification strip */}
               <div className="bg-[#FFF8E9] p-4 rounded-xl border border-[#B88932]/35 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -751,17 +896,52 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                       }`}
                     >
                       <optgroup label="Khung Giờ Sáng (06:00 – 13:00)">
-                        {timeSlots.slice(0, 13).map((slot) => (
-                          <option key={slot} value={slot}>{slot}</option>
-                        ))}
+                        {timeSlots.slice(0, 13).map((slot) => {
+                          const slotAvail = availability[slot];
+                          const isSlotFull = slotAvail && slotAvail.remaining === 0;
+                          return (
+                            <option key={slot} value={slot}>
+                              {slot} {isSlotFull ? '(Đã kín bàn)' : slotAvail ? `(Còn ${slotAvail.remaining} bàn)` : ''}
+                            </option>
+                          );
+                        })}
                       </optgroup>
                       <optgroup label="Khung Giờ Chiều (17:00 – 22:00)">
-                        {timeSlots.slice(13).map((slot) => (
-                          <option key={slot} value={slot}>{slot}</option>
-                        ))}
+                        {timeSlots.slice(13).map((slot) => {
+                          const slotAvail = availability[slot];
+                          const isSlotFull = slotAvail && slotAvail.remaining === 0;
+                          return (
+                            <option key={slot} value={slot}>
+                              {slot} {isSlotFull ? '(Đã kín bàn)' : slotAvail ? `(Còn ${slotAvail.remaining} bàn)` : ''}
+                            </option>
+                          );
+                        })}
                       </optgroup>
                     </select>
                   </div>
+
+                  {/* Real-time Capacity Status Badge */}
+                  <div className="mt-2 text-xs">
+                    {loadingAvailability ? (
+                      <div className="flex items-center gap-1.5 text-[#65452F] py-1">
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#B88932]" />
+                        <span>Đang kiểm tra bàn trống...</span>
+                      </div>
+                    ) : isFull ? (
+                      <div className="p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-center gap-1.5">
+                        <span>🔴 Khung giờ này đã kín 20/20 bàn online. Vui lòng chọn khung giờ khác hoặc liên hệ hotline quán.</span>
+                      </div>
+                    ) : currentSlot.remaining <= 5 ? (
+                      <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800 flex items-center gap-1.5">
+                        <span>⚡ Chỉ còn {currentSlot.remaining} bàn cuối trong khung giờ này!</span>
+                      </div>
+                    ) : (
+                      <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
+                        <span>🟢 Còn {currentSlot.remaining} bàn trống</span>
+                      </div>
+                    )}
+                  </div>
+
                   {errors.reservationTime && (
                     <p className="mt-1 text-xs text-[#A52B25] flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -812,6 +992,86 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                 )}
               </div>
 
+              {/* Dedicated card: Món ăn chọn dùng tại bàn */}
+              {preOrderedItems.length > 0 && (
+                <div className="p-4 sm:p-5 rounded-xl bg-[#FFF8E9] border-2 border-[#B88932]/50 shadow-sm space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#B88932]/30 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <UtensilsCrossed className="w-5 h-5 text-[#A52B25]" />
+                      <div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-[#68131C]">
+                          Món ăn chọn dùng tại bàn
+                        </h3>
+                        <p className="text-[11px] text-[#65452F]">
+                          Món sẽ được chuẩn bị nóng hổi khi quý khách tới cơ sở
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleClearPreOrderedItems}
+                      className="text-xs text-[#A52B25] hover:text-[#831F1A] font-semibold underline decoration-dotted flex items-center gap-1 cursor-pointer"
+                      title="Xóa danh sách món đã chọn"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Xóa tất cả</span>
+                    </button>
+                  </div>
+
+                  <div className="divide-y divide-[#B88932]/20">
+                    {preOrderedItems.map((item) => (
+                      <div key={item.dishId} className="py-2.5 flex items-center justify-between gap-3 text-sm">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-[#68131C] truncate">{item.name}</p>
+                          <p className="text-xs text-[#65452F]">{item.unitPrice.toLocaleString('vi-VN')}đ / phần</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center border border-[#B88932]/40 rounded-lg bg-[#F4E8D2]/40 overflow-hidden">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQuantity(item.dishId, item.quantity - 1)}
+                              className="w-7 h-7 flex items-center justify-center hover:bg-[#B88932]/20 text-[#68131C] transition-colors cursor-pointer"
+                              title="Giảm số lượng"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="w-8 text-center text-xs font-bold text-[#68131C]">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQuantity(item.dishId, item.quantity + 1)}
+                              className="w-7 h-7 flex items-center justify-center hover:bg-[#B88932]/20 text-[#68131C] transition-colors cursor-pointer"
+                              title="Tăng số lượng"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                          <span className="w-24 text-right font-mono font-bold text-[#A52B25]">
+                            {(item.unitPrice * item.quantity).toLocaleString('vi-VN')}đ
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveItem(item.dishId)}
+                            className="p-1 text-[#65452F] hover:text-[#A52B25] transition-colors cursor-pointer"
+                            title="Xóa món này"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-3 border-t border-[#B88932]/30 flex items-center justify-between text-sm">
+                    <span className="font-bold text-[#68131C]">Tổng tiền món ăn tạm tính:</span>
+                    <span className="text-base font-serif font-black text-[#A52B25]">
+                      {preOrderTotal.toLocaleString('vi-VN')}đ
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* 8. Lời nhắn / Ghi chú (Không bắt buộc) */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#68131C] mb-2">
@@ -835,11 +1095,13 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                 {submitError && <p role="alert" className="text-sm text-[#A52B25]">{submitError}</p>}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-3.5 bg-[#68131C] hover:bg-[#560F16] border border-[#B88932]/40 text-[#F4E8D2] font-bold text-sm uppercase tracking-wider rounded-lg shadow-md hover:shadow-lg transform active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  disabled={isSubmitting || isFull}
+                  className="w-full py-3.5 bg-[#68131C] hover:bg-[#560F16] border border-[#B88932]/40 text-[#F4E8D2] font-bold text-sm uppercase tracking-wider rounded-lg shadow-md hover:shadow-lg transform active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <span>{t.btnSubmitting}</span>
+                  ) : isFull ? (
+                    <span>Khung giờ đã kín bàn</span>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-[#D6A84F]" />

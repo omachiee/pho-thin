@@ -115,8 +115,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleExportCSV = () => {
-    const headers = ['Mã Đơn', 'Khách Hàng', 'Số Điện Thoại', 'Email', 'Cơ Sở', 'Ngày', 'Giờ', 'Số Khách', 'Trạng Thái', 'Ghi Chú'];
-    const rows = reservations.map((r) => [r.id, r.fullName, r.phone, r.email, r.branchName, r.reservationDate, r.reservationTime, r.partySize, r.status, r.notes]);
+    const headers = [
+      'Mã Đơn', 'Khách Hàng', 'Số Điện Thoại', 'Email', 'Cơ Sở',
+      'Ngày', 'Giờ', 'Số Khách', 'Trạng Thái', 'Món Gọi Trước', 'Tổng Tiền Món (đ)', 'Ghi Chú'
+    ];
+    const rows = reservations.map((r) => {
+      const preOrderSummary = r.preOrderedItems && r.preOrderedItems.length > 0
+        ? r.preOrderedItems.map((dish) => `${dish.name} × ${dish.quantity}`).join('; ')
+        : '';
+      const preOrderTotal = r.preOrderTotal && r.preOrderTotal > 0 ? r.preOrderTotal : '';
+      return [
+        r.id,
+        r.fullName,
+        r.phone,
+        r.email,
+        r.branchName,
+        r.reservationDate,
+        r.reservationTime,
+        r.partySize,
+        r.status,
+        preOrderSummary,
+        preOrderTotal,
+        r.notes,
+      ];
+    });
     const csvCell = (value: string | number) => {
       const text = String(value ?? '');
       return `"${(/^[\s]*[=+\-@]/.test(text) ? `'${text}` : text).replace(/"/g, '""')}"`;
@@ -211,6 +233,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const estimatedRevenueToday = todayReservations
     .filter((r) => r.status !== 'cancelled')
     .reduce((sum, r) => sum + r.partySize * 85000, 0);
+
+  // Table capacity monitor per slot for today (respecting branch filter if active)
+  const todayActiveReservations = reservations.filter(
+    (r) => r.reservationDate === todayStr && r.status !== 'cancelled' && (resBranchFilter === 'all' || r.branchId === resBranchFilter)
+  );
+  const slotCounts = todayActiveReservations.reduce<Record<string, number>>((acc, r) => {
+    if (r.reservationTime) {
+      acc[r.reservationTime] = (acc[r.reservationTime] || 0) + 1;
+    }
+    return acc;
+  }, {});
+  const activeTodaySlots = Object.entries(slotCounts).sort(([a], [b]) => a.localeCompare(b));
 
   return (
     <div className="min-h-screen bg-[#160305] text-[#FFF8E9] flex flex-col font-sans selection:bg-[#D6A84F] selection:text-[#160305]">
@@ -309,7 +343,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'orders' ? 'bg-[#D6A84F] text-[#160305] shadow-md' : 'text-[#F4E8D2]/80 hover:text-white hover:bg-[#3B0B10]/60'}`}
           >
             <UtensilsCrossed className="w-4 h-4" />
-            <span>Đơn món</span>
+            <span>Đơn mang về</span>
           </button>
 
           <button disabled={isBusy}
@@ -518,7 +552,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         className="bg-[#160305] p-3.5 rounded-xl border border-[#B88932]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-mono font-bold text-xs text-[#D6A84F]">
                               {item.id}
                             </span>
@@ -528,6 +562,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <span className="text-xs bg-[#3B0B10] px-2 py-0.5 rounded text-[#F4E8D2]/90">
                               {item.partySize} khách
                             </span>
+                            {item.preOrderedItems && item.preOrderedItems.length > 0 && (
+                              <span className="text-[10px] font-bold bg-[#3B0B10] border border-[#D6A84F]/50 text-[#D6A84F] px-1.5 py-0.5 rounded">
+                                🍜 Gọi trước: {item.preOrderedItems.length} món • {(item.preOrderTotal || 0).toLocaleString('vi-VN')} đ
+                              </span>
+                            )}
                           </div>
                           <div className="text-xs text-[#F4E8D2]/80 mt-1 flex flex-wrap gap-2">
                             <span>Giờ: <strong className="text-white">{item.reservationTime}</strong> ({item.reservationDate})</span>
@@ -645,6 +684,44 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
             </div>
 
+            {/* Tải bàn trực tuyến hôm nay */}
+            <div className="bg-[#200609] p-4 rounded-2xl border border-[#B88932]/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs sm:text-sm font-bold text-[#D6A84F] flex items-center gap-2">
+                  <span>📊 Tình Trạng Bàn Đặt Trực Tuyến Hôm Nay ({todayStr})</span>
+                </h4>
+                <span className="text-[11px] text-[#F4E8D2]/70">Giới hạn tối đa: 20 đơn/khung giờ</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 pt-1">
+                {activeTodaySlots.length === 0 ? (
+                  <div className="col-span-full text-center py-2 text-xs text-[#F4E8D2]/60">
+                    Chưa có lượt đặt bàn nào trong ngày hôm nay.
+                  </div>
+                ) : (
+                  activeTodaySlots.map(([slot, count]) => {
+                    const badgeClass =
+                      count >= 20
+                        ? 'border-red-500 bg-red-950/60 text-red-200'
+                        : count >= 15
+                          ? 'border-amber-500 bg-amber-950/60 text-amber-200'
+                          : 'border-[#B88932]/30 bg-[#160305] text-[#F4E8D2]';
+                    const statusText = count >= 20 ? 'KÍN BÀN' : count >= 15 ? 'Sắp đầy' : 'Còn chỗ';
+
+                    return (
+                      <div
+                        key={slot}
+                        className={`p-2.5 rounded-xl border flex flex-col items-center justify-between text-center transition-all ${badgeClass}`}
+                      >
+                        <span className="font-mono font-bold text-xs">{slot}</span>
+                        <span className="text-sm font-bold my-0.5">{count}/20</span>
+                        <span className="text-[10px] font-semibold uppercase">{statusText}</span>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
             {/* Reservations Cards List (Mobile & Desktop Responsive) */}
             <div className="space-y-3">
               {filteredReservations.length === 0 ? (
@@ -659,13 +736,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   >
                     {/* Header Row: ID, Status, Branch */}
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#B88932]/20 pb-2.5">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-mono font-bold text-xs text-[#D6A84F] bg-[#160305] px-2 py-0.5 rounded border border-[#B88932]/20">
                           {item.id}
                         </span>
                         {item.isWalkIn && (
                           <span className="text-[10px] bg-[#3B0B10] border border-[#D6A84F]/40 text-[#D6A84F] px-1.5 py-0.5 rounded">
                             Tại Quầy
+                          </span>
+                        )}
+                        {item.preOrderedItems && item.preOrderedItems.length > 0 && (
+                          <span className="text-[11px] font-bold bg-[#3B0B10] border border-[#D6A84F]/50 text-[#D6A84F] px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                            🍜 Gọi trước: {item.preOrderedItems.length} món • {(item.preOrderTotal || 0).toLocaleString('vi-VN')} đ
                           </span>
                         )}
                         <span className="text-xs text-[#F4E8D2]/60">
@@ -731,6 +813,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </div>
                     </div>
 
+                    {/* Món ăn gọi trước cho bàn */}
+                    {item.preOrderedItems && item.preOrderedItems.length > 0 && (
+                      <div className="mt-2 bg-[#160305]/80 p-2.5 rounded-xl border border-[#B88932]/20 text-xs">
+                        <p className="font-bold text-[#D6A84F] mb-1">Món ăn gọi trước cho bàn:</p>
+                        <ul className="space-y-1">
+                          {item.preOrderedItems.map((dish, idx) => (
+                            <li key={`${dish.dishId}-${idx}`} className="flex justify-between text-[#F4E8D2]">
+                              <span>{dish.name} × {dish.quantity}</span>
+                              <span className="font-mono text-[#D6A84F]">{(dish.unitPrice * dish.quantity).toLocaleString('vi-VN')} đ</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="mt-1.5 pt-1 border-t border-[#B88932]/20 flex justify-between font-bold text-xs">
+                          <span>Tạm tính món ăn:</span>
+                          <span className="text-[#3DD68C]">{(item.preOrderTotal || 0).toLocaleString('vi-VN')} đ</span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Bottom: Mobile Touch Action Bar */}
                     <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#B88932]/20">
                       {/* One-touch Call Button (Ideal for Smartphone) */}
@@ -788,8 +889,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'orders' && (
           <div className="space-y-4">
             <div className="bg-[#200609] p-4 rounded-2xl border border-[#B88932]/30">
-              <h3 className="text-sm sm:text-base font-serif font-bold text-[#D6A84F]">Đơn món mang về</h3>
-              <p className="text-xs text-[#F4E8D2]/70">Thanh toán khi nhận món tại cơ sở. Hoàn thành đơn không tự động xác nhận đã thanh toán.</p>
+              <h3 className="text-sm sm:text-base font-serif font-bold text-[#D6A84F]">Đơn Mang Về (Takeaway - Nhận tại quầy)</h3>
+              <p className="text-xs text-[#F4E8D2]/70">Chỉ bao gồm các đơn khách hẹn giờ đến quầy lấy mang đi. Các đơn ăn tại quán được quản lý tập trung tại tab Đơn Đặt Bàn.</p>
             </div>
             {orders.length === 0 && <p className="text-xs text-[#F4E8D2]/70">Chưa có đơn món.</p>}
             {orders.map((order) => (
