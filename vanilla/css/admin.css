@@ -1,0 +1,205 @@
+/* ==========================================================================
+   ADMIN.CSS - TRANG QUẢN TRỊ NỘI BỘ PHỞ THÌN BỜ HỒ
+   Dark Mahogany & Gold Retro Style
+   ========================================================================== */
+
+:root {
+  --admin-bg: #160305;
+  --admin-card-bg: #200609;
+  --admin-card-hover: #3B0B10;
+  --admin-gold: #D6A84F;
+  --admin-gold-muted: #B88932;
+  --admin-text: #FFF8E9;
+  --admin-text-muted: rgba(255, 248, 233, 0.7);
+  --admin-border: rgba(184, 137, 50, 0.3);
+  --admin-red: #A52B25;
+  --admin-green: #3DD68C;
+}
+
+body.admin-body {
+  background-color: var(--admin-bg);
+  color: var(--admin-text);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.admin-header {
+  background-color: var(--admin-card-bg);
+  border-bottom: 1px solid var(--admin-border);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand h2 {
+  font-size: 16px;
+  color: var(--admin-gold);
+  margin: 0;
+}
+
+.admin-tag {
+  background-color: var(--admin-red);
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Nav Tabs */
+.admin-nav {
+  background-color: #120204;
+  border-bottom: 1px solid var(--admin-border);
+  padding: 8px 24px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.admin-nav-btn {
+  background: transparent;
+  color: var(--admin-text-muted);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.admin-nav-btn:hover {
+  background-color: var(--admin-card-hover);
+  color: #FFF;
+}
+
+.admin-nav-btn.active {
+  background-color: var(--admin-gold);
+  color: var(--admin-bg);
+}
+
+/* Content Area */
+.admin-container {
+  max-width: 1300px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.admin-card {
+  background-color: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--admin-gold);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Capacity Monitor Widget */
+.capacity-monitor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.capacity-slot-card {
+  border: 1px solid var(--admin-border);
+  background-color: var(--admin-bg);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.capacity-slot-card.full {
+  border-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #FCA5A5;
+}
+
+.capacity-slot-card.warning {
+  border-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #FDE68A;
+}
+
+/* Tables & Lists */
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-order-item {
+  background-color: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.badge-status {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-pending { background: #FEF3C7; color: #92400E; }
+.status-confirmed { background: #D1FAE5; color: #065F46; }
+.status-completed { background: #DBEAFE; color: #1E40AF; }
+.status-cancelled { background: #F3F4F6; color: #4B5563; }
+
+.preorder-pill {
+  background-color: rgba(214, 168, 79, 0.15);
+  border: 1px solid var(--admin-gold);
+  color: var(--admin-gold);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preorder-detail-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+}

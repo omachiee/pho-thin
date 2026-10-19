@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ Món & Đặt Mang Về - Phở Thìn Bờ Hồ (1955)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
+        <div class="brand-text">
+          <h1>Phở Thìn Bờ Hồ</h1>
+          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="thuc-don.html">Thực Đơn</a></li>
+          <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+          <li><a href="gio-hang.html" class="active">Đơn Mang Về</a></li>
+          <li><a href="tra-cuu.html">Tra Cứu Đơn</a></li>
+          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="gio-hang.html" class="cart-icon-btn">
+          <span>🛒 Giỏ món</span>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER TIÊU ĐỀ -->
+  <section style="background: var(--color-bg-alt); padding: 30px 0; border-bottom: 1px solid var(--color-border); text-align: center;">
+    <div class="container">
+      <h1 style="font-size: 32px; margin-bottom: 8px;">Đặt Món Mang Về (Takeaway - Nhận Tại Quầy)</h1>
+      <p style="color: var(--color-text-muted);">Đóng gói chu đáo, phở và nước dùng riêng biệt, nhận thanh toán tại cơ sở</p>
+    </div>
+  </section>
+
+  <!-- MAIN CART & CHECKOUT -->
+  <main class="container" style="padding: 40px 16px;">
+    <!-- BANNER CHUYỂN SANG ĐẶT BÀN NẾU MUỐN ĂN TẠI QUÁN -->
+    <div class="switch-banner" id="switchBanner" style="display: none;">
+      <div>
+        <h4 style="color: var(--color-red-primary);">🍜 Quý khách muốn thưởng thức phở nóng tại bàn?</h4>
+        <p>Đặt bàn trước để được giữ chỗ ngồi và quán chuẩn bị món nóng hổi ngay khi bạn đến!</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="btnSwitchToBooking">
+        Chuyển sang Đặt bàn kèm món này →
+      </button>
+    </div>
+
+    <div class="booking-layout" id="cartContainer">
+      <!-- CỘT 1: DANH SÁCH MÓN ĐÃ CHỌN -->
+      <div class="form-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
+          <h2 style="font-size: 20px;">Món Đã Chọn Trong Giỏ</h2>
+          <button type="button" class="btn btn-outline btn-sm" id="clearAllCartBtn">Xóa giỏ hàng</button>
+        </div>
+
+        <div id="cartItemsList">
+          <!-- Render danh sách món -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border);">
+          <span>Tổng tiền tạm tính:</span>
+          <span id="cartTotalPrice" style="font-family: var(--font-mono); color: var(--color-red-primary);">0 đ</span>
+        </div>
+        <p style="font-size: 12px; color: var(--color-text-muted); margin-top: 8px;">
+          * Giá đã bao gồm thuế. Thanh toán trực tiếp tại quầy khi nhận món.
+        </p>
+      </div>
+
+      <!-- CỘT 2: THÔNG TIN NHẬN MÓN MANG VỀ -->
+      <div class="form-panel">
+        <h2 style="font-size: 20px; margin-bottom: 16px; border-bottom: 2px solid var(--color-gold); padding-bottom: 8px;">
+          Thông Tin Nhận Món
+        </h2>
+
+        <form id="takeawayForm">
+          <div class="form-group">
+            <label for="takeawayName">Họ Và Tên (*)</label>
+            <input type="text" id="takeawayName" class="form-control" placeholder="Tên người nhận món" required>
+          </div>
+
+          <div class="form-group">
+            <label for="takeawayPhone">Số Điện Thoại (*)</label>
+            <input type="tel" id="takeawayPhone" class="form-control" placeholder="0912345678" required>
+          </div>
+
+          <div class="form-group">
+            <label for="takeawayBranch">Cơ Sở Nhận Món (*)</label>
+            <select id="takeawayBranch" class="form-control" required></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="takeawayDate">Ngày Lấy Món (*)</label>
+              <input type="date" id="takeawayDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="takeawayTime">Giờ Lấy (*)</label>
+              <input type="time" id="takeawayTime" class="form-control" value="11:45" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="takeawayNotes">Ghi Chú Đóng Gói</label>
+            <textarea id="takeawayNotes" class="form-control" rows="2" placeholder="Ví dụ: Nước dùng và bánh phở để túi riêng, xin thêm ớt..."></textarea>
+          </div>
+
+          <div id="takeawayError" style="display: none; padding: 10px; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 6px; margin-bottom: 14px; font-size: 13px;"></div>
+
+          <button type="submit" id="btnSubmitTakeaway" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 15px;">
+            Gửi Đơn Mang Về · Thanh Toán Khi Nhận
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- KHỐI KHI GIỎ HÀNG TRỐNG -->
+    <div id="emptyCartBox" style="display: none; text-align: center; padding: 60px 20px;">
+      <div style="font-size: 64px; margin-bottom: 16px;">🍜</div>
+      <h3 style="font-size: 24px; margin-bottom: 8px;">Giỏ hàng của bạn đang trống</h3>
+      <p style="color: var(--color-text-muted); margin-bottom: 24px;">Hãy dạo qua thực đơn để chọn những bát phở nóng hổi đậm đà nhé!</p>
+      <a href="thuc-don.html" class="btn btn-primary">Xem Thực Đơn Ngay →</a>
+    </div>
+  </main>
+
+  <!-- MODAL XÁC NHẬN ĐƠN MANG VỀ THÀNH CÔNG -->
+  <div class="modal-overlay" id="orderSuccessModal">
+    <div class="modal-content" style="text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 12px;">📦</div>
+      <h3 style="font-size: 24px; color: var(--color-red-primary); margin-bottom: 8px;">Đã Tiếp Nhận Đơn Mang Về</h3>
+      <p style="font-size: 14px; color: var(--color-text-muted); margin-bottom: 16px;">
+        Mã đơn hàng: <strong id="orderSuccessCode" style="font-family: var(--font-mono); font-size: 18px; color: var(--color-gold-dark);"></strong>
+      </p>
+
+      <div style="background: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: 8px; padding: 16px; text-align: left; font-size: 13px; margin-bottom: 20px;">
+        <p><strong>Khách hàng:</strong> <span id="orderSuccessName"></span> (<span id="orderSuccessPhone"></span>)</p>
+        <p><strong>Cơ sở nhận:</strong> <span id="orderSuccessBranch"></span></p>
+        <p><strong>Hẹn lấy món lúc:</strong> <span id="orderSuccessTime"></span></p>
+        <div id="orderSuccessItems" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--color-border);"></div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <a href="tra-cuu.html" class="btn btn-gold">Xem Đơn Của Tôi</a>
+        <button class="btn btn-primary" onclick="window.location.href='index.html'">Về Trang Chủ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Hotline: 033 9253 464</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    function updateCartBadge() {
+      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
+    }
+    updateCartBadge();
+    window.addEventListener('phothin_cart_updated', updateCartBadge);
+
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('show');
+    });
+
+    // Điền chi nhánh
+    const branches = PhoThinStore.getBranches();
+    const takeawayBranch = document.getElementById('takeawayBranch');
+    takeawayBranch.innerHTML = branches.map(b => `<option value="${b.id}">${b.code}: ${b.name}</option>`).join('');
+
+    // Ngày hẹn
+    const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
+    const takeawayDate = document.getElementById('takeawayDate');
+    takeawayDate.min = todayStr;
+    takeawayDate.value = todayStr;
+
+    // Render danh sách giỏ hàng
+    function renderCartPage() {
+      const cart = PhoThinStore.getCart();
+      const list = document.getElementById('cartItemsList');
+      const totalText = document.getElementById('cartTotalPrice');
+      const container = document.getElementById('cartContainer');
+      const emptyBox = document.getElementById('emptyCartBox');
+      const banner = document.getElementById('switchBanner');
+
+      if (!cart.length) {
+        container.style.display = 'none';
+        banner.style.display = 'none';
+        emptyBox.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'grid';
+      banner.style.display = 'flex';
+      emptyBox.style.display = 'none';
+
+      let total = 0;
+      list.innerHTML = cart.map(item => {
+        const dish = PhoThinStore.getDishById(item.dishId);
+        if (!dish) return '';
+        const subtotal = dish.price * item.quantity;
+        total += subtotal;
+
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--color-border);">
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <img src="${dish.image}" alt="${dish.name}" style="width: 56px; height: 56px; object-fit: cover; border-radius: 6px;">
+              <div>
+                <strong style="font-size: 14px; display: block;">${dish.name}</strong>
+                <span style="font-size: 12px; color: var(--color-text-muted); font-family: var(--font-mono);">${dish.price.toLocaleString('vi-VN')} đ/món</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="qty-btn" onclick="changeQty('${dish.id}', ${item.quantity - 1})">-</button>
+              <span style="font-weight: 700; width: 24px; text-align: center;">${item.quantity}</span>
+              <button class="qty-btn" onclick="changeQty('${dish.id}', ${item.quantity + 1})">+</button>
+              <button onclick="changeQty('${dish.id}', 0)" style="border: none; background: none; color: red; font-size: 16px; cursor: pointer; margin-left: 8px;" title="Xóa">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      totalText.innerText = total.toLocaleString('vi-VN') + ' đ';
+    }
+
+    window.changeQty = function(dishId, qty) {
+      PhoThinStore.updateCartQuantity(dishId, qty);
+      renderCartPage();
+    };
+
+    document.getElementById('clearAllCartBtn').addEventListener('click', () => {
+      if (confirm('Bạn có chắc muốn xóa sạch giỏ hàng không?')) {
+        PhoThinStore.clearCart();
+        renderCartPage();
+      }
+    });
+
+    // CHUYỂN SANG ĐẶT BÀN KÈM MÓN
+    document.getElementById('btnSwitchToBooking').addEventListener('click', () => {
+      const cart = PhoThinStore.getCart();
+      if (!cart.length) return;
+      localStorage.setItem('phothin_cart_for_reservation', JSON.stringify(cart));
+      window.location.href = 'dat-ban.html';
+    });
+
+    renderCartPage();
+
+    // SUBMIT ĐƠN MANG VỀ
+    document.getElementById('takeawayForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('takeawayError');
+      errBox.style.display = 'none';
+
+      const cart = PhoThinStore.getCart();
+      if (!cart.length) {
+        errBox.innerText = 'Giỏ hàng của bạn đang trống!';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        const items = cart.map(item => {
+          const dish = PhoThinStore.getDishById(item.dishId);
+          return dish ? { dishId: dish.id, name: dish.name, unitPrice: dish.price, quantity: item.quantity } : null;
+        }).filter(Boolean);
+
+        const pickupAt = `${takeawayDate.value}T${document.getElementById('takeawayTime').value}:00`;
+
+        const newOrder = PhoThinStore.createOrder({
+          fullName: document.getElementById('takeawayName').value,
+          phone: document.getElementById('takeawayPhone').value,
+          branchId: takeawayBranch.value,
+          pickupAt,
+          notes: document.getElementById('takeawayNotes').value,
+          items
+        });
+
+        // Hiển thị modal thành công
+        document.getElementById('orderSuccessCode').innerText = newOrder.id;
+        document.getElementById('orderSuccessName').innerText = newOrder.fullName;
+        document.getElementById('orderSuccessPhone').innerText = newOrder.phone;
+        document.getElementById('orderSuccessBranch').innerText = newOrder.branchName;
+        document.getElementById('orderSuccessTime').innerText = new Date(newOrder.pickupAt).toLocaleString('vi-VN');
+
+        const itemsBox = document.getElementById('orderSuccessItems');
+        itemsBox.innerHTML = `
+          <ul style="padding-left: 20px;">
+            ${newOrder.items.map(i => `<li>${i.name} × ${i.quantity} — ${(i.unitPrice * i.quantity).toLocaleString('vi-VN')} đ</li>`).join('')}
+          </ul>
+          <p style="font-weight: 700; color: var(--color-red-primary); margin-top: 6px;">Tổng tiền: ${newOrder.total.toLocaleString('vi-VN')} đ</p>
+        `;
+
+        document.getElementById('orderSuccessModal').classList.add('active');
+        renderCartPage();
+      } catch (err) {
+        errBox.innerText = err.message || 'Chưa gửi được đơn.';
+        errBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

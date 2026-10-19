@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Hệ Thống - Phở Thìn Bờ Hồ</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+</head>
+<body class="admin-body">
+
+  <!-- TOP BAR -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <img src="images/logo-pho-thin.svg" alt="Logo" style="width: 36px; height: 36px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h2>Phở Thìn Bờ Hồ</h2>
+          <span class="admin-tag">ADMIN</span>
+        </div>
+        <div style="font-size: 11px; color: var(--admin-text-muted);">Hệ thống điều phối đặt bàn & đơn mang về</div>
+      </div>
+    </div>
+
+    <div>
+      <a href="index.html" style="color: var(--admin-gold); font-size: 13px; text-decoration: underline; font-weight: 600;">
+        ← Quay Lại Trang Khách
+      </a>
+    </div>
+  </header>
+
+  <!-- NAV TABS -->
+  <nav class="admin-nav">
+    <button class="admin-nav-btn active" data-tab="resManagerTab">
+      <span>📅 Đơn Đặt Bàn Ăn</span>
+      <span id="pendingBadge" style="background: var(--admin-red); color: #FFF; font-size: 10px; padding: 1px 6px; border-radius: 10px; display: none;">0</span>
+    </button>
+    <button class="admin-nav-btn" data-tab="ordersManagerTab">
+      <span>📦 Đơn Mang Về</span>
+    </button>
+    <button class="admin-nav-btn" data-tab="dishesManagerTab">
+      <span>🍲 Quản Lý Món Ăn</span>
+    </button>
+    <button class="admin-nav-btn" data-tab="settingsTab">
+      <span>⚙️ Dữ Liệu & Cài Đặt</span>
+    </button>
+  </nav>
+
+  <main class="admin-container">
+    <!-- ========================================== -->
+    <!-- TAB 1: QUẢN LÝ ĐƠN ĐẶT BÀN ĂN & CAPACITY -->
+    <!-- ========================================== -->
+    <div id="resManagerTab" class="tab-panel">
+      <!-- WIDGET THEO DÕI TẢI BÀN HÔM NAY -->
+      <div class="admin-card">
+        <div class="admin-card-title">
+          <span>📊 Tình Trạng Bàn Đặt Trực Tuyến Hôm Nay (<span id="todayLabel"></span>)</span>
+          <span style="font-size: 11px; color: var(--admin-text-muted); font-weight: normal;">Giới hạn: Tối đa 20 đơn/khung giờ/cơ sở</span>
+        </div>
+        <div class="capacity-monitor-grid" id="todayCapacityGrid">
+          <!-- Render các khung giờ có đơn -->
+        </div>
+      </div>
+
+      <!-- DANH SÁCH ĐƠN ĐẶT BÀN -->
+      <div class="admin-card">
+        <div class="admin-card-title">
+          <span>Danh Sách Đơn Đặt Bàn Dùng Món Tại Quán</span>
+          <div style="display: flex; gap: 8px;">
+            <select id="filterBranch" style="background: var(--admin-bg); color: #FFF; border: 1px solid var(--admin-border); padding: 4px 8px; border-radius: 6px; font-size: 12px;"></select>
+            <select id="filterStatus" style="background: var(--admin-bg); color: #FFF; border: 1px solid var(--admin-border); padding: 4px 8px; border-radius: 6px; font-size: 12px;">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="pending">Chờ xác nhận</option>
+              <option value="confirmed">Đã xác nhận</option>
+              <option value="completed">Đã hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-list" id="reservationsListAdmin">
+          <!-- Render danh sách đơn -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: QUẢN LÝ ĐƠN MANG VỀ (TAKEAWAY) -->
+    <!-- ========================================== -->
+    <div id="ordersManagerTab" class="tab-panel" style="display: none;">
+      <div class="admin-card">
+        <div class="admin-card-title">
+          <span>Đơn Hàng Mang Về (Takeaway - Nhận Tại Quầy)</span>
+          <span style="font-size: 11px; color: var(--admin-text-muted); font-weight: normal;">Đóng gói sẵn cho khách đến lấy</span>
+        </div>
+        <div class="admin-list" id="ordersListAdmin">
+          <!-- Render danh sách đơn mang về -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: QUẢN LÝ DANH SÁCH MÓN ĂN -->
+    <!-- ========================================== -->
+    <div id="dishesManagerTab" class="tab-panel" style="display: none;">
+      <div class="admin-card">
+        <div class="admin-card-title">
+          <span>Quản Lý Trạng Thái Thực Đơn</span>
+          <span style="font-size: 11px; color: var(--admin-text-muted); font-weight: normal;">Bật/tắt trạng thái hết món khi bếp hết nguyên liệu</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;" id="dishesAdminGrid">
+          <!-- Render danh sách món -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: CÀI ĐẶT & RESET DỮ LIỆU -->
+    <!-- ========================================== -->
+    <div id="settingsTab" class="tab-panel" style="display: none;">
+      <div class="admin-card" style="max-width: 600px;">
+        <h3 style="color: var(--admin-gold); font-size: 18px; margin-bottom: 12px;">Công Cụ Cho Giáo Viên & Giám Khảo</h3>
+        <p style="font-size: 13px; color: var(--admin-text-muted); line-height: 1.6; margin-bottom: 20px;">
+          Nếu bạn muốn đưa toàn bộ hệ thống về trạng thái ban đầu để kiểm tra lại quy trình đặt bàn (giới hạn 20 đơn), giỏ hàng, và các đơn mẫu, bấm vào nút bên dưới:
+        </p>
+        <button id="btnResetData" style="background-color: var(--admin-red); color: #FFF; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+          🔄 Khôi Phục Dữ Liệu Mẫu Ban Đầu
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCRIPT -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    // Tab switching
+    document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        const targetTab = e.currentTarget.dataset.tab;
+        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+        document.getElementById(targetTab).style.display = 'block';
+      });
+    });
+
+    const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
+    document.getElementById('todayLabel').innerText = todayStr;
+
+    // Chi nhánh
+    const branches = PhoThinStore.getBranches();
+    const filterBranch = document.getElementById('filterBranch');
+    filterBranch.innerHTML = '<option value="all">Tất cả cơ sở</option>' + branches.map(b => `<option value="${b.id}">${b.code}</option>`).join('');
+
+    filterBranch.addEventListener('change', renderAdmin);
+    document.getElementById('filterStatus').addEventListener('change', renderAdmin);
+
+    // ==========================================
+    // RENDER CAPACITY MONITOR WIDGET
+    // ==========================================
+    function renderCapacityWidget() {
+      const reservations = PhoThinStore.getReservations().filter(
+        r => r.reservationDate === todayStr && r.status !== 'cancelled'
+      );
+
+      const counts = {};
+      reservations.forEach(r => {
+        counts[r.reservationTime] = (counts[r.reservationTime] || 0) + 1;
+      });
+
+      const grid = document.getElementById('todayCapacityGrid');
+      const activeTimes = Object.keys(counts).sort();
+
+      if (!activeTimes.length) {
+        grid.innerHTML = '<p style="color:var(--admin-text-muted); font-size:12px; grid-column: 1 / -1;">Hôm nay chưa có đơn đặt bàn nào.</p>';
+        return;
+      }
+
+      grid.innerHTML = activeTimes.map(time => {
+        const booked = counts[time];
+        const isFull = booked >= 20;
+        const isWarning = booked >= 15;
+        const statusClass = isFull ? 'full' : (isWarning ? 'warning' : '');
+        const label = isFull ? 'KÍN BÀN (20/20)' : `Còn ${20 - booked} bàn`;
+
+        return `
+          <div class="capacity-slot-card ${statusClass}">
+            <strong style="color: var(--admin-gold); display: block; font-size: 14px;">${time}</strong>
+            <span style="font-weight: 700;">${booked}/20 đơn</span>
+            <div style="font-size: 10px; margin-top: 2px;">${label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // RENDER DANH SÁCH ĐƠN ĐẶT BÀN
+    // ==========================================
+    function renderReservations() {
+      const selectedBranch = filterBranch.value;
+      const selectedStatus = document.getElementById('filterStatus').value;
+
+      let list = PhoThinStore.getReservations();
+      if (selectedBranch !== 'all') list = list.filter(r => r.branchId === selectedBranch);
+      if (selectedStatus !== 'all') list = list.filter(r => r.status === selectedStatus);
+
+      const pendingCount = PhoThinStore.getReservations().filter(r => r.status === 'pending').length;
+      const badge = document.getElementById('pendingBadge');
+      if (pendingCount > 0) {
+        badge.innerText = pendingCount;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      const container = document.getElementById('reservationsListAdmin');
+      if (!list.length) {
+        container.innerHTML = '<p style="color:var(--admin-text-muted); font-size:13px; padding:20px 0;">Không có đơn đặt bàn nào theo bộ lọc.</p>';
+        return;
+      }
+
+      container.innerHTML = list.map(r => `
+        <div class="admin-order-item">
+          <div class="admin-order-header">
+            <div>
+              <strong style="font-family: monospace; color: var(--admin-gold); font-size: 14px;">${r.id}</strong>
+              <span style="margin: 0 8px;">•</span>
+              <strong style="font-size: 14px;">${r.fullName}</strong>
+              <span style="margin: 0 8px;">•</span>
+              <a href="tel:${r.phone}" style="color: var(--admin-green);">${r.phone}</a>
+            </div>
+            <span class="badge-status status-${r.status}">
+              ${r.status === 'pending' ? 'Chờ xác nhận' : (r.status === 'confirmed' ? 'Đã xác nhận' : (r.status === 'completed' ? 'Hoàn thành' : 'Đã hủy'))}
+            </span>
+          </div>
+
+          <div style="font-size: 12px; color: var(--admin-text-muted); margin-bottom: 8px;">
+            <span>🏢 ${r.branchName}</span>
+            <span style="margin: 0 8px;">•</span>
+            <span style="color: #FFF; font-weight: 700;">⏰ ${r.reservationTime}</span> (Ngày ${r.reservationDate})
+            <span style="margin: 0 8px;">•</span>
+            <span>👥 ${r.partySize} khách</span>
+          </div>
+
+          ${r.notes ? `<div style="font-size: 12px; color: var(--admin-text-muted); margin-bottom: 8px; font-style: italic;">"${r.notes}"</div>` : ''}
+
+          <!-- HIỂN THỊ MÓN GỌI TRƯỚC (NẾU CÓ) -->
+          ${r.preOrderedItems && r.preOrderedItems.length > 0 ? `
+            <div class="preorder-detail-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span class="preorder-pill">🍜 Có Gọi Trước ${r.preOrderedItems.length} Món Ăn</span>
+                <strong style="color: var(--admin-green); font-size: 13px;">${(r.preOrderTotal || 0).toLocaleString('vi-VN')} đ</strong>
+              </div>
+              <ul style="padding-left: 18px; line-height: 1.6; color: var(--admin-text);">
+                ${r.preOrderedItems.map(item => `
+                  <li>${item.name} × <strong>${item.quantity}</strong> (${(item.unitPrice * item.quantity).toLocaleString('vi-VN')} đ)</li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <!-- CÁC NÚT THAO TÁC -->
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; border-top: 1px solid var(--admin-border); padding-top: 10px;">
+            ${r.status === 'pending' ? `
+              <button onclick="updateResStatus('${r.id}', 'confirmed')" style="background: var(--admin-green); color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                Xác Nhận Giữ Bàn
+              </button>
+            ` : ''}
+            ${r.status === 'confirmed' ? `
+              <button onclick="updateResStatus('${r.id}', 'completed')" style="background: #3B82F6; color: #FFF; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                Hoàn Thành Bữa Ăn
+              </button>
+            ` : ''}
+            ${r.status !== 'cancelled' && r.status !== 'completed' ? `
+              <button onclick="updateResStatus('${r.id}', 'cancelled')" style="background: #4B5563; color: #FFF; border: none; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                Hủy Bàn
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.updateResStatus = function(id, status) {
+      PhoThinStore.updateReservationStatus(id, status);
+      renderAdmin();
+    };
+
+    // ==========================================
+    // RENDER ĐƠN MANG VỀ
+    // ==========================================
+    function renderOrders() {
+      const orders = PhoThinStore.getOrders();
+      const container = document.getElementById('ordersListAdmin');
+
+      if (!orders.length) {
+        container.innerHTML = '<p style="color:var(--admin-text-muted); font-size:13px; padding:20px 0;">Chưa có đơn hàng mang về nào.</p>';
+        return;
+      }
+
+      container.innerHTML = orders.map(o => `
+        <div class="admin-order-item">
+          <div class="admin-order-header">
+            <div>
+              <strong style="font-family: monospace; color: var(--admin-gold); font-size: 14px;">${o.id}</strong>
+              <span style="margin: 0 8px;">•</span>
+              <strong style="font-size: 14px;">${o.fullName}</strong>
+              <span style="margin: 0 8px;">•</span>
+              <a href="tel:${o.phone}" style="color: var(--admin-green);">${o.phone}</a>
+            </div>
+            <span class="badge-status status-${o.status}">
+              ${o.status === 'pending' ? 'Chờ xác nhận' : (o.status === 'confirmed' ? 'Đã xác nhận' : (o.status === 'completed' ? 'Hoàn thành' : 'Đã hủy'))}
+            </span>
+          </div>
+
+          <div style="font-size: 12px; color: var(--admin-text-muted); margin-bottom: 8px;">
+            <span>🏢 ${o.branchName}</span>
+            <span style="margin: 0 8px;">•</span>
+            <span style="color: #FFF; font-weight: 700;">⏰ Lấy lúc: ${new Date(o.pickupAt).toLocaleString('vi-VN')}</span>
+          </div>
+
+          ${o.notes ? `<div style="font-size: 12px; color: var(--admin-text-muted); margin-bottom: 8px; font-style: italic;">"${o.notes}"</div>` : ''}
+
+          <div class="preorder-detail-box">
+            <ul style="padding-left: 18px; line-height: 1.6; color: var(--admin-text);">
+              ${(o.items || []).map(i => `<li>${i.name} × <strong>${i.quantity}</strong> — ${(i.unitPrice * i.quantity).toLocaleString('vi-VN')} đ</li>`).join('')}
+            </ul>
+            <div style="text-align: right; font-weight: 700; color: var(--admin-gold); margin-top: 6px; font-size: 13px;">
+              Tổng cộng: ${o.total.toLocaleString('vi-VN')} đ
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; border-top: 1px solid var(--admin-border); padding-top: 10px;">
+            ${o.status === 'pending' ? `
+              <button onclick="updateOrderStatusAdmin('${o.id}', 'confirmed')" style="background: var(--admin-green); color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                Xác Nhận Đơn
+              </button>
+            ` : ''}
+            ${o.status === 'confirmed' ? `
+              <button onclick="updateOrderStatusAdmin('${o.id}', 'completed')" style="background: #3B82F6; color: #FFF; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+                Đã Giao Cho Khách
+              </button>
+            ` : ''}
+            ${o.status !== 'cancelled' && o.status !== 'completed' ? `
+              <button onclick="updateOrderStatusAdmin('${o.id}', 'cancelled')" style="background: #4B5563; color: #FFF; border: none; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                Hủy Đơn
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.updateOrderStatusAdmin = function(id, status) {
+      PhoThinStore.updateOrderStatus(id, status);
+      renderAdmin();
+    };
+
+    // ==========================================
+    // RENDER QUẢN LÝ MÓN ĂN
+    // ==========================================
+    function renderDishesManager() {
+      const dishes = PhoThinStore.getDishes();
+      const container = document.getElementById('dishesAdminGrid');
+
+      container.innerHTML = dishes.map(dish => `
+        <div class="admin-order-item" style="display: flex; gap: 12px; align-items: center;">
+          <img src="${dish.image}" alt="${dish.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+          <div style="flex: 1;">
+            <strong style="font-size: 13px; display: block;">${dish.name}</strong>
+            <span style="font-family: monospace; color: var(--admin-gold); font-size: 12px;">${dish.formattedPrice}</span>
+          </div>
+          <button onclick="toggleDish('${dish.id}')" style="background: ${dish.isAvailable ? 'rgba(61, 214, 140, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${dish.isAvailable ? 'var(--admin-green)' : '#F87171'}; border: 1px solid ${dish.isAvailable ? 'var(--admin-green)' : '#F87171'}; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">
+            ${dish.isAvailable ? '✓ Đang Bán' : '✕ Tạm Hết'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    window.toggleDish = function(id) {
+      PhoThinStore.toggleDishAvailability(id);
+      renderAdmin();
+    };
+
+    // ==========================================
+    // RESET DỮ LIỆU
+    // ==========================================
+    document.getElementById('btnResetData').addEventListener('click', () => {
+      if (confirm('Khôi phục toàn bộ danh sách đơn đặt bàn, đơn món và thực đơn về dữ liệu mẫu ban đầu?')) {
+        PhoThinStore.resetToDefault();
+        alert('Đã khôi phục dữ liệu mẫu thành công!');
+        renderAdmin();
+      }
+    });
+
+    function renderAdmin() {
+      renderCapacityWidget();
+      renderReservations();
+      renderOrders();
+      renderDishesManager();
+    }
+
+    renderAdmin();
+  </script>
+</body>
+</html>

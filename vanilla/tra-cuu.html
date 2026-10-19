@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra Cứu Đơn Của Tôi - Phở Thìn Bờ Hồ (1955)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="images/logo-pho-thin.svg">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo-pho-thin.svg" alt="Phở Thìn Bờ Hồ Logo">
+        <div class="brand-text">
+          <h1>Phở Thìn Bờ Hồ</h1>
+          <span>Gia truyền từ năm 1955 • Đinh Tiên Hoàng</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="thuc-don.html">Thực Đơn</a></li>
+          <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
+          <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+          <li><a href="tra-cuu.html" class="active">Tra Cứu Đơn</a></li>
+          <li><a href="admin.html" style="color: var(--color-gold);">Quản Trị</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="gio-hang.html" class="cart-icon-btn">
+          <span>🛒 Giỏ món</span>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER TIÊU ĐỀ -->
+  <section style="background: var(--color-bg-alt); padding: 30px 0; border-bottom: 1px solid var(--color-border); text-align: center;">
+    <div class="container">
+      <h1 style="font-size: 32px; margin-bottom: 8px;">Tra Cứu Đơn Hàng & Giữ Chỗ</h1>
+      <p style="color: var(--color-text-muted);">Kiểm tra tình trạng đơn đặt bàn ăn tại quán và đơn món mang về của bạn</p>
+    </div>
+  </section>
+
+  <!-- SEARCH INPUT -->
+  <main class="container" style="max-width: 800px; padding: 40px 16px;">
+    <div class="form-panel" style="margin-bottom: 30px;">
+      <form id="searchForm" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="tel" id="searchPhoneInput" class="form-control" style="flex: 1; min-width: 240px;" placeholder="Nhập số điện thoại đã dùng để đặt..." required>
+        <button type="submit" class="btn btn-primary">Tìm Kiếm Đơn</button>
+      </form>
+    </div>
+
+    <!-- TABS KẾT QUẢ -->
+    <div id="resultsArea" style="display: none;">
+      <div style="display: flex; gap: 8px; border-bottom: 2px solid var(--color-gold); margin-bottom: 20px;">
+        <button class="btn btn-primary btn-sm tab-btn active" data-tab="resTab" id="resTabBtn">
+          Đơn Đặt Bàn Ăn (<span id="resCount">0</span>)
+        </button>
+        <button class="btn btn-outline btn-sm tab-btn" data-tab="ordTab" id="ordTabBtn">
+          Đơn Mang Về (<span id="ordCount">0</span>)
+        </button>
+      </div>
+
+      <!-- TAB 1: ĐƠN ĐẶT BÀN -->
+      <div id="resTab" class="tab-content">
+        <div id="reservationsList"></div>
+      </div>
+
+      <!-- TAB 2: ĐƠN MANG VỀ -->
+      <div id="ordTab" class="tab-content" style="display: none;">
+        <div id="ordersList"></div>
+      </div>
+    </div>
+
+    <div id="emptyNotice" style="display: none; text-align: center; padding: 40px 0; color: var(--color-text-muted);">
+      <p>Không tìm thấy đơn nào liên kết với số điện thoại này.</p>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>© 1955 - 2026 Phở Thìn Bờ Hồ. Hotline: 033 9253 464</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    function updateCartBadge() {
+      document.getElementById('cartCount').innerText = PhoThinStore.getCartTotalCount();
+    }
+    updateCartBadge();
+    window.addEventListener('phothin_cart_updated', updateCartBadge);
+
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('show');
+    });
+
+    const phoneInput = document.getElementById('searchPhoneInput');
+    const savedPhone = localStorage.getItem('phothin_customer_phone');
+    if (savedPhone) {
+      phoneInput.value = savedPhone;
+      setTimeout(() => performSearch(savedPhone), 100);
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      performSearch(phoneInput.value);
+    });
+
+    // Tab chuyển đổi
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('btn-primary', 'active');
+          b.classList.add('btn-outline');
+        });
+        e.currentTarget.classList.add('btn-primary', 'active');
+        e.currentTarget.classList.remove('btn-outline');
+
+        const tabId = e.currentTarget.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.getElementById(tabId).style.display = 'block';
+      });
+    });
+
+    const statusLabels = {
+      pending: '<span style="background:#FEF3C7; color:#92400E; padding:3px 8px; border-radius:4px; font-weight:700; font-size:11px;">Chờ quán xác nhận</span>',
+      confirmed: '<span style="background:#D1FAE5; color:#065F46; padding:3px 8px; border-radius:4px; font-weight:700; font-size:11px;">Đã giữ chỗ</span>',
+      completed: '<span style="background:#DBEAFE; color:#1E40AF; padding:3px 8px; border-radius:4px; font-weight:700; font-size:11px;">Hoàn thành</span>',
+      cancelled: '<span style="background:#F3F4F6; color:#4B5563; padding:3px 8px; border-radius:4px; font-weight:700; font-size:11px;">Đã hủy</span>'
+    };
+
+    function performSearch(phone) {
+      const records = PhoThinStore.getCustomerRecords(phone);
+      const resultsArea = document.getElementById('resultsArea');
+      const emptyNotice = document.getElementById('emptyNotice');
+
+      if (!records.reservations.length && !records.orders.length) {
+        resultsArea.style.display = 'none';
+        emptyNotice.style.display = 'block';
+        return;
+      }
+
+      emptyNotice.style.display = 'none';
+      resultsArea.style.display = 'block';
+
+      document.getElementById('resCount').innerText = records.reservations.length;
+      document.getElementById('ordCount').innerText = records.orders.length;
+
+      // Render Đơn đặt bàn
+      const resContainer = document.getElementById('reservationsList');
+      if (!records.reservations.length) {
+        resContainer.innerHTML = '<p style="color:var(--color-text-muted); padding:20px 0;">Chưa có đơn đặt bàn nào.</p>';
+      } else {
+        resContainer.innerHTML = records.reservations.map(r => `
+          <div class="form-panel" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="font-family: var(--font-mono); color: var(--color-gold-dark); font-size: 15px;">${r.id}</strong>
+              ${statusLabels[r.status] || r.status}
+            </div>
+            <p><strong>Cơ sở:</strong> ${r.branchName}</p>
+            <p><strong>Thời gian:</strong> <span style="color: var(--color-red-primary); font-weight: 700;">${r.reservationTime}</span> - Ngày ${r.reservationDate} (${r.partySize} người)</p>
+            ${r.notes ? `<p style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;"><em>Ghi chú: "${r.notes}"</em></p>` : ''}
+            
+            ${r.preOrderedItems && r.preOrderedItems.length > 0 ? `
+              <div style="background: var(--color-white); border: 1px dashed var(--color-border); border-radius: 6px; padding: 10px; margin-top: 10px; font-size: 13px;">
+                <p style="font-weight: 700; color: var(--color-red-primary); margin-bottom: 4px;">🍜 Món ăn gọi trước cho bàn:</p>
+                <ul style="padding-left: 20px; line-height: 1.6;">
+                  ${r.preOrderedItems.map(item => `<li>${item.name} × ${item.quantity} — ${(item.unitPrice * item.quantity).toLocaleString('vi-VN')} đ</li>`).join('')}
+                </ul>
+                <p style="font-weight: 700; margin-top: 6px; text-align: right; color: var(--color-red-primary);">Tổng tạm tính: ${r.preOrderTotal.toLocaleString('vi-VN')} đ</p>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+
+      // Render Đơn mang về
+      const ordContainer = document.getElementById('ordersList');
+      if (!records.orders.length) {
+        ordContainer.innerHTML = '<p style="color:var(--color-text-muted); padding:20px 0;">Chưa có đơn mang về nào.</p>';
+      } else {
+        ordContainer.innerHTML = records.orders.map(o => `
+          <div class="form-panel" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="font-family: var(--font-mono); color: var(--color-gold-dark); font-size: 15px;">${o.id}</strong>
+              ${statusLabels[o.status] || o.status}
+            </div>
+            <p><strong>Cơ sở nhận:</strong> ${o.branchName}</p>
+            <p><strong>Hẹn nhận lúc:</strong> ${new Date(o.pickupAt).toLocaleString('vi-VN')}</p>
+            <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: 6px; padding: 10px; margin-top: 10px; font-size: 13px;">
+              <ul style="padding-left: 20px; line-height: 1.6;">
+                ${(o.items || []).map(i => `<li>${i.name} × ${i.quantity} — ${(i.unitPrice * i.quantity).toLocaleString('vi-VN')} đ</li>`).join('')}
+              </ul>
+              <p style="font-weight: 700; margin-top: 6px; text-align: right; color: var(--color-red-primary);">Tổng thanh toán: ${o.total.toLocaleString('vi-VN')} đ</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  </script>
+</body>
+</html>
