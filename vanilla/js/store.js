@@ -407,10 +407,74 @@ const PhoThinStore = {
       o => o.phone.replace(/[\s().-]/g, '') === cleanPhone
     );
     return { reservations, orders };
+  },
+
+  // Tự động render 4 cơ sở ở footer trên tất cả các trang
+  renderFooterBranches() {
+    if (typeof document === 'undefined') return;
+    const branchesGrid = document.getElementById('footerBranchesGrid');
+    if (!branchesGrid) return;
+
+    const branches = this.getBranches();
+    if (!branches || branches.length === 0) return;
+
+    branchesGrid.innerHTML = '';
+    branches.forEach(b => {
+      const bCard = document.createElement('div');
+      bCard.className = 'footer-branch-card';
+      bCard.innerHTML = `
+        ${b.isOriginal ? '<span class="branch-original-tag">GỐC</span>' : ''}
+        <div class="branch-name">${b.code}: ${b.name}</div>
+        <div class="branch-addr">${b.address}</div>
+        <div class="branch-actions">
+          <a href="tel:${b.phone.replace(/\\s/g, '')}" class="branch-phone">${b.phone}</a>
+          <a href="dat-ban.html?branch=${b.id}" class="branch-reserve-link">Đặt bàn →</a>
+        </div>
+      `;
+      branchesGrid.appendChild(bCard);
+    });
+  },
+
+  // Tự động khởi tạo Modal Cảnh báo mạo danh ở footer/ticker trên tất cả các trang
+  initWarningModal() {
+    if (typeof document === 'undefined' || this._warningModalInitialized) return;
+    const warningModal = document.getElementById('warningModalBackdrop');
+    if (!warningModal) return;
+    this._warningModalInitialized = true;
+
+    const openWarning = (e) => {
+      if (e) e.preventDefault();
+      warningModal.classList.add('open');
+    };
+    const closeWarning = () => {
+      warningModal.classList.remove('open');
+    };
+
+    document.querySelectorAll('.top-ticker-alert-btn, #btnOpenWarningFromTicker, #btnOpenWarningFromFooter, #heroLogoTrigger, #heroBadgeTrigger')
+      .forEach(btn => btn.addEventListener('click', openWarning));
+
+    document.getElementById('btnCloseWarningModal')?.addEventListener('click', closeWarning);
+    document.getElementById('btnConfirmWarningModal')?.addEventListener('click', closeWarning);
+    warningModal.addEventListener('click', (e) => {
+      if (e.target === warningModal) closeWarning();
+    });
   }
 };
 
 // Tự động khởi tạo ngay khi nạp file trong môi trường trình duyệt
 if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
   PhoThinStore.init();
+}
+
+if (typeof document !== 'undefined') {
+  const setupFooter = () => {
+    PhoThinStore.renderFooterBranches();
+    PhoThinStore.initWarningModal();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFooter);
+  } else {
+    setupFooter();
+  }
 }

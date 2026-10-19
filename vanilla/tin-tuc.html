@@ -111,10 +111,14 @@
 
   </main>
 
-  <!-- FOOTER -->
+  <!-- ======================================================================
+       FOOTER (4 CƠ SỞ CHÍNH THỨC & DI SẢN)
+       ====================================================================== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-top-grid">
+        
+        <!-- Col 1: Brand & Impersonation Warning -->
         <div class="footer-brand-col">
           <div style="display: flex; align-items: center; gap: 12px;">
             <div class="brand-seal-wrapper" style="width: 50px; height: 50px;">
@@ -125,38 +129,134 @@
               <span style="font-size: 11px; color: var(--color-gold);">HÀ NỘI TỪ 1955 • 4 CƠ SỞ CHÍNH THỨC</span>
             </div>
           </div>
+
           <p class="footer-brand-desc">
-            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm.
+            Phở Thìn Bờ Hồ do cụ Bùi Chí Thìn sáng lập từ năm 1955 tại 61 Đinh Tiên Hoàng, Hoàn Kiếm. Thương hiệu bảo hộ độc quyền, không nhượng quyền xô bồ, kiên định giữ trọn hương vị truyền thống.
           </p>
+
+          <button type="button" class="footer-warning-btn" id="btnOpenWarningFromFooter">
+            <span>⚠️</span>
+            <span>Cảnh báo mạo danh & Bản đồ giả mạo</span>
+          </button>
         </div>
 
+        <!-- Col 2: Navigation Links -->
         <div class="footer-links-col">
           <h4>Liên Kết Nhanh</h4>
           <ul class="footer-links-list">
             <li><a href="index.html">Trang Chủ</a></li>
-            <li><a href="gioi-thieu.html">Giới Thiệu</a></li>
-            <li><a href="thuc-don.html">Thực Đơn</a></li>
-            <li><a href="dat-ban.html">Đặt Bàn Ăn</a></li>
-            <li><a href="gio-hang.html">Đơn Mang Về</a></li>
+            <li><a href="gioi-thieu.html">Giới Thiệu (Báo Cũ 1955)</a></li>
+            <li><a href="thuc-don.html">Thực Đơn Phở & Món Kèm</a></li>
+            <li><a href="dat-ban.html">Đặt Bàn Ăn Tại Quán</a></li>
+            <li><a href="gio-hang.html">Đơn Mang Về (Takeaway)</a></li>
+            <li><a href="tin-tuc.html">Bảng Tin & Sự Kiện</a></li>
+            <li><a href="doi-tac.html">Hợp Tác Masan Chin-Su</a></li>
+            <li><a href="lien-he.html">Liên Hệ & Tuyển Dụng</a></li>
           </ul>
         </div>
 
+        <!-- Col 3: 4 Official Branches -->
         <div class="footer-branches-col">
-          <h4>4 Cơ Sở Chính Thức Duy Nhất</h4>
-          <p style="font-size: 12px; color: rgba(244,232,210,0.85); line-height: 1.6;">
-            • CS1: 61 Đinh Tiên Hoàng, Hoàn Kiếm (GỐC 1955)<br>
-            • CS2: 01 Lê Văn Hưu, Hai Bà Trưng<br>
-            • CS3: 19B Bát Đàn, Hoàn Kiếm<br>
-            • CS4: 28 Liễu Giai, Ba Đình
-          </p>
+          <h4>4 Cơ Sở Chính Thức Duy Nhất Tại Hà Nội</h4>
+          <div class="footer-branches-grid" id="footerBranchesGrid">
+            <div class="footer-branch-card">
+              <span class="branch-original-tag">GỐC</span>
+              <div class="branch-name">CS1: 61 Đinh Tiên Hoàng</div>
+              <div class="branch-addr">61 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội (GỐC 1955)</div>
+              <div class="branch-actions">
+                <a href="tel:0912345678" class="branch-phone">0912 345 678</a>
+                <a href="dat-ban.html?branch=cs1-dinh-tien-hoang" class="branch-reserve-link">Đặt bàn →</a>
+              </div>
+            </div>
+            <div class="footer-branch-card">
+              <div class="branch-name">CS2: 01 Lê Văn Hưu</div>
+              <div class="branch-addr">01 Lê Văn Hưu, Hai Bà Trưng, Hà Nội</div>
+              <div class="branch-actions">
+                <a href="tel:0912345679" class="branch-phone">0912 345 679</a>
+                <a href="dat-ban.html?branch=cs2-le-van-huu" class="branch-reserve-link">Đặt bàn →</a>
+              </div>
+            </div>
+            <div class="footer-branch-card">
+              <div class="branch-name">CS3: 19B Bát Đàn</div>
+              <div class="branch-addr">19B Bát Đàn, Hoàn Kiếm, Hà Nội</div>
+              <div class="branch-actions">
+                <a href="tel:0912345680" class="branch-phone">0912 345 680</a>
+                <a href="dat-ban.html?branch=cs3-hang-tre" class="branch-reserve-link">Đặt bàn →</a>
+              </div>
+            </div>
+            <div class="footer-branch-card">
+              <div class="branch-name">CS4: 28 Liễu Giai</div>
+              <div class="branch-addr">28 Liễu Giai, Ba Đình, Hà Nội</div>
+              <div class="branch-actions">
+                <a href="tel:0912345681" class="branch-phone">0912 345 681</a>
+                <a href="dat-ban.html?branch=cs4-kim-ma" class="branch-reserve-link">Đặt bàn →</a>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
+
+      <!-- Legal Copyright -->
       <div class="footer-bottom-bar">
-        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí).</span>
+        <span>© 1955 - 2026 Bản quyền thuộc về Phở Thìn Bờ Hồ (Gia tộc Bùi Chí). Tất cả quyền được bảo lưu.</span>
         <span style="font-family: var(--font-mono); color: var(--color-gold);">Hanoi Heritage • Est. 1955</span>
       </div>
     </div>
   </footer>
+
+  <!-- ======================================================================
+       MODAL CẢNH BÁO MẠO DANH & BẢN ĐỒ GIẢ MẠO (FAKE MAP WARNING)
+       ====================================================================== -->
+  <div class="modal-backdrop" id="warningModalBackdrop">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header-bar">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; text-transform: uppercase;">
+          <span>⚠️</span>
+          <span>Cảnh Báo Mạo Danh & Bản Đồ GiẢ Mạo</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseWarningModal">✕</button>
+      </div>
+
+      <div style="padding: 24px; color: var(--color-burgundy);">
+        <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px; margin-bottom: 20px;">
+          <h4 style="color: #991b1b; font-size: 14px; margin-bottom: 6px;">QUAN TRỌNG: PHÂN BIỆT RÕ THƯƠNG HIỆU</h4>
+          <p style="font-size: 13px; color: #7f1d1d; line-height: 1.5;">
+            <strong>Phở Thìn Bờ Hồ</strong> (do cụ <strong>Bùi Chí Thìn</strong> sáng lập năm 1955 tại 61 Đinh Tiên Hoàng) là thương hiệu phở truyền thống nước trong thanh ngọt. Quán <em>HOÀN TOÀN TÁCH BIỆT</em> với quán Phở Thìn Lò Đúc (chuyên phở xào lăn mỡ hành ra đời năm 1979).
+          </p>
+        </div>
+
+        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--color-burgundy);">
+          Danh sách 4 cơ sở CHÍNH THỨC duy nhất được gia tộc công nhận:
+        </h4>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong style="color: var(--color-red-accent);">✓ CS1 (GỐC): 61 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Đối diện Tháp Rùa và Đền Ngọc Sơn • Hotline: 0912 345 678</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS2: 01 Lê Văn Hưu, Hai Bà Trưng, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 679</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS3: 19B Bát Đàn, Hoàn Kiếm, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 680</p>
+          </div>
+          <div style="padding: 10px 14px; background-color: var(--bg-cream); border-radius: 6px; border: 1px solid var(--color-gold-border-light);">
+            <strong>✓ CS4: 28 Liễu Giai, Ba Đình, Hà Nội</strong>
+            <p style="font-size: 12px; color: var(--color-text-brown-light);">Hotline: 0912 345 681</p>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <button type="button" class="btn btn-primary" id="btnConfirmWarningModal">
+            Đã Hiểu & Tiếp Tục Xem
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="js/data.js"></script>
   <script src="js/store.js"></script>
