@@ -4,8 +4,69 @@
  */
 
 const PhoThinStore = {
+  // Lắng nghe kích hoạt Cổng Quản Trị bí mật (#admin, #quantri, ?admin=true, Ctrl+Shift+A, hoặc chạm 3 lần logo)
+  initStealthGateway() {
+    if (typeof window === 'undefined' || this._stealthGatewayInitialized) return;
+    this._stealthGatewayInitialized = true;
+
+    // Không kích hoạt nếu đang ở chính trang admin.html
+    const pathname = window.location.pathname.toLowerCase();
+    if (pathname.endsWith('admin.html')) return;
+
+    const checkStealthTrigger = () => {
+      const hash = (window.location.hash || '').toLowerCase();
+      const search = window.location.search || '';
+      const params = new URLSearchParams(search);
+
+      if (
+        hash === '#admin' ||
+        hash === '#quantri' ||
+        hash === '#admin-portal' ||
+        params.get('admin') === 'true' ||
+        params.get('admin') === 'portal'
+      ) {
+        // Xóa hash trên URL hiện tại để nút Back của trình duyệt hoạt động mượt mà
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+        }
+        window.location.href = 'admin.html';
+      }
+    };
+
+    // Kiểm tra ngay khi tải trang (ví dụ người dùng mở URL index.html#admin)
+    checkStealthTrigger();
+    // Lắng nghe khi người dùng gõ / đổi hash trên thanh địa chỉ (#admin)
+    window.addEventListener('hashchange', checkStealthTrigger);
+
+    // Phím tắt quản trị viên bí mật: Ctrl + Shift + A (hoặc Cmd + Shift + A trên Mac)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        window.location.href = 'admin.html';
+      }
+    });
+
+    // Chạm nhanh 3 lần vào logo con dấu Phở Thìn trên header để mở quản trị
+    let logoClicks = 0;
+    let logoTimer = null;
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.closest('.brand-seal-wrapper')) {
+        logoClicks++;
+        clearTimeout(logoTimer);
+        if (logoClicks >= 3) {
+          logoClicks = 0;
+          window.location.href = 'admin.html';
+        } else {
+          logoTimer = setTimeout(() => { logoClicks = 0; }, 1200);
+        }
+      }
+    });
+  },
+
   // Khởi tạo dữ liệu vào localStorage và tự động đồng bộ khi có phiên bản dữ liệu mới
   init() {
+    this.initStealthGateway();
+
     const currentVersion = localStorage.getItem('phothin_data_version');
     const targetVersion = (typeof DATA_VERSION !== 'undefined') ? DATA_VERSION : '2026.10.19-full';
 
