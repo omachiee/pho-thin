@@ -9,11 +9,20 @@ interface Props {
   onBack: () => void;
   onComplete: () => void;
   onViewMyOrders?: () => void;
+  onSwitchToReservation?: () => void;
 }
 const money = (amount: number) => amount.toLocaleString('vi-VN') + ' đ';
 const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
 
-export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, onViewMyOrders }: Props) {
+export function CheckoutSection({
+  cart,
+  lang,
+  onQuantity,
+  onBack,
+  onComplete,
+  onViewMyOrders,
+  onSwitchToReservation,
+}: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [order, setOrder] = useState<Order | null>(null);
@@ -36,9 +45,7 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
       setError('Vui lòng chọn thời gian nhận trong tương lai.'); return;
     }
     const phone = String(form.get('phone') || '').trim();
-    const diningOption = String(form.get('diningOption') || '');
-    const userNotes = String(form.get('notes') || '').trim();
-    const notes = diningOption ? `[${diningOption}] ${userNotes}`.trim() : userNotes;
+    const notes = String(form.get('notes') || '').trim();
 
     setBusy(true);
     try {
@@ -63,7 +70,7 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
   if (order) return (
     <section className="mx-auto max-w-3xl px-4 py-12">
       <div className="rounded-xl border-2 border-[#B88932] bg-[#F4E8D2] p-6 sm:p-10 space-y-4">
-        <h1 className="text-3xl font-bold">Đã tiếp nhận đơn món</h1>
+        <h1 className="text-3xl font-bold">Đã tiếp nhận đơn món mang về</h1>
         <p className="break-all">Mã đơn: <strong>{order.id}</strong></p>
         <p>Chờ cơ sở xác nhận. Nhận tại <strong>{order.branchName}</strong>.</p>
         <p>{new Date(order.pickupAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}</p>
@@ -76,7 +83,7 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
               onClick={onViewMyOrders}
               className="rounded bg-[#D6A84F] hover:bg-[#B88932] px-6 py-3 font-bold text-[#560F16] transition-colors cursor-pointer shadow-sm"
             >
-              Xem đơn đặt bàn của tôi
+              Xem đơn của tôi
             </button>
           )}
           <button onClick={onBack} className="rounded bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9] cursor-pointer">
@@ -92,7 +99,7 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
       <button onClick={onBack} className="mb-5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#68131C] hover:text-[#560F16] underline cursor-pointer">
         ← Quay lại giỏ hàng
       </button>
-      <h1 className="mb-8 text-3xl font-bold">Đặt món nhận tại quán</h1>
+      <h1 className="mb-8 text-3xl font-bold">Đặt món mang về (Takeaway - Nhận tại quầy)</h1>
       {!cart.length ? <p>Giỏ hàng trống. Chọn món trong thực đơn để bắt đầu.</p> : (
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="rounded-xl border border-[#B88932]/50 bg-[#F4E8D2] p-5 sm:p-7">
@@ -113,21 +120,30 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
             <p className="mt-2 text-sm">Giá được kiểm tra lại khi gửi đơn. Chỉ nhận tại cơ sở, thanh toán khi nhận.</p>
           </div>
           <form onSubmit={submit} className="space-y-4">
+            {onSwitchToReservation && (
+              <div className="rounded-xl border-2 border-[#D6A84F] bg-[#FFF8E9] p-4 text-[#68131C] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <p className="font-bold flex items-center gap-1.5 text-sm sm:text-base">
+                    🍜 Quý khách muốn dùng bữa tại bàn?
+                  </p>
+                  <p className="text-xs text-[#68131C]/80 mt-0.5">
+                    Đặt bàn trước để được giữ chỗ và phục vụ món nóng hổi ngay khi đến quán!
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={onSwitchToReservation}
+                  className="shrink-0 rounded-lg bg-[#68131C] hover:bg-[#560F16] text-[#FFF8E9] px-4 py-2 text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Chuyển sang Đặt bàn kèm món →
+                </button>
+              </div>
+            )}
             <fieldset disabled={busy} className="space-y-4 disabled:opacity-60">
-              <legend className="mb-4 text-xl font-bold">Thông tin nhận món</legend>
+              <legend className="mb-4 text-xl font-bold">Thông tin nhận món mang về</legend>
               <label className="block space-y-1"><span>Họ tên</span><input name="fullName" autoComplete="name" required maxLength={100} className={inputClass} /></label>
               <label className="block space-y-1"><span>Số điện thoại</span><input name="phone" type="tel" autoComplete="tel" required maxLength={20} className={inputClass} /></label>
               <label className="block space-y-1"><span>Cơ sở nhận</span><select name="branchId" required className={inputClass}>{branches.map((branch) => <option key={branch.id} value={branch.id}>{branch.name[lang]} — {branch.address}</option>)}</select></label>
-              <label className="block space-y-1">
-                <span>Hình thức dùng món / Bàn</span>
-                <select name="diningOption" className={inputClass}>
-                  <option value="Dùng tại quán (Bàn 1-2 người)">Dùng tại quán (Bàn 1 - 2 người)</option>
-                  <option value="Dùng tại quán (Bàn 3-4 người)">Dùng tại quán (Bàn 3 - 4 người)</option>
-                  <option value="Dùng tại quán (Bàn 5-8 người)">Dùng tại quán (Bàn 5 - 8 người)</option>
-                  <option value="Dùng tại quán (Bàn lớn trên 8 người)">Dùng tại quán (Bàn lớn trên 8 người)</option>
-                  <option value="Mang về (Nhận tại quầy)">Mang về (Nhận tại quầy)</option>
-                </select>
-              </label>
               <div className="grid grid-cols-2 gap-3">
                 <label className="block space-y-1"><span>Ngày nhận</span><input name="date" type="date" required min={today()} defaultValue={today()} className={inputClass} /></label>
                 <label className="block space-y-1"><span>Giờ nhận (Việt Nam)</span><input name="time" type="time" required className={inputClass} /></label>
@@ -135,7 +151,7 @@ export function CheckoutSection({ cart, lang, onQuantity, onBack, onComplete, on
               <label className="block space-y-1"><span>Ghi chú</span><textarea name="notes" maxLength={1000} rows={3} className={inputClass} /></label>
             </fieldset>
             {error && <p role="alert" className="rounded border border-red-300 bg-red-50 p-3 text-red-800">{error}</p>}
-            <button type="submit" disabled={busy || unavailable || !branches.length} className="w-full rounded-lg bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9] disabled:opacity-50">{busy ? 'Đang gửi đơn…' : 'Gửi đơn · Thanh toán khi nhận'}</button>
+            <button type="submit" disabled={busy || unavailable || !branches.length} className="w-full rounded-lg bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9] disabled:opacity-50">{busy ? 'Đang gửi đơn…' : 'Gửi đơn mang về · Thanh toán khi nhận'}</button>
           </form>
         </div>
       )}

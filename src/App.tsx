@@ -157,6 +157,12 @@ export default function App() {
     setCart((items) => quantity === 0 ? items.filter((item) => item.dishId !== id) : items.map((item) => item.dishId === id ? { ...item, quantity } : item));
   };
 
+  const handleSwitchToReservation = () => {
+    setCartForReservation([...cart]);
+    setCurrentView('reservation');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleReserveWithDish = (dish: Dish) => {
     setDishForReservation(dish);
     setSelectedDish(null);
@@ -226,6 +232,7 @@ export default function App() {
             onBack={() => handleNavigate('my-orders')}
             onComplete={() => setCart([])}
             onViewMyOrders={() => handleNavigate('my-orders')}
+            onSwitchToReservation={handleSwitchToReservation}
           />
         )}
         {currentView === 'my-orders' && (
