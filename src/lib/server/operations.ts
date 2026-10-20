@@ -44,9 +44,37 @@ export async function reservationAvailability(client: SupabaseClient, branchId: 
     availability,
   };
 }
+
+export function phoneVariants(phone: string): string[] {
+  const clean = phone.replace(/[\s().-]/g, '');
+  const set = new Set<string>([clean]);
+  if (clean.startsWith('0')) {
+    set.add('+84' + clean.slice(1));
+    set.add('84' + clean.slice(1));
+  } else if (clean.startsWith('+84')) {
+    set.add('0' + clean.slice(3));
+    set.add(clean.slice(1));
+  } else if (clean.startsWith('84')) {
+    set.add('0' + clean.slice(2));
+    set.add('+' + clean);
+  }
+  return Array.from(set);
+}
+
 export async function createReservation(client: SupabaseClient, body: unknown, manual = false) {
   const r = validate.reservation(body, manual);
   if (!manual) {
+    const variants = phoneVariants(r.phone);
+    const { data: pendingReservations, error: countPendingErr } = await client
+      .from('reservations')
+      .select('id')
+      .in('phone', variants)
+      .eq('status', 'pending');
+    databaseError(countPendingErr);
+    if (pendingReservations && pendingReservations.length >= 2) {
+      throw new ApiError(400, 'Bạn đang có đơn hàng chưa hoàn tất, vui lòng chờ xử lý trước khi đặt thêm.');
+    }
+
     const { data: existing, error: countErr } = await client
       .from('reservations')
       .select('id')
@@ -78,21 +106,6 @@ export async function createInquiry(client: SupabaseClient, body: unknown) {
   databaseError(error);
   if (!data) throw new ApiError(503, 'Không thể tạo liên hệ.');
   return mapInquiry(data);
-}
-export function phoneVariants(phone: string): string[] {
-  const clean = phone.replace(/[\s().-]/g, '');
-  const set = new Set<string>([clean]);
-  if (clean.startsWith('0')) {
-    set.add('+84' + clean.slice(1));
-    set.add('84' + clean.slice(1));
-  } else if (clean.startsWith('+84')) {
-    set.add('0' + clean.slice(3));
-    set.add(clean.slice(1));
-  } else if (clean.startsWith('84')) {
-    set.add('0' + clean.slice(2));
-    set.add('+' + clean);
-  }
-  return Array.from(set);
 }
 
 export async function createOrder(client: SupabaseClient, body: unknown) {

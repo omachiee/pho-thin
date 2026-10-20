@@ -33,7 +33,7 @@ describe('Reservation Schema & Mappings', () => {
     const input = {
       fullName: 'Trần Văn B',
       phone: '0987654321',
-      reservationDate: '2026-10-20',
+      reservationDate: '2026-10-25',
       reservationTime: '12:00',
       partySize: 4,
       branchId: 'bo-ho',
@@ -95,11 +95,18 @@ describe('Reservation Capacity & Availability', () => {
     const existing20 = Array.from({ length: 20 }, (_, i) => ({ id: `res-${i}` }));
     const mockClient: any = {
       from: (table: string) => {
+        let filters: Record<string, any> = {};
         const builder: any = {
           select: () => builder,
-          eq: () => builder,
-          neq: () => builder,
-          then: (resolve: any) => resolve({ data: existing20, error: null })
+          in: (col: string, vals: any) => { filters['in_' + col] = vals; return builder; },
+          eq: (col: string, val: any) => { filters[col] = val; return builder; },
+          neq: (col: string, val: any) => { filters['not_' + col] = val; return builder; },
+          then: (resolve: any) => {
+            if (filters.status === 'pending' && filters.in_phone) {
+              return resolve({ data: [], error: null });
+            }
+            return resolve({ data: existing20, error: null });
+          }
         };
         return builder;
       }
@@ -108,7 +115,7 @@ describe('Reservation Capacity & Availability', () => {
     const booking = {
       fullName: 'Trần Văn B',
       phone: '0987654321',
-      reservationDate: '2026-10-20',
+      reservationDate: '2026-10-25',
       reservationTime: '12:00',
       partySize: 4,
       branchId: 'bo-ho',
@@ -121,6 +128,46 @@ describe('Reservation Capacity & Availability', () => {
     );
   });
 
+  it('rejects reservation creation when customer already has >= 2 pending reservations', async () => {
+    const mockClient: any = {
+      from: (table: string) => {
+        let filters: Record<string, any> = {};
+        const builder: any = {
+          select: () => builder,
+          in: (col: string, vals: any) => { filters['in_' + col] = vals; return builder; },
+          eq: (col: string, val: any) => { filters[col] = val; return builder; },
+          then: (resolve: any) => {
+            if (filters.status === 'pending' && filters.in_phone) {
+              return resolve({ data: [{ id: 'res-p1' }, { id: 'res-p2' }], error: null });
+            }
+            return resolve({ data: [], error: null });
+          }
+        };
+        return builder;
+      }
+    };
+
+    const booking = {
+      fullName: 'Khách Spam Đặt Bàn',
+      phone: '0988096000',
+      reservationDate: '2026-10-25',
+      reservationTime: '12:00',
+      partySize: 2,
+      branchId: 'bo-ho',
+      notes: ''
+    };
+
+    await assert.rejects(
+      () => createReservation(mockClient, booking),
+      (err: any) => {
+        assert(err instanceof ApiError);
+        assert.equal(err.status, 400);
+        assert.equal(err.message, 'Bạn đang có đơn hàng chưa hoàn tất, vui lòng chờ xử lý trước khi đặt thêm.');
+        return true;
+      }
+    );
+  });
+
   it('allows reservation creation and saves pre-ordered items when slot has capacity', async () => {
     let insertedRecord: any = null;
     const mockClient: any = {
@@ -128,6 +175,7 @@ describe('Reservation Capacity & Availability', () => {
         let filters: any = {};
         const builder: any = {
           select: () => builder,
+          in: (col: string, vals: any) => { filters['in_' + col] = vals; return builder; },
           eq: (col: string, val: any) => { filters[col] = val; return builder; },
           neq: (col: string, val: any) => { filters['not_' + col] = val; return builder; },
           insert: (record: any) => {
@@ -147,7 +195,12 @@ describe('Reservation Capacity & Availability', () => {
               })
             };
           },
-          then: (resolve: any) => resolve({ data: [], error: null })
+          then: (resolve: any) => {
+            if (filters.status === 'pending' && filters.in_phone) {
+              return resolve({ data: [], error: null });
+            }
+            resolve({ data: [], error: null });
+          }
         };
         return builder;
       }
@@ -156,7 +209,7 @@ describe('Reservation Capacity & Availability', () => {
     const booking = {
       fullName: 'Nguyễn Thị C',
       phone: '0901234567',
-      reservationDate: '2026-10-20',
+      reservationDate: '2026-10-25',
       reservationTime: '18:00',
       partySize: 2,
       branchId: 'bo-ho',

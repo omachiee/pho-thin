@@ -11,6 +11,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
         let filters: any = {};
         const builder: any = {
           select: () => builder,
+          in: (col: string, val: any) => { filters['in_' + col] = val; return builder; },
           eq: (col: string, val: any) => { filters[col] = val; return builder; },
           neq: (col: string, val: any) => { filters['not_' + col] = val; return builder; },
           insert: (payload: any) => {
@@ -23,6 +24,12 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
             };
           },
           then: (resolve: any) => {
+            if (filters.status === 'pending' && filters.in_phone) {
+              const pendingRows = mockReservations.filter(r =>
+                filters.in_phone.includes(r.phone) && (r.status === 'pending' || r.status === undefined)
+              );
+              return resolve({ data: pendingRows, error: null });
+            }
             const filtered = mockReservations.filter(r =>
               (!filters.branch_id || r.branch_id === filters.branch_id) &&
               (!filters.reservation_date || r.reservation_date === filters.reservation_date) &&
@@ -45,7 +52,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
     for (let i = 0; i < 20; i++) {
       await createReservation(mockClient, {
         fullName: `Khách ${i + 1}`,
-        phone: '0912345678',
+        phone: `09123456${i.toString().padStart(2, '0')}`,
         reservationDate: '2026-10-25',
         reservationTime: '12:00',
         partySize: 2,
@@ -98,6 +105,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
       from: () => {
         const builder: any = {
           select: () => builder,
+          in: () => builder,
           eq: () => builder,
           neq: () => builder,
           insert: (payload: any) => {
@@ -141,6 +149,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
         let filters: any = {};
         const builder: any = {
           select: () => builder,
+          in: () => builder,
           eq: (col: string, val: any) => { filters[col] = val; return builder; },
           neq: (col: string, val: any) => { filters['not_' + col] = val; return builder; },
           insert: (payload: any) => {
@@ -238,6 +247,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
         let filters: any = {};
         const builder: any = {
           select: () => builder,
+          in: (col: string, val: any) => { filters['in_' + col] = val; return builder; },
           eq: (col: string, val: any) => { filters[col] = val; return builder; },
           neq: (col: string, val: any) => { filters['not_' + col] = val; return builder; },
           insert: (payload: any) => {
@@ -250,6 +260,12 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
             };
           },
           then: (resolve: any) => {
+            if (filters.status === 'pending' && filters.in_phone) {
+              const pendingRows = mockReservations.filter(r =>
+                filters.in_phone.includes(r.phone) && (r.status === 'pending' || r.status === undefined)
+              );
+              return resolve({ data: pendingRows, error: null });
+            }
             const filtered = mockReservations.filter(r =>
               (!filters.branch_id || r.branch_id === filters.branch_id) &&
               (!filters.reservation_date || r.reservation_date === filters.reservation_date) &&
@@ -267,7 +283,7 @@ describe('End-to-End Table Capacity & Reservation Integration', () => {
     for (let i = 0; i < 20; i++) {
       await createReservation(mockClient, {
         fullName: `Khách Bờ Hồ ${i + 1}`,
-        phone: '0912345678',
+        phone: `09123456${i.toString().padStart(2, '0')}`,
         reservationDate: '2026-10-25',
         reservationTime: '12:00',
         partySize: 2,

@@ -1090,9 +1090,21 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({
                 </div>
               </div>
 
-              {/* Action Submit Button [Gửi thông tin] - Heritage red #A52B25 with warm cream text */}
               <div className="pt-4 space-y-3">
-                {submitError && <p role="alert" className="text-sm text-[#A52B25]">{submitError}</p>}
+                {submitError && (
+                  <div role="alert" className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-800 space-y-2">
+                    <p className="font-semibold text-sm">{submitError}</p>
+                    {submitError.includes('chưa hoàn tất') && (
+                      <button
+                        type="button"
+                        onClick={() => onNavigate('my-orders')}
+                        className="inline-flex items-center gap-1 text-xs font-bold text-[#68131C] underline hover:text-[#560F16] cursor-pointer"
+                      >
+                        Xem và quản lý các đơn đặt bàn hiện có của bạn →
+                      </button>
+                    )}
+                  </div>
+                )}
                 <button
                   type="submit"
                   disabled={isSubmitting || isFull}
