@@ -79,8 +79,34 @@ export async function createInquiry(client: SupabaseClient, body: unknown) {
   if (!data) throw new ApiError(503, 'Không thể tạo liên hệ.');
   return mapInquiry(data);
 }
+export function phoneVariants(phone: string): string[] {
+  const clean = phone.replace(/[\s().-]/g, '');
+  const set = new Set<string>([clean]);
+  if (clean.startsWith('0')) {
+    set.add('+84' + clean.slice(1));
+    set.add('84' + clean.slice(1));
+  } else if (clean.startsWith('+84')) {
+    set.add('0' + clean.slice(3));
+    set.add(clean.slice(1));
+  } else if (clean.startsWith('84')) {
+    set.add('0' + clean.slice(2));
+    set.add('+' + clean);
+  }
+  return Array.from(set);
+}
+
 export async function createOrder(client: SupabaseClient, body: unknown) {
   const o = validate.order(body);
+  const variants = phoneVariants(o.phone);
+  const { data: pendingOrders, error: countErr } = await client
+    .from('orders')
+    .select('id')
+    .in('phone', variants)
+    .eq('status', 'pending');
+  databaseError(countErr);
+  if (pendingOrders && pendingOrders.length >= 2) {
+    throw new ApiError(400, 'Bạn đang có đơn hàng chưa hoàn tất, vui lòng chờ xử lý trước khi đặt thêm.');
+  }
   const { data, error } = await client.rpc('create_order', {
     p_full_name: o.fullName, p_phone: o.phone, p_branch_id: o.branchId, p_pickup_at: o.pickupAt,
     p_notes: o.notes, p_items: o.items.map(item => ({ dish_id: item.dishId, quantity: item.quantity })),
@@ -137,22 +163,6 @@ export async function adminDelete(client: SupabaseClient, name: Resource, record
   databaseError(error);
   if (!data) throw new ApiError(400, 'Không tìm thấy dữ liệu.');
   return { id: validatedId };
-}
-
-function phoneVariants(phone: string): string[] {
-  const clean = phone.replace(/[\s().-]/g, '');
-  const set = new Set<string>([clean]);
-  if (clean.startsWith('0')) {
-    set.add('+84' + clean.slice(1));
-    set.add('84' + clean.slice(1));
-  } else if (clean.startsWith('+84')) {
-    set.add('0' + clean.slice(3));
-    set.add(clean.slice(1));
-  } else if (clean.startsWith('84')) {
-    set.add('0' + clean.slice(2));
-    set.add('+' + clean);
-  }
-  return Array.from(set);
 }
 
 function matchesPhone(storedPhone: string, testPhone: string): boolean {

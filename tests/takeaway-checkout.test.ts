@@ -1,10 +1,12 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { customerOrders } from '../src/lib/server/operations';
+import { customerOrders, createOrder } from '../src/lib/server/operations';
+import { ApiError } from '../src/lib/server/validation';
 
 function mockSupabaseClient(handlers: {
   orders?: any[];
   reservations?: any[];
+  rpcHandler?: (name: string, params: any) => Promise<{ data: any; error: any }>;
 }) {
   let ordersData = handlers.orders ? [...handlers.orders] : [];
   let reservationsData = handlers.reservations ? [...handlers.reservations] : [];
@@ -13,6 +15,7 @@ function mockSupabaseClient(handlers: {
     from: (table: string) => {
       let currentTable = table;
       let filterPhone: string[] = [];
+      let filterStatus: string | null = null;
 
       const builder: any = {
         select: (_fields?: string) => builder,
@@ -20,16 +23,27 @@ function mockSupabaseClient(handlers: {
           if (col === 'phone') filterPhone = values;
           return builder;
         },
+        eq: (col: string, val: string) => {
+          if (col === 'status') filterStatus = val;
+          return builder;
+        },
+        then: (resolve: any, reject: any) => {
+          if (currentTable === 'orders') {
+            let res = ordersData.filter(o => !filterPhone.length || filterPhone.includes(o.phone));
+            if (filterStatus) res = res.filter(o => o.status === filterStatus);
+            return Promise.resolve({ data: res, error: null }).then(resolve, reject);
+          }
+          return Promise.resolve({ data: [], error: null }).then(resolve, reject);
+        },
         order: () => {
           if (currentTable === 'orders') {
-            return Promise.resolve({
-              data: ordersData.filter(o => filterPhone.includes(o.phone)),
-              error: null,
-            });
+            let res = ordersData.filter(o => !filterPhone.length || filterPhone.includes(o.phone));
+            if (filterStatus) res = res.filter(o => o.status === filterStatus);
+            return Promise.resolve({ data: res, error: null });
           }
           if (currentTable === 'reservations') {
             return Promise.resolve({
-              data: reservationsData.filter(r => filterPhone.includes(r.phone)),
+              data: reservationsData.filter(r => !filterPhone.length || filterPhone.includes(r.phone)),
               error: null,
             });
           }
@@ -37,6 +51,25 @@ function mockSupabaseClient(handlers: {
         },
       };
       return builder;
+    },
+    rpc: (name: string, params: any) => {
+      if (handlers.rpcHandler) return handlers.rpcHandler(name, params);
+      return Promise.resolve({
+        data: {
+          id: 'order-new-123',
+          full_name: params.p_full_name,
+          phone: params.p_phone,
+          branch_id: params.p_branch_id,
+          branch_name: 'Phở Thìn Bờ Hồ',
+          pickup_at: params.p_pickup_at,
+          notes: params.p_notes,
+          status: 'pending',
+          total: 140000,
+          created_at: new Date().toISOString(),
+          order_items: [{ dish_id: 'pho-tai', name: 'Phở tái', unit_price: 70000, quantity: 2 }],
+        },
+        error: null,
+      });
     },
   } as any;
 }
@@ -96,4 +129,61 @@ describe('Takeaway Checkout & Reservation Pre-Order Display', () => {
     assert.equal(total, 70000 * 2 + 75000 * 1 + 10000 * 4); // 140000 + 75000 + 40000 = 255000
     assert.equal(total, 255000);
   });
+
+  it('rejects order creation when customer has >= 2 pending orders with proper warning message', async () => {
+    const client = mockSupabaseClient({
+      orders: [
+        { id: 'order-1', phone: '0912345678', status: 'pending' },
+        { id: 'order-2', phone: '+84912345678', status: 'pending' },
+      ],
+    });
+
+    const newOrderInput = {
+      fullName: 'Khách Hàng',
+      phone: '0912345678',
+      branchId: 'bo-ho',
+      pickupAt: new Date(Date.now() + 3600000).toISOString(),
+      notes: '',
+      items: [{ dishId: 'pho-tai', quantity: 2 }],
+    };
+
+    await assert.rejects(
+      async () => {
+        await createOrder(client, newOrderInput);
+      },
+      (error: unknown) => {
+        assert(error instanceof ApiError);
+        assert.equal(error.status, 400);
+        assert.equal(
+          error.message,
+          'Bạn đang có đơn hàng chưa hoàn tất, vui lòng chờ xử lý trước khi đặt thêm.'
+        );
+        return true;
+      }
+    );
+  });
+
+  it('allows order creation when customer has < 2 pending orders', async () => {
+    const client = mockSupabaseClient({
+      orders: [
+        { id: 'order-1', phone: '0912345678', status: 'pending' },
+        { id: 'order-2', phone: '0912345678', status: 'completed' },
+        { id: 'order-3', phone: '0912345678', status: 'cancelled' },
+      ],
+    });
+
+    const newOrderInput = {
+      fullName: 'Khách Hàng Hợp Lệ',
+      phone: '0912345678',
+      branchId: 'bo-ho',
+      pickupAt: new Date(Date.now() + 3600000).toISOString(),
+      notes: '',
+      items: [{ dishId: 'pho-tai', quantity: 1 }],
+    };
+
+    const order = await createOrder(client, newOrderInput);
+    assert.equal(order.id, 'order-new-123');
+    assert.equal(order.status, 'pending');
+  });
 });
+

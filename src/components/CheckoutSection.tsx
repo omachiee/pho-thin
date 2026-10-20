@@ -150,7 +150,20 @@ export function CheckoutSection({
               </div>
               <label className="block space-y-1"><span>Ghi chú</span><textarea name="notes" maxLength={1000} rows={3} className={inputClass} /></label>
             </fieldset>
-            {error && <p role="alert" className="rounded border border-red-300 bg-red-50 p-3 text-red-800">{error}</p>}
+            {error && (
+              <div role="alert" className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-800 space-y-2">
+                <p className="font-medium">{error}</p>
+                {onViewMyOrders && error.includes('chưa hoàn tất') && (
+                  <button
+                    type="button"
+                    onClick={onViewMyOrders}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#68131C] underline hover:text-[#560F16] cursor-pointer"
+                  >
+                    Xem và quản lý các đơn hàng hiện có của bạn →
+                  </button>
+                )}
+              </div>
+            )}
             <button type="submit" disabled={busy || unavailable || !branches.length} className="w-full rounded-lg bg-[#68131C] px-6 py-3 font-bold text-[#FFF8E9] disabled:opacity-50">{busy ? 'Đang gửi đơn…' : 'Gửi đơn mang về · Thanh toán khi nhận'}</button>
           </form>
         </div>
